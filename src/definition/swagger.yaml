@@ -1,0 +1,77 @@
+openapi: 3.0.0
+info:
+  title: Hello World API
+  description: Hello world API.
+  version: '1.0'
+paths:
+  /hello:
+    post:
+      x-swagger-router-controller: helloWorldRoute
+      operationId: helloWorldPost
+      tags:
+        - /hello
+      description: >-
+        Returns greeting.
+      parameters:
+        - name: greeting
+          in: query
+          description: Name of greeting
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hello'
+        default:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      x-swagger-router-controller: helloWorldRoute
+      operationId: helloWorldGet
+      tags:
+        - /hello
+      description: >-
+        Returns greeting.
+      parameters:
+        - name: greeting
+          in: query
+          description: Name of greeting
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hello'
+        default:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+servers:
+  - url: '/api'
+components:
+  schemas:
+    Hello:
+      properties:
+        msg:
+          type: string
+      required:
+        - msg
+    Error:
+      properties:
+        message:
+          type: string
+      required:
+        - message
