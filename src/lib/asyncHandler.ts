@@ -2,11 +2,14 @@ import * as express from "express";
 import * as P from "bluebird";
 import log from "../log";
 import { TDebug } from "../log";
+
 const debug = new TDebug("src:lib:asyncHandler");
+
 export interface HandlerOption {
   cache?: boolean;
   cacheLive?: number;
 }
+
 export function asyncHandler(
   handler: (req: express.Request, res: express.Response, next) => P<any>,
   name: string, options?: HandlerOption): express.Handler {
@@ -50,21 +53,21 @@ export function asyncHandler(
       });
   };
 }
+
 interface CachedItem {
   data: object;
   expTs: number;
 }
+
 const cachedData: { [key: string]: CachedItem } = {};
+
 // TODO use cache server
 async function cache(req: express.Request, item: CachedItem): P<any> {
   const fullUrl = getUrl(req);
   debug.log("Set cache: %s data: %o", fullUrl, item);
   cachedData[fullUrl] = item;
 }
-// async function hasCache(req: express.Request): P<boolean> {
-//   const fullUrl = getUrl(req);
-//   return typeof cachedData[fullUrl] !== "undefined";
-// }
+
 async function getCache(req: express.Request): P<CachedItem> {
   const fullUrl = getUrl(req);
   debug.log("Get cache: %s", fullUrl);

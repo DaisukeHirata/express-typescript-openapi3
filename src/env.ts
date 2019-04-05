@@ -15,6 +15,7 @@ export function get(key) {
     dynamic[key] :
     typeof process.env[key] !== "undefined" ? process.env[key] : def[key];
 }
+
 export function set(key, val) {
   dynamic[key] = val;
 }
