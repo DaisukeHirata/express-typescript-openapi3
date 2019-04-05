@@ -1,7 +1,9 @@
 # Nodejs FES Template
+
 This version includes support for OpenAPI 3.0
 
 # Environment vars
+
 This project uses the following environment variables:
 
 | Name                          | Description                         | Default Value                                  |
@@ -10,45 +12,54 @@ This project uses the following environment variables:
 
 
 # Pre-requisites
+
 - Install [Node.js](https://nodejs.org/en/) version 8.0.0
 
 
 # Getting started
+
 - Clone the repository
-```
+
+```shell
 git clone  <git lab template url> <project_name>
 ```
+
 - Install dependencies
-```
+
+```shell
 cd <project_name>
 npm install
 ```
+
 - Build and run the project
-```
+
+```shell
 npm start
 ```
+
   Navigate to `http://localhost:8001`
 
 - API Document endpoints
 
-  swagger Spec Endpoint : http://localhost:8001/api-docs 
+  swagger Spec Endpoint : `http://localhost:8001/api-docs`
 
-  swagger-ui  Endpoint : http://localhost:8001/docs 
+  swagger-ui  Endpoint : `http://localhost:8001/docs`
 
 
 # TypeScript + Node 
+
 The main purpose of this repository is to show a project setup and workflow for writing microservice. The Rest APIs will be using the Swagger (OpenAPI) Specification.
 
-
-
-
 ## Getting TypeScript
+
 Add Typescript to project `npm`.
-```
+
+```shell
 npm install -D typescript
 ```
 
 ## Project Structure
+
 The folder structure of this app is explained below:
 
 | Name | Description |
@@ -56,19 +67,21 @@ The folder structure of this app is explained below:
 | **dist**                 | Contains the distributable (or output) from your TypeScript build.  |
 | **node_modules**         | Contains all  npm dependencies                                                            |
 | **src**                  | Contains  source code that will be compiled to the dist dir                               |
-| **src/config**           | Application configuration including environment-specific configs 
-| **src/controllers**      | Controllers define functions to serve various express routes. 
+| **src/config**           | Application configuration including environment-specific configs
+| **src/controllers**      | Controllers define functions to serve various express routes.
 | **src/lib**              | Common libraries to be used across your app.  
 | **src/middlewares**      | Express middlewares which process the incoming requests before handling them down to the routes
-| **src/routes**           | Contain all express routes, separated by module/area of application                       
+| **src/routes**           | Contain all express routes, separated by module/area of application
 | **src/models**           | Models define schemas that will be used in storing and retrieving data from Application database  |
 | **src/monitoring**      | Prometheus metrics |
 | **src**/index.ts         | Entry point to express app                                                               |
-| package.json             | Contains npm dependencies as well as [build scripts](#what-if-a-library-isnt-on-definitelytyped)   | tsconfig.json            | Config settings for compiling source code only written in TypeScript    
+| package.json             | Contains npm dependencies as well as [build scripts](#what-if-a-library-isnt-on-definitelytyped)   | tsconfig.json            | Config settings for compiling source code only written in TypeScript
 | tslint.json              | Config settings for TSLint code style checking                                                |
 
 ## Building the project
+
 ### Configuring TypeScript compilation
+
 ```json
 {
     "compilerOptions": {
@@ -77,23 +90,20 @@ The folder structure of this app is explained below:
       "outDir": "dist",
       "sourceMap": true
     },
-    
+
     "include": [
       "src/**/*.ts"
-      
-
     ],
     "exclude": [
       "src/**/*.spec.ts",
       "test",
       "node_modules"
-    
     ]
   }
-
 ```
 
 ### Running the build
+
 All the different build steps are orchestrated via [npm scripts](https://docs.npmjs.com/misc/scripts).
 Npm scripts basically allow us to call (and chain) terminal commands via npm.
 
@@ -108,7 +118,8 @@ Npm scripts basically allow us to call (and chain) terminal commands via npm.
 | `lint`                    | Runs TSLint on project files       |
 
 ### Using the debugger in VS Code
-Node.js debugging in VS Code is easy to setup and even easier to use. 
+
+Node.js debugging in VS Code is easy to setup and even easier to use.
 Press `F5` in VS Code, it looks for a top level `.vscode` folder with a `launch.json` file.
 
 ```json
@@ -121,12 +132,10 @@ Press `F5` in VS Code, it looks for a top level `.vscode` folder with a `launch.
                 "name": "Launch Program",
                 "program": "${workspaceFolder}/dist/index.js",
                 "preLaunchTask": "tsc: build - tsconfig.json",
-               
                 "outFiles": [
                     "${workspaceFolder}/dist/*js"
                 ]
             },
-           
             {
                 // Name of configuration; appears in the launch configuration drop down menu.
                 "name": "Run mocha",
@@ -135,14 +144,11 @@ Press `F5` in VS Code, it looks for a top level `.vscode` folder with a `launch.
                 "type": "node",
                 // Workspace relative or absolute path to the program.
                 "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
-                
                 // Automatically stop program after launch.
                 "stopOnEntry": false,
                 // Command line arguments passed to the program.
                 "args": ["--no-timeouts", "--compilers", "ts:ts-node/register", "${workspaceRoot}/test/*"],
-                
                 // Workspace relative or absolute path to the working directory of the program being debugged. Default is the current workspace.
-               
                 // Workspace relative or absolute path to the runtime executable to be used. Default is the runtime executable on the PATH.
                 "runtimeExecutable": null,
                 // Environment variables passed to the program.
@@ -153,17 +159,18 @@ Press `F5` in VS Code, it looks for a top level `.vscode` folder with a `launch.
 ```
 
 ## Testing
+
 The tests are  written in Mocha and the assertions done using Chai
 
-```
+```json
 "mocha": "3.4.2",
 "chai": "4.1.2",
 "chai-http": "3.0.0",
-
 ```
 
 ### Example application.spec.ts
-```
+
+```javascript
 import chaiHttp = require("chai-http")
 import * as chai from "chai"
 import app from './application'
@@ -178,7 +185,6 @@ describe('App', () => {
       .get('/api/hello?greeting=world')
       .send({})
       .end((err:Error, res: any): void => {
-          
           expect(res.statusCode).to.be.equal(200);
           expect(res.body.msg).to.be.equal("hello world");
           done();
@@ -187,19 +193,23 @@ describe('App', () => {
     });
 });
 ```
-### Running tests using NPM Scripts
-````
-npm run test
 
+### Running tests using NPM Scripts
+
+```shell
+npm run test
 ````
+
 Test files are created under test folder.
 
-
 # Swagger
+
 ## Specification
+
 The swagger specification file is named as swagger.yaml. The file is located under definition folder.
 Example:
-```
+
+```yaml
 paths:
   /hello:
     get:
@@ -247,6 +257,7 @@ components:
       required:
         - message
 ```
+
 ### Highlights of the swagger.yaml File
 
 - /hello:
@@ -260,22 +271,24 @@ components:
   Specifies the method being requested (GET, PUT, POST, etc.).
 - operationId: hello
   
-  Specifies the direct method to invoke for this endpoint within the controller/router 
+  Specifies the direct method to invoke for this endpoint within the controller/router
 - parameters:
   
    This section defines the parameters of your endpoint. They can be defined as path, query, header, formData, or body.
 - definitions:
-   
+
    This section defines the structure of objects used in responses or as parameters.
 - servers:
+
    Defines the base path or the servers available.
 
 ## Swagger Middleware
+
 The project is using npm module `oas-tools` that provides middleware functions for metadata, security, validation and routing, and bundles Swagger UI into Express using OpenAPI 3.0 spec.
 
 __It is also possible to set configuration variables, these are them:__
 
-| Name	| Type	| Explanation / Values |
+| Name | Type | Explanation / Values |
 | ------------- | ------------- | ------------- |
 |`logLevel` | `String` | Possible values from less to more level of verbosity are: error, warning, custom, info and debug. Ignored if `customLogger` is used. Default is info. |
 |`logFile` | `String` | Logs file path. Ignored if `customLogger` is used. |
@@ -304,15 +317,16 @@ const options = {
     };
     swaggerTools.configure(options);
 ```
+
 To initialise just type the following:
+
 ```javascript
 const swaggerDoc = loadDocumentSync(basePath + "/definition/swagger.yaml");
-    
+
     swaggerTools.initialize(swaggerDoc, app, function() {
         cb();
     });
 ```
-
 
 - Swagger Router
 
@@ -320,7 +334,7 @@ const swaggerDoc = loadDocumentSync(basePath + "/definition/swagger.yaml");
 
   Here is an example for a hello world endpoint:
 
-  ```
+  ```yaml
   paths:
   /hello:
     get:
@@ -352,23 +366,22 @@ const swaggerDoc = loadDocumentSync(basePath + "/definition/swagger.yaml");
               schema:
                 $ref: '#/components/schemas/Error'
   ```
+
 The fields `x-swagger-router-controller` will point the middleware to a `helloWorldRoute.ts` file in the route's directory, while the `operationId` names the handler function to be invoked.
 
 # TSLint
+
 TSLint is a code linter that helps catch minor code quality and style issues.
 
 ## TSLint rules
+
 All rules are configured through `tslint.json`.
 
-
 ## Running TSLint
+
 To run TSLint you can call the main build script or just the TSLint task.
-```
+
+```shell
 npm run build:live   // runs full build including TSLint
 npm run lint  // runs only TSLint
 ```
-
-
-
-
-
