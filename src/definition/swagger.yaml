@@ -59,11 +59,46 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /goodbye/{postId}:
+    post:
+      x-swagger-router-controller: goodbyeWorldRoute
+      operationId: goodbyeWorldPost
+      tags:
+        - /goodbye
+      description: >-
+        Returns greeting.
+      parameters:
+        - name: postId
+          in: path
+          description: id of a post
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Goodbye'
+        default:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 servers:
   - url: '/api'
 components:
   schemas:
     Hello:
+      properties:
+        msg:
+          type: string
+      required:
+        - msg
+    Goodbye:
       properties:
         msg:
           type: string

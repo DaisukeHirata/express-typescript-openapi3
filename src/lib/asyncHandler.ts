@@ -13,7 +13,7 @@ export interface HandlerOption {
 export function asyncHandler(
   handler: (req: express.Request, res: express.Response, next) => P<any>,
   name: string, options?: HandlerOption): express.Handler {
-  debug.log("Register handler with option: %o", options);
+  debug.log("Register handler with option: %o", [options] );
   return (req: express.Request, res: express.Response, next) => {
     async function exec(): P<any> {
       debug.start("SERVICE:" + name);
@@ -44,7 +44,7 @@ export function asyncHandler(
         if (data) {
           res.json(data);
         } else if (!res.finished) {
-          debug.log("no more response to send, status code: %d", res.statusCode);
+          debug.log("no more response to send, status code: %d", [res.statusCode] );
           res.end();
         }
       }, (error) => {
@@ -64,7 +64,7 @@ const cachedData: { [key: string]: CachedItem } = {};
 // TODO use cache server
 async function cache(req: express.Request, item: CachedItem): P<any> {
   const fullUrl = getUrl(req);
-  debug.log("Set cache: %s data: %o", fullUrl, item);
+  debug.log("Set cache: %s data: %o", [fullUrl, item]);
   cachedData[fullUrl] = item;
 }
 
@@ -73,11 +73,11 @@ async function getCache(req: express.Request): P<CachedItem> {
   debug.log("Get cache: %s", fullUrl);
   const data = cachedData[fullUrl];
   if (data && data.expTs < Date.now()) {
-    debug.log("Cache expired: %s", fullUrl);
+    debug.log("Cache expired: %s", [fullUrl]);
     delete cachedData[fullUrl];
     return;
   } else {
-    debug.log("Hit cache: %s", fullUrl);
+    debug.log("Hit cache: %s", [fullUrl]);
     return data;
   }
 }

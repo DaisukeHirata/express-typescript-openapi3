@@ -49,7 +49,7 @@
     "build:live": "npm run clean && npm run lint && tsc -p tsconfig.json && npm run build:copy",
     "test": "DEBUG=fes:* TS_NODE_CACHE=false ./node_modules/.bin/mocha --compilers ts:ts-node/register ./test/* --exit",
     "build:dev": "nodemon --exec ts-node -- ./src/index.ts",
-    "dev": "DEBUG=fes:* TS_NODE_CACHE=false npm run build:dev",
+    "dev": "DEBUG=fes:*,app:* TS_NODE_CACHE=false npm run build:dev",
     "lint": "tslint -p tsconfig.json",
     "updateSwagger": "node scripts/updateSwagger.js",
     "updateAll": "node scripts/updateCode.js",
