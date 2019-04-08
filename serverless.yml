@@ -1,0 +1,24 @@
+service: serverless-express-typescript
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${opt:stage, 'dev'}
+  region: ap-northeast-1
+
+package:
+  exclude:
+    - "**/*.ts"
+    - "test/**"
+    - "scripts/**"
+    - ".vscode/**"
+    - "node_modules/**"
+    - "*"
+    - "!package.json"
+
+functions:
+  http:
+    handler: dist/lambda.http
+    events:
+      - http: ANY /
+      - http: ANY /{proxy+}
