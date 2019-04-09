@@ -12,13 +12,14 @@ paths:
         - /hello
       description: >-
         Returns greeting.
-      parameters:
-        - name: greeting
-          in: query
-          description: Name of greeting
-          required: true
-          schema:
-            type: string
+      requestBody:
+        description: Callback payload
+        x-name: pet
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
       responses:
         '200':
           description: Successful request.
@@ -98,6 +99,18 @@ components:
           type: string
       required:
         - msg
+    Pet:
+      type: object
+      discriminator:
+        propertyName: petType
+      properties:
+        name:
+          type: string
+        petType:
+          type: string
+      required:
+      - name
+      - petType
     Goodbye:
       properties:
         msg:

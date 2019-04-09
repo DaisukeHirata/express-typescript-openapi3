@@ -1,5 +1,4 @@
-
-// import * as bodyParser from "body-parser";
+import * as bodyParser from "body-parser";
 import * as cors from "cors";
 import * as express from "express";
 import { resolve } from "path";
@@ -17,11 +16,11 @@ monit.init(app);
 app.use(cors(getCorsOptions()));
 app.use(cls.setRequestId);
 app.use(inOutLogger);
+app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
 
 initSwaggerMiddlware(app, resolve(__dirname), () => {
   // self.express.use('/api/weather', helloRouteBuilder);
-  // self.express.use(bodyParser.json());
-  // self.express.use(bodyParser.urlencoded({ extended: false }));
   // Custom error handler that returns JSON
   app.use(function (err, req: express.Request, res: express.Response, next) {
     if (err) {
