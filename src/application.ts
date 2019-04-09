@@ -1,6 +1,7 @@
 import * as bodyParser from "body-parser";
 import * as cors from "cors";
 import * as express from "express";
+import * as multer from "multer";
 import { resolve } from "path";
 import { initSwaggerMiddlware } from "./middlewares/swagger";
 import * as env from "./env";
@@ -16,8 +17,12 @@ monit.init(app);
 app.use(cors(getCorsOptions()));
 app.use(cls.setRequestId);
 app.use(inOutLogger);
-app.use(bodyParser.json());
+app.use(bodyParser.json({
+  strict: false
+}));
 // app.use(bodyParser.urlencoded({ extended: false }));
+const upload = multer();
+app.use(upload.any());
 
 initSwaggerMiddlware(app, resolve(__dirname), () => {
   // self.express.use('/api/weather', helloRouteBuilder);

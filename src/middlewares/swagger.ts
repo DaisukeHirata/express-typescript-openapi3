@@ -8,6 +8,7 @@ declare module "express" {
     interface Request {
         swagger: Swagger20Request["swagger"];
         requestId: string;
+        files: any[];
     }
 }
 

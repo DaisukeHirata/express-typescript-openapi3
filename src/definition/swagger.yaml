@@ -88,7 +88,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
+  /uploadImage:
+    post:
+      x-swagger-router-controller: uploadImageRoute
+      operationId: uploadImagePost
+      tags:
+        - /uploadImage
+      description: >-
+        upload Image file
+      requestBody:
+        description: Callback payload
+        x-name: uploadImage
+        required: true
+        content:
+          application/json: # this should be multipart/form-data. but oas-tools can not accept multipart/form-data for validation
+            schema:
+              $ref: '#/components/schemas/UploadImage'
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hello'
+        default:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 servers:
   - url: '/api'
 components:
@@ -109,8 +137,8 @@ components:
         petType:
           type: string
       required:
-      - name
-      - petType
+        - name
+        - petType
     Goodbye:
       properties:
         msg:
@@ -123,3 +151,17 @@ components:
           type: string
       required:
         - message
+    UploadImage:
+      type: object
+      properties:
+        file: # <- this is the form field name that needs to be present in the POST payload 
+          type: string
+          format: binary
+          description: a binary file uploaded via openAPI spec
+        id:
+          type: string # it's a form field, so will always be a string 
+        name:
+          type: string
+      required:
+        - id
+        - name
