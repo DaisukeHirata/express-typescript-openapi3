@@ -2,8 +2,8 @@
   "name": "express-ts-openapi3",
   "version": "1.0.0",
   "repository": "express-ts-openapi3",
-  "description": "",
-  "main": "dist/src/index.js",
+  "description": "express-ts-openapi3",
+  "main": "dist/index.js",
   "dependencies": {
     "aws-lambda": "^0.1.2",
     "aws-serverless-express": "^3.3.6",
@@ -18,6 +18,7 @@
     "oas-tools": "^2.1.5",
     "perfy": "^1.1.2",
     "prom-client": "11.0.0",
+    "source-map-support": "^0.5.12",
     "winston": "^2.4.0"
   },
   "devDependencies": {
@@ -48,9 +49,9 @@
   },
   "scripts": {
     "clean": "rm -rf dist",
-    "build:copy": "cpx \"src/**/*.yaml\" dist/ && cp -r node_modules/ dist/node_modules",
+    "build:copy": "cpx \"src/**/*.yaml\" dist/",
     "start": "DEBUG=fes:* node dist/index.js",
-    "build:live": "npm run clean && npm run lint && tsc -p tsconfig.json && npm run build:copy",
+    "build:live": "npm run clean && npm run lint && tsc -p tsconfig.json && npm run build:copy && cp package* ./dist && npm install --production --prefix ./dist",
     "test": "DEBUG=fes:* TS_NODE_CACHE=false ./node_modules/.bin/mocha --compilers ts:ts-node/register ./test/* --exit",
     "build:dev": "nodemon --exec ts-node -- ./src/index.ts",
     "dev": "DEBUG=fes:*,app:* TS_NODE_CACHE=false npm run build:dev",
@@ -58,7 +59,7 @@
     "updateSwagger": "node scripts/updateSwagger.js",
     "updateAll": "node scripts/updateCode.js",
     "testOne": "TS_NODE_CACHE=false ./node_modules/.bin/mocha --compilers ts:ts-node/register ",
-    "deploy": "serverless deploy"
+    "deploy": "npm run build:live && serverless deploy"
   },
   "engines": {
     "node": ">6.11.0"

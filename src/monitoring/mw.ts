@@ -23,16 +23,13 @@ const responseStatCount = new promClient.Counter({
 export function requestWatch(req: Request, res: Response, next) {
   const labels: any = {
     method: req.method,
-    path: req.path
+    path: req.url
   };
   const timer = responseTime.startTimer();
 
   requestCount.inc(labels);
 
   res.on("finish", () => {
-    if (req.swagger) {
-      labels.path = req.swagger.apiPath;
-    }
     responseStatCount.inc({
       method: labels.method,
       path: labels.path,
