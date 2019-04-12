@@ -1,9 +1,88 @@
 openapi: 3.0.0
 info:
-  title: Hello World API
-  description: Hello world API.
+  title: Cinemas API
+  description: Cinemas API.
   version: '1.0'
+
 paths:
+  /movies:
+    get:
+      x-swagger-router-controller: moviesRoute
+      operationId: moviesGet
+      tags:
+        - /movies
+      description: >-
+        get movie list
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movies'
+        default:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /movies/{id}:
+    get:
+      x-swagger-router-controller: moviesRoute
+      operationId: movieGet
+      tags:
+        - /movies
+      description: >-
+        get a movie
+      parameters:
+        - name: id
+          in: path
+          description: id of a movie
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movies'
+        default:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /uploadImage:
+    post:
+      x-swagger-router-controller: uploadImageRoute
+      operationId: uploadImagePost
+      tags:
+        - /uploadImage
+      description: >-
+        upload Image file
+      requestBody:
+        description: Callback payload
+        x-name: uploadImage
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadImage'
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hello'
+        default:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /hello:
     post:
       x-swagger-router-controller: helloWorldRoute
@@ -88,84 +167,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /uploadImage:
-    post:
-      x-swagger-router-controller: uploadImageRoute
-      operationId: uploadImagePost
-      tags:
-        - /uploadImage
-      description: >-
-        upload Image file
-      requestBody:
-        description: Callback payload
-        x-name: uploadImage
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/UploadImage'
-      responses:
-        '200':
-          description: Successful request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Hello'
-        default:
-          description: Invalid request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /movies:
-    get:
-      x-swagger-router-controller: moviesRoute
-      operationId: moviesGet
-      tags:
-        - /movies
-      description: >-
-        get movie list
-      responses:
-        '200':
-          description: Successful request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Movies'
-        default:
-          description: Invalid request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /movies/{id}:
-    get:
-      x-swagger-router-controller: moviesRoute
-      operationId: movieGet
-      tags:
-        - /movies
-      description: >-
-        get a movie
-      parameters:
-        - name: id
-          in: path
-          description: id of a movie
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Successful request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Movie'
-        default:
-          description: Invalid request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+
+
 
 
 servers:
@@ -178,6 +181,67 @@ components:
           type: string
       required:
         - message
+    Movies:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Movie'
+      required:
+        - data
+    Movie:
+      type: object
+      properties:
+        type:
+          type: string
+          example: "movies" # always movies
+        id:
+          type: string
+          example: "1"
+        attributes:
+          $ref: '#/components/schemas/MovieAttributes'
+      required:
+        - type
+        - id
+        - attributes
+    MovieAttributes:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Assasins Creed"
+        runtime:
+          type: number
+          example: 115
+        format:
+          type: string
+          example: "IMAX"
+        plot:
+          type: string
+          example: "Lorem ipsum dolor sit amet"
+        released-at:
+          type: string
+          format: date-time
+          example: '2018-12-01T00:00:00Z'
+      required:
+        - title
+        - runtime
+        - released-at
+    UploadImage:
+      type: object
+      properties:
+        file: # <- this is the form field name that needs to be present in the POST payload 
+          type: string
+          format: binary
+          description: a binary file uploaded via openAPI spec
+        id:
+          type: string # it's a form field, so will always be a string 
+        name:
+          type: string
+      required:
+        - id
+        - name
     Hello:
       properties:
         msg:
@@ -202,64 +266,3 @@ components:
           type: string
       required:
         - msg
-    UploadImage:
-      type: object
-      properties:
-        file: # <- this is the form field name that needs to be present in the POST payload 
-          type: string
-          format: binary
-          description: a binary file uploaded via openAPI spec
-        id:
-          type: string # it's a form field, so will always be a string 
-        name:
-          type: string
-      required:
-        - id
-        - name
-    Movies:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Movie'
-      required:
-        - data
-    Movie:
-      type: object
-      properties:
-        type:
-          type: string
-          example: "movies" # always movies
-        id:
-          type: integer
-          example: 1
-        attributes:
-          $ref: '#/components/schemas/MovieAttributes'
-      required:
-        - type
-        - id
-        - attributes
-    MovieAttributes:
-      type: object
-      properties:
-        title:
-          type: string
-          example: "Assasins Creed"
-        runtime:
-          type: number
-          example: 115
-        format:
-          type: string
-          example: "IMAX"
-        plot:
-          type: string
-          example: "Lorem ipsum dolor sit amet"
-        released_at:
-          type: string
-          format: date-time
-          example: '2018-12-01T00:00:00Z'
-      required:
-        - title
-        - runtime
-        - released_at
