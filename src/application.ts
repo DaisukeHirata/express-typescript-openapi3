@@ -9,7 +9,7 @@ import { inOutLogger } from "./log";
 import * as monit from "./monitoring";
 import * as cls from "./lib/cls";
 import { getCorsOptions } from "./cors";
-import * as helmet from "helmet"
+import * as helmet from "helmet";
 
 env.checkEnv();
 const app = express();
