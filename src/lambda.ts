@@ -32,4 +32,9 @@ sourceMapSupport.install();
 app.use(eventContext);
 const server = createServer(app, undefined, binaryMimeTypes);
 
-export const http = (event: any, context: Context) => proxy(server, event, context);
+// export const http = (event: any, context: Context, callback: any) => {
+//   context.callbackWaitsForEmptyEventLoop = false;
+//   proxy(server, event, context, "CALLBACK", callback);
+// };
+
+export const http = (event: any, context: Context, callback: any) => proxy(server, event, context);

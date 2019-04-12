@@ -12,6 +12,6 @@ export async function getHelloWorld(req: Request, res: Response): P<any> {
 
 export async function postHelloWorld(req: Request, res: Response): P<any> {
     const body = req.body;
-    debug.log("body: ", req.body);
-    res.send({"msg": JSON.stringify(req.body)});
+    debug.log("body: ", body);
+    res.send({"msg": JSON.stringify(body)});
 }
