@@ -117,10 +117,67 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /movies:
+    get:
+      x-swagger-router-controller: moviesRoute
+      operationId: moviesGet
+      tags:
+        - /movies
+      description: >-
+        get movie list
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movies'
+        default:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /movies/{id}:
+    get:
+      x-swagger-router-controller: moviesRoute
+      operationId: movieGet
+      tags:
+        - /movies
+      description: >-
+        get a movie
+      parameters:
+        - name: id
+          in: path
+          description: id of a movie
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        default:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
 servers:
   - url: '/api'
 components:
   schemas:
+    Error:
+      properties:
+        message:
+          type: string
+      required:
+        - message
     Hello:
       properties:
         msg:
@@ -145,12 +202,6 @@ components:
           type: string
       required:
         - msg
-    Error:
-      properties:
-        message:
-          type: string
-      required:
-        - message
     UploadImage:
       type: object
       properties:
@@ -165,3 +216,50 @@ components:
       required:
         - id
         - name
+    Movies:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Movie'
+      required:
+        - data
+    Movie:
+      type: object
+      properties:
+        type:
+          type: string
+          example: "movies" # always movies
+        id:
+          type: integer
+          example: 1
+        attributes:
+          $ref: '#/components/schemas/MovieAttributes'
+      required:
+        - type
+        - id
+        - attributes
+    MovieAttributes:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Assasins Creed"
+        runtime:
+          type: number
+          example: 115
+        format:
+          type: string
+          example: "IMAX"
+        plot:
+          type: string
+          example: "Lorem ipsum dolor sit amet"
+        released_at:
+          type: string
+          format: date-time
+          example: '2018-12-01T00:00:00Z'
+      required:
+        - title
+        - runtime
+        - released_at
