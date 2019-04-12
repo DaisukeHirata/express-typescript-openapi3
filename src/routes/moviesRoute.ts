@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { MoviesController } from "../controllers/movies";
+import { MoviesController } from "../controllers/moviesController";
 import { asyncHandler } from "../lib/asyncHandler";
 
 const moviesController = new MoviesController();
