@@ -385,3 +385,11 @@ To run TSLint you can call the main build script or just the TSLint task.
 npm run build:live   // runs full build including TSLint
 npm run lint  // runs only TSLint
 ```
+
+## Deploy to AWS Serverless
+
+[Configure AWS Credentials](https://serverless.com/framework/docs/providers/aws/guide/credentials/) before running this command.
+
+```shell
+npm run deploy
+```
