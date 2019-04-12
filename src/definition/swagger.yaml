@@ -101,7 +101,7 @@ paths:
         x-name: uploadImage
         required: true
         content:
-          application/json: # this should be multipart/form-data. but oas-tools can not accept multipart/form-data for validation
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/UploadImage'
       responses:
