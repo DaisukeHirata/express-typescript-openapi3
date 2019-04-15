@@ -13,7 +13,6 @@ import * as helmet from "helmet";
 
 env.checkEnv();
 const app = express();
-export default app;
 monit.init(app);
 app.use(cors(getCorsOptions()));
 app.use(cls.setRequestId);
@@ -41,7 +40,4 @@ initSwaggerMiddlware(app, resolve(__dirname), () => {
   });
 });
 
-export class Application {
-
-}
-
+export default app;
