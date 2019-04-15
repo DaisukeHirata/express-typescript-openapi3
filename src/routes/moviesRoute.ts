@@ -1,8 +1,10 @@
 import { Request, Response, Router } from "express";
 import { MoviesController } from "../controllers/moviesController";
+import { MovieRepository } from "../repositories/moviesRepository";
 import { asyncHandler } from "../lib/asyncHandler";
 
-const moviesController = new MoviesController();
+const repo = new MovieRepository();
+const moviesController = new MoviesController(repo);
 
 export const getAllMovies = Router().use("/", asyncHandler((req: Request, res: Response) => moviesController.getAllMovies(req, res), "getAllMovies"));
 export const getMoviePremieres = Router().use("/", asyncHandler((req: Request, res: Response) => moviesController.getMoviePremieres(req, res), "getMoviePremieres"));

@@ -9,8 +9,8 @@ const debug = new TDebug("app:src:controllers:movies");
 export class MoviesController {
   private repo: MovieRepository;
 
-  constructor() {
-    this.repo = new MovieRepository();
+  constructor(repo: MovieRepository) {
+    this.repo = repo;
   }
 
   public async getAllMovies(req: Request, res: Response): P<any> {
