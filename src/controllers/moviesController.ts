@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import * as P from "bluebird";
 import { TDebug } from "../log";
-import { movieSerializer, errorSerializer } from "../serializers/moviesSerializer";
+import { movieSerializer } from "../serializers/moviesSerializer";
 import { MovieRepository } from "../repositories/moviesRepository";
 
 const debug = new TDebug("app:src:controllers:movies");
@@ -32,12 +32,9 @@ export class MoviesController {
     const movies = await this.repo.getMovieById(id);
 
     if (movies.length === 0) {
-      const errors = new errorSerializer({
-        code: "404",
-        title: "Not Found",
-        detail: "Sorry, can not find that!!"
+      res.status(404).send({
+        message: "Sorry, can not find that!!"
       });
-      res.status(404).send(errors);
       return;
     }
 
