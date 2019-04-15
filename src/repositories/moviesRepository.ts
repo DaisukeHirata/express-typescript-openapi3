@@ -1,6 +1,18 @@
 // import { TDebug } from "../log";
-
 // const debug = new TDebug("app:src:repositories:movies");
+import * as P from "bluebird";
+import * as serverlessMysql from "serverless-mysql";
+
+// should be configurable
+const mysql = serverlessMysql({
+  config: {
+    host     : "localhost",
+    database : "cinema",
+    user     : "foo",
+    password : "bar",
+    dateStrings: true
+  }
+});
 
 const movie1 = {
   id: "1",
@@ -21,17 +33,30 @@ const movie2 = {
 };
 
 export class MovieRepository {
-  public getAllMovies(): any[] {
-    return [movie1, movie2];
+  public async getAllMovies(): P<any[]> {
+    const results = await mysql.query("SELECT id, title, runtime, format, plot, DATE_FORMAT(released_at, \'%Y-%m-%dT%TZ\') as released_at FROM movie");
+
+    await mysql.end();
+
+    return results;
   }
 
-  public getMoviePremieres(): any[] {
-    return [movie1, movie2];
+  public async getMoviePremieres(): P<any[]> {
+    const results = await mysql.query("SELECT id, title, runtime, format, plot, DATE_FORMAT(released_at, \'%Y-%m-%dT%TZ\') as released_at FROM movie");
+    console.log(results);
+    await mysql.end();
+
+    return results;
   }
 
-  public getMovieById(id: string): any {
-    const movie = Object.create(movie1);
-    movie.id = id;
-    return movie;
+  public async getMovieById(id: string): P<any> {
+    const results = await mysql.query(
+      "SELECT id, title, runtime, format, plot, DATE_FORMAT(released_at, \'%Y-%m-%dT%TZ\') as released_at FROM movie WHERE id = ?",
+      [id]
+    );
+
+    await mysql.end();
+
+    return results;
   }
 }

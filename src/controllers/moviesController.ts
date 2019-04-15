@@ -14,14 +14,14 @@ export class MoviesController {
   }
 
   public async getAllMovies(req: Request, res: Response): P<any> {
-    const movies = this.repo.getAllMovies();
+    const movies = await this.repo.getAllMovies();
     debug.log("movies: ", movies);
     const serializedMovies = movieSerializer.serialize(movies);
     res.send(serializedMovies);
   }
 
   public async getMoviePremieres(req: Request, res: Response): P<any> {
-    const movies = this.repo.getMoviePremieres();
+    const movies = await this.repo.getMoviePremieres();
     debug.log("movies: ", movies);
     const serializedMovies = movieSerializer.serialize(movies);
     res.send(serializedMovies);
@@ -29,8 +29,13 @@ export class MoviesController {
 
   public async getMovieById(req: Request, res: Response): P<any> {
     const id = req.swagger.params.id.value;
-    const movie = this.repo.getMovieById(id);
-    const serializedMovie = movieSerializer.serialize([movie]);
+    const movies = await this.repo.getMovieById(id);
+
+    if (movies.length === 0) {
+      res.status(404).send("Sorry can't find that!!");
+    }
+
+    const serializedMovie = movieSerializer.serialize(movies);
     debug.log("movie: ", serializedMovie);
     res.send(serializedMovie);
   }
