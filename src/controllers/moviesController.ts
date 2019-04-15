@@ -20,9 +20,16 @@ export class MoviesController {
     res.send(serializedMovies);
   }
 
-  public async getMovie(req: Request, res: Response): P<any> {
+  public async getMoviePremieres(req: Request, res: Response): P<any> {
+    const movies = this.repo.getMoviePremieres();
+    debug.log("movies: ", movies);
+    const serializedMovies = movieSerializer.serialize(movies);
+    res.send(serializedMovies);
+  }
+
+  public async getMovieById(req: Request, res: Response): P<any> {
     const id = req.swagger.params.id.value;
-    const movie = this.repo.getMovie(id);
+    const movie = this.repo.getMovieById(id);
     const serializedMovie = movieSerializer.serialize([movie]);
     debug.log("movie: ", serializedMovie);
     res.send(serializedMovie);

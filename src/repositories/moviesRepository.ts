@@ -25,7 +25,11 @@ export class MovieRepository {
     return [movie1, movie2];
   }
 
-  public getMovie(id: string): any {
+  public getMoviePremieres(): any[] {
+    return [movie1, movie2];
+  }
+
+  public getMovieById(id: string): any {
     const movie = Object.create(movie1);
     movie.id = id;
     return movie;

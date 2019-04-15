@@ -26,6 +26,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /movies/premieres:
+    get:
+      x-swagger-router-controller: moviesRoute
+      operationId: getMoviePremieres
+      tags:
+        - /movies
+      description: >-
+        get movie list
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movies'
+        default:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /movies/{id}:
     get:
       x-swagger-router-controller: moviesRoute
