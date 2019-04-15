@@ -8,7 +8,7 @@ paths:
   /movies:
     get:
       x-swagger-router-controller: moviesRoute
-      operationId: moviesGet
+      operationId: getAllMovies
       tags:
         - /movies
       description: >-
@@ -29,7 +29,7 @@ paths:
   /movies/{id}:
     get:
       x-swagger-router-controller: moviesRoute
-      operationId: movieGet
+      operationId: getMovie
       tags:
         - /movies
       description: >-

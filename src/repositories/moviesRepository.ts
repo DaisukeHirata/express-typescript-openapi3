@@ -3,7 +3,7 @@
 // const debug = new TDebug("app:src:repositories:movies");
 
 const movie1 = {
-  id: 1,
+  id: "1",
   title: "Assasins Creed",
   runtime: 115,
   format: "IMAX",
@@ -12,7 +12,7 @@ const movie1 = {
 };
 
 const movie2 = {
-  id: 2,
+  id: "2",
   title: "Assasins Creed 2",
   runtime: 116,
   format: "IMAX MAX",
@@ -21,12 +21,13 @@ const movie2 = {
 };
 
 export class MovieRepository {
-  public getMovies(): any[] {
+  public getAllMovies(): any[] {
     return [movie1, movie2];
   }
 
-  public getMovie(id: number): any {
-    movie1.id = id;
-    return movie1;
+  public getMovie(id: string): any {
+    const movie = Object.create(movie1);
+    movie.id = id;
+    return movie;
   }
 }

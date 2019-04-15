@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getHelloWorld, postHelloWorld } from "../controllers/hello";
+import { getHelloWorld, postHelloWorld } from "../controllers/helloController";
 import { asyncHandler } from "../lib/asyncHandler";
 
 export const helloWorldGet = Router().use("/", asyncHandler(getHelloWorld, "helloWorldGet"));

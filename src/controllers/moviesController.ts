@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import * as P from "bluebird";
 import { TDebug } from "../log";
-import { movieSerializer } from "../serializers/movies";
-import { MovieRepository } from "../repositories/movies";
+import { movieSerializer } from "../serializers/moviesSerializer";
+import { MovieRepository } from "../repositories/moviesRepository";
 
 const debug = new TDebug("app:src:controllers:movies");
 
@@ -13,8 +13,8 @@ export class MoviesController {
     this.repo = new MovieRepository();
   }
 
-  public async getMovies(req: Request, res: Response): P<any> {
-    const movies = this.repo.getMovies();
+  public async getAllMovies(req: Request, res: Response): P<any> {
+    const movies = this.repo.getAllMovies();
     debug.log("movies: ", movies);
     const serializedMovies = movieSerializer.serialize(movies);
     res.send(serializedMovies);
