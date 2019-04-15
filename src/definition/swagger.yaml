@@ -25,7 +25,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Errors'
   /movies/premieres:
     get:
       x-swagger-router-controller: moviesRoute
@@ -46,7 +46,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Errors'
   /movies/{id}:
     get:
       x-swagger-router-controller: moviesRoute
@@ -74,7 +74,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Errors'
   /uploadImage:
     post:
       x-swagger-router-controller: uploadImageRoute
@@ -103,7 +103,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Errors'
   /hello:
     post:
       x-swagger-router-controller: helloWorldRoute
@@ -132,7 +132,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Errors'
     get:
       x-swagger-router-controller: helloWorldRoute
       operationId: helloWorldGet
@@ -159,7 +159,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Errors'
   /goodbye/{postId}:
     post:
       x-swagger-router-controller: goodbyeWorldRoute
@@ -187,7 +187,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Errors'
 
 
 
@@ -196,12 +196,26 @@ servers:
   - url: '/api'
 components:
   schemas:
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
     Error:
       properties:
-        message:
+        code:
           type: string
+        title:
+          type: string
+        detail:
+          type: string
+        source:
+          type: object
       required:
-        - message
+        - code
+        - title
     Movies:
       type: object
       properties:
