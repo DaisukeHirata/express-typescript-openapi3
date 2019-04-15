@@ -39,5 +39,9 @@ initSwaggerMiddlware(app, resolve(__dirname), () => {
       res.json(errMsg);
     }
   });
-
 });
+
+export class Application {
+
+}
+

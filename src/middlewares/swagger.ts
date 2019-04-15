@@ -27,8 +27,8 @@ export const initSwaggerMiddlware = function (app: express.Express, basePath: st
         router: true,
         validator: true,
         docs: {
-            // swaggerUi: "/docs",
-            // swaggerUiPrefix: "",
+            swaggerUi: "/docs",
+            swaggerUiPrefix: "",
             apiDocs: "/api-docs",
             apiDocsPrefix: ""
         }
