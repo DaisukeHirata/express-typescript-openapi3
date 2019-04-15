@@ -32,7 +32,10 @@ export class MoviesController {
     const movies = await this.repo.getMovieById(id);
 
     if (movies.length === 0) {
-      res.status(404).send("Sorry can't find that!!");
+      res.status(404).send({
+        "message": "Sorry, can not find that!!"
+      });
+      return;
     }
 
     const serializedMovie = movieSerializer.serialize(movies);
