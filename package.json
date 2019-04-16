@@ -66,7 +66,8 @@
     "updateSwagger": "node scripts/updateSwagger.js",
     "updateAll": "node scripts/updateCode.js",
     "testOne": "TS_NODE_CACHE=false ./node_modules/.bin/mocha --timeout 10000 --compilers ts:ts-node/register ",
-    "deploy": "npm run build:live && serverless deploy"
+    "deploy": "npm run build:live && serverless deploy",
+    "chrome-debug": "node --debug-brk --inspect --require ts-node/register src/index.ts"
   },
   "engines": {
     "node": ">6.11.0"
