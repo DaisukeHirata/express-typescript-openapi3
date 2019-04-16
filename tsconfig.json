@@ -1,9 +1,14 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "lib": ["es6"],
     "module": "commonjs",
     "outDir": "dist",
-    "sourceMap": true
+    "sourceMap": true,
+    "types": ["reflect-metadata"],
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "include": [
     "src/**/*.ts",
@@ -13,4 +18,4 @@
     "test",
     "node_modules"
   ]
-}
+} 

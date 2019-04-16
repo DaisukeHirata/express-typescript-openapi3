@@ -1,12 +1,14 @@
 import { Request, Response, Router } from "express";
 import { MoviesController } from "../controllers/moviesController";
-import { MovieRepository } from "../repositories/moviesRepository";
 import { asyncHandler } from "../lib/asyncHandler";
+import { TYPES } from "../inversify/types";
+import { IMovieRepository } from "../inversify/interfaces";
+import * as env from "../env";
+import { Container } from "inversify";
 
-const repo = new MovieRepository();
+const myContainer = env.get("DIContainer") as Container;
+const repo = myContainer.get<IMovieRepository>(TYPES.IMovieRepository);
 const moviesController = new MoviesController(repo);
-
-console.log(module.parent.exports);
 
 export const getAllMovies = Router().use("/", asyncHandler((req: Request, res: Response) => moviesController.getAllMovies(req, res), "getAllMovies"));
 export const getMoviePremieres = Router().use("/", asyncHandler((req: Request, res: Response) => moviesController.getMoviePremieres(req, res), "getMoviePremieres"));

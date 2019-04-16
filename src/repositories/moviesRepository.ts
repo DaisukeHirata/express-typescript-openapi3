@@ -2,6 +2,9 @@
 // const debug = new TDebug("app:src:repositories:movies");
 import * as P from "bluebird";
 import * as serverlessMysql from "serverless-mysql";
+import "reflect-metadata";
+import { injectable } from "inversify";
+import { IMovieRepository } from "../inversify/interfaces";
 
 // should be configurable
 const mysql = serverlessMysql({
@@ -14,7 +17,8 @@ const mysql = serverlessMysql({
   }
 });
 
-export class MovieRepository {
+@injectable()
+export class MovieRepository implements IMovieRepository {
   public async getAllMovies(): P<any[]> {
     const results = await mysql.query("SELECT id, title, runtime, format, plot, DATE_FORMAT(released_at, \'%Y-%m-%dT%TZ\') as released_at FROM movie");
 

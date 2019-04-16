@@ -2,14 +2,14 @@ import { Request, Response } from "express";
 import * as P from "bluebird";
 import { TDebug } from "../log";
 import { movieSerializer } from "../serializers/moviesSerializer";
-import { MovieRepository } from "../repositories/moviesRepository";
+import { IMovieRepository } from "../inversify/interfaces";
 
 const debug = new TDebug("app:src:controllers:movies");
 
 export class MoviesController {
-  private repo: MovieRepository;
+  private repo: IMovieRepository;
 
-  constructor(repo: MovieRepository) {
+  constructor(repo: IMovieRepository) {
     this.repo = repo;
   }
 

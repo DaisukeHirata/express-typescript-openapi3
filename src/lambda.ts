@@ -2,7 +2,8 @@ import * as sourceMapSupport from "source-map-support";
 import { createServer, proxy } from "aws-serverless-express";
 import { eventContext } from "aws-serverless-express/middleware";
 import { Context } from "aws-lambda";
-import app from "./application";
+import { initApp } from "./application";
+import { myContainer } from "./inversify/inversify.config";
 
 // NOTE: If you get ERR_CONTENT_DECODING_FAILED in your browser, this is likely
 // due to a compressed response (e.g. gzip) which has not been handled correctly
@@ -29,6 +30,7 @@ const binaryMimeTypes: string[] = [
 ];
 
 sourceMapSupport.install();
+const app = initApp(myContainer);
 app.use(eventContext);
 const server = createServer(app, undefined, binaryMimeTypes);
 
