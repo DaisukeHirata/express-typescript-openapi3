@@ -37,13 +37,13 @@ npm install
 npm start
 ```
 
-  Navigate to `http://localhost:8001`
+  Navigate to `https://localhost`
 
 - API Document endpoints
 
-  swagger Spec Endpoint : `http://localhost:8001/api-docs`
+  swagger Spec Endpoint : `https://localhost/api-docs`
 
-  swagger-ui  Endpoint : `http://localhost:8001/docs`
+  swagger-ui  Endpoint : `https://localhost/docs`
 
 
 # TypeScript + Node 

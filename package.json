@@ -22,6 +22,7 @@
     "prom-client": "11.0.0",
     "serverless-mysql": "^1.2.1",
     "source-map-support": "^0.5.12",
+    "spdy": "^4.0.0",
     "winston": "^2.4.0"
   },
   "devDependencies": {
@@ -68,7 +69,7 @@
     "testOne": "TS_NODE_CACHE=false ./node_modules/.bin/mocha --timeout 10000 --compilers ts:ts-node/register ",
     "deploy": "npm run build:live && serverless deploy",
     "chrome-debug": "node --debug-brk --inspect --require ts-node/register src/index.ts",
-    "integration-test": "./node_modules/.bin/mocha integration-test/index.js",
+    "integration-test": "NODE_TLS_REJECT_UNAUTHORIZED=0 ./node_modules/.bin/mocha integration-test/index.js",
     "jmeter": "rm -f integration-test/log.jtl && rm -rf integration-test/report && jmeter -n -t integration-test/movie-service-api.jmeter.test.jmx -l integration-test/log.jtl -e -o integration-test/report"
   },
   "engines": {
