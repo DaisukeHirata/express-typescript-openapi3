@@ -1,10 +1,10 @@
 import { Request, Response, Router } from "express";
+import { Container } from "inversify";
 import { MoviesController } from "../controllers/moviesController";
 import { asyncHandler } from "../lib/asyncHandler";
 import { TYPES } from "../inversify/types";
 import { IMovieRepository } from "../inversify/interfaces";
 import * as env from "../env";
-import { Container } from "inversify";
 
 const myContainer = env.get("DIContainer") as Container;
 const repo = myContainer.get<IMovieRepository>(TYPES.IMovieRepository);

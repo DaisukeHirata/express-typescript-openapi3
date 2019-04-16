@@ -1,4 +1,3 @@
-
 exports.get = get;
 exports.set = set;
 const def = {

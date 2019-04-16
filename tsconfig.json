@@ -12,10 +12,10 @@
   },
   "include": [
     "src/**/*.ts",
+    "test/**/*.ts",
     "package.json"
   ],
   "exclude": [
-    "test",
     "node_modules"
   ]
 } 
