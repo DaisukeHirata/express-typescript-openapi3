@@ -1,7 +1,7 @@
 {
   "events": {
-    "restart": "kill-port 8001",
-    "crash": "kill-port 8001"
+    "restart": "kill-port 443",
+    "crash": "kill-port 443"
   },
  "delay": "0"
 }
