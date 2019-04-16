@@ -67,7 +67,9 @@
     "updateAll": "node scripts/updateCode.js",
     "testOne": "TS_NODE_CACHE=false ./node_modules/.bin/mocha --timeout 10000 --compilers ts:ts-node/register ",
     "deploy": "npm run build:live && serverless deploy",
-    "chrome-debug": "node --debug-brk --inspect --require ts-node/register src/index.ts"
+    "chrome-debug": "node --debug-brk --inspect --require ts-node/register src/index.ts",
+    "integration-test": "./node_modules/.bin/mocha integration-test/index.js",
+    "jmeter": "rm -f integration-test/log.jtl && rm -rf integration-test/report && jmeter -n -t integration-test/movie-service-api.jmeter.test.jmx -l integration-test/log.jtl -e -o integration-test/report"
   },
   "engines": {
     "node": ">6.11.0"
