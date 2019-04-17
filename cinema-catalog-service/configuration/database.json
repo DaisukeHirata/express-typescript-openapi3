@@ -8,6 +8,6 @@
       "driver": "mysql", 
       "user": "foo",
       "password": "bar",
-      "database": "cinema"
+      "database": "cinema_catalog"
   }
 } 

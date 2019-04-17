@@ -22,7 +22,7 @@ exports.up = function(db) {
     format: "string",
     plot: "string",
     released_at: "datetime"
-  });  
+  });
   return null;
 };
 
