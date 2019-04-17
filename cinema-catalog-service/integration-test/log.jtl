@@ -1,0 +1,61 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1555423297279,57,Fetch all items,200,OK,Item API Perf Test 1-1,text,true,,1057,128,1,1,http://localhost:8001/api/movies,57,0,33
+1555423297339,2,Fetch all premieres,400,Bad Request,Item API Perf Test 1-1,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,2,0,0
+1555423297342,9,Retrieve item based on Id,200,OK,Item API Perf Test 1-1,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,9,0,0
+1555423297362,10,Fetch all items,200,OK,Item API Perf Test 1-1,text,true,,1057,128,1,1,http://localhost:8001/api/movies,10,0,0
+1555423297373,3,Fetch all premieres,400,Bad Request,Item API Perf Test 1-1,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,3,0,0
+1555423297376,11,Retrieve item based on Id,200,OK,Item API Perf Test 1-1,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,11,0,0
+1555423297387,10,Fetch all items,200,OK,Item API Perf Test 1-1,text,true,,1057,128,1,1,http://localhost:8001/api/movies,10,0,1
+1555423297398,2,Fetch all premieres,400,Bad Request,Item API Perf Test 1-1,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,2,0,0
+1555423297401,10,Retrieve item based on Id,200,OK,Item API Perf Test 1-1,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,10,0,0
+1555423297412,13,Fetch all items,200,OK,Item API Perf Test 1-1,text,true,,1057,128,1,1,http://localhost:8001/api/movies,13,0,1
+1555423297426,2,Fetch all premieres,400,Bad Request,Item API Perf Test 1-1,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,2,0,0
+1555423297429,10,Retrieve item based on Id,200,OK,Item API Perf Test 1-1,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,10,0,0
+1555423297440,10,Fetch all items,200,OK,Item API Perf Test 1-1,text,true,,1057,128,1,1,http://localhost:8001/api/movies,10,0,1
+1555423297451,2,Fetch all premieres,400,Bad Request,Item API Perf Test 1-1,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,2,0,0
+1555423297453,10,Retrieve item based on Id,200,OK,Item API Perf Test 1-1,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,10,0,0
+1555423297464,12,Fetch all items,200,OK,Item API Perf Test 1-1,text,true,,1057,128,1,1,http://localhost:8001/api/movies,12,0,1
+1555423297477,2,Fetch all premieres,400,Bad Request,Item API Perf Test 1-1,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,2,0,0
+1555423297480,10,Retrieve item based on Id,200,OK,Item API Perf Test 1-1,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,10,0,0
+1555423297491,11,Fetch all items,200,OK,Item API Perf Test 1-1,text,true,,1057,128,1,1,http://localhost:8001/api/movies,11,0,0
+1555423297503,2,Fetch all premieres,400,Bad Request,Item API Perf Test 1-1,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,2,0,0
+1555423297505,12,Retrieve item based on Id,200,OK,Item API Perf Test 1-1,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,12,0,0
+1555423297518,11,Fetch all items,200,OK,Item API Perf Test 1-1,text,true,,1057,128,1,1,http://localhost:8001/api/movies,11,0,0
+1555423297530,2,Fetch all premieres,400,Bad Request,Item API Perf Test 1-1,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,2,0,0
+1555423297533,11,Retrieve item based on Id,200,OK,Item API Perf Test 1-1,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,11,0,0
+1555423297544,15,Fetch all items,200,OK,Item API Perf Test 1-1,text,true,,1057,128,1,1,http://localhost:8001/api/movies,15,0,1
+1555423297560,3,Fetch all premieres,400,Bad Request,Item API Perf Test 1-1,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,3,0,0
+1555423297563,10,Retrieve item based on Id,200,OK,Item API Perf Test 1-1,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,10,0,0
+1555423297573,11,Fetch all items,200,OK,Item API Perf Test 1-1,text,true,,1057,128,1,1,http://localhost:8001/api/movies,11,0,1
+1555423297584,3,Fetch all premieres,400,Bad Request,Item API Perf Test 1-1,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,2,0,0
+1555423297587,10,Retrieve item based on Id,200,OK,Item API Perf Test 1-1,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,10,0,0
+1555423298159,11,Fetch all items,200,OK,Item API Perf Test 1-2,text,true,,1057,128,1,1,http://localhost:8001/api/movies,11,0,0
+1555423298171,2,Fetch all premieres,400,Bad Request,Item API Perf Test 1-2,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,2,0,0
+1555423298173,8,Retrieve item based on Id,200,OK,Item API Perf Test 1-2,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,8,0,0
+1555423298182,9,Fetch all items,200,OK,Item API Perf Test 1-2,text,true,,1057,128,1,1,http://localhost:8001/api/movies,9,0,1
+1555423298191,2,Fetch all premieres,400,Bad Request,Item API Perf Test 1-2,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,2,0,0
+1555423298193,12,Retrieve item based on Id,200,OK,Item API Perf Test 1-2,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,12,0,0
+1555423298205,13,Fetch all items,200,OK,Item API Perf Test 1-2,text,true,,1057,128,1,1,http://localhost:8001/api/movies,13,0,1
+1555423298218,2,Fetch all premieres,400,Bad Request,Item API Perf Test 1-2,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,2,0,0
+1555423298221,8,Retrieve item based on Id,200,OK,Item API Perf Test 1-2,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,8,0,0
+1555423298230,11,Fetch all items,200,OK,Item API Perf Test 1-2,text,true,,1057,128,1,1,http://localhost:8001/api/movies,11,0,1
+1555423298241,2,Fetch all premieres,400,Bad Request,Item API Perf Test 1-2,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,2,0,0
+1555423298243,10,Retrieve item based on Id,200,OK,Item API Perf Test 1-2,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,10,0,0
+1555423298253,9,Fetch all items,200,OK,Item API Perf Test 1-2,text,true,,1057,128,1,1,http://localhost:8001/api/movies,9,0,1
+1555423298263,2,Fetch all premieres,400,Bad Request,Item API Perf Test 1-2,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,2,0,0
+1555423298265,10,Retrieve item based on Id,200,OK,Item API Perf Test 1-2,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,10,0,0
+1555423298275,10,Fetch all items,200,OK,Item API Perf Test 1-2,text,true,,1057,128,1,1,http://localhost:8001/api/movies,10,0,1
+1555423298285,2,Fetch all premieres,400,Bad Request,Item API Perf Test 1-2,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,1,0,0
+1555423298287,9,Retrieve item based on Id,200,OK,Item API Perf Test 1-2,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,9,0,0
+1555423298297,10,Fetch all items,200,OK,Item API Perf Test 1-2,text,true,,1057,128,1,1,http://localhost:8001/api/movies,10,0,0
+1555423298307,2,Fetch all premieres,400,Bad Request,Item API Perf Test 1-2,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,2,0,0
+1555423298309,13,Retrieve item based on Id,200,OK,Item API Perf Test 1-2,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,13,0,0
+1555423298322,14,Fetch all items,200,OK,Item API Perf Test 1-2,text,true,,1057,128,1,1,http://localhost:8001/api/movies,14,0,1
+1555423298337,2,Fetch all premieres,400,Bad Request,Item API Perf Test 1-2,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,1,0,0
+1555423298339,8,Retrieve item based on Id,200,OK,Item API Perf Test 1-2,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,8,0,0
+1555423298348,9,Fetch all items,200,OK,Item API Perf Test 1-2,text,true,,1057,128,1,1,http://localhost:8001/api/movies,9,0,1
+1555423298357,6,Fetch all premieres,400,Bad Request,Item API Perf Test 1-2,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,6,0,0
+1555423298364,10,Retrieve item based on Id,200,OK,Item API Perf Test 1-2,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,10,0,0
+1555423298375,10,Fetch all items,200,OK,Item API Perf Test 1-2,text,true,,1057,128,1,1,http://localhost:8001/api/movies,9,0,0
+1555423298385,2,Fetch all premieres,400,Bad Request,Item API Perf Test 1-2,text,false,,677,137,1,1,http://localhost:8001/api/movies/premiers,2,0,0
+1555423298388,7,Retrieve item based on Id,200,OK,Item API Perf Test 1-2,text,true,,639,130,1,1,http://localhost:8001/api/movies/1,7,0,0
