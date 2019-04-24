@@ -20,6 +20,13 @@ paths:
         - /cinemas
       description: >-
         we already have the location defined to display the cinemas
+      parameters:
+        - name: city_id
+          in: query
+          description: id of city
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Successful request.
@@ -64,7 +71,7 @@ paths:
   /cinemas/{cinema_id}/{movie_id}:
     get:
       x-swagger-router-controller: cinemasRoute
-      operationId: getCinemaScheduleByMovie
+      operationId: getCinemaSchedulesByMovie
       tags:
         - /cinemas
       description: >-

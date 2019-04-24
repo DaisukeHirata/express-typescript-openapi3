@@ -10,7 +10,7 @@ import { IMovieRepository } from "../inversify/interfaces";
 const mysql = serverlessMysql({
   config: {
     host     : "localhost",
-    database : "cinema",
+    database : "cinema_catalog",
     user     : "foo",
     password : "bar",
     dateStrings: true
@@ -39,6 +39,17 @@ export class MovieRepository implements IMovieRepository {
   public async getMovieById(id: string): P<any> {
     const results = await mysql.query(
       "SELECT id, title, runtime, format, plot, DATE_FORMAT(released_at, \'%Y-%m-%dT%TZ\') as released_at FROM movie WHERE id = ?",
+      [id]
+    );
+
+    await mysql.end();
+
+    return results;
+  }
+
+  public async getCinemasByCity(id: string): P<any> {
+    const results = await mysql.query(
+      "SELECT id, name FROM cinema WHERE city_id = ?",
       [id]
     );
 
