@@ -1,4 +1,4 @@
-# Nodejs FES Template
+# Nodejs Template
 
 This version includes support for OpenAPI 3.0
 

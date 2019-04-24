@@ -1,62 +1,82 @@
 openapi: 3.0.0
 info:
-  title: Cinemas API
-  description: Cinemas API.
+  title: Cinema Catalog Service
+  description: >-
+    - we need a city for displaying the available cinemas.
+
+    - we need the cinemas to display the movie premieres.
+
+    - we need the movie premieres and display the schedules.
+
+    - we need the schedules to see if there are seats available for booking.
   version: '1.0'
 
 paths:
-  /movies:
+  /cinemas:
     get:
-      x-swagger-router-controller: moviesRoute
-      operationId: getAllMovies
+      x-swagger-router-controller: cinemasRoute
+      operationId: getCinemasByCity
       tags:
-        - /movies
+        - /cinemas
       description: >-
-        get movie list
+        we already have the location defined to display the cinemas
       responses:
         '200':
           description: Successful request.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Movies'
+                $ref: '#/components/schemas/Cinemas'
         default:
           description: Invalid request.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorSummary'
-  /movies/premieres:
+  /cinemas/{cinema_id}:
     get:
-      x-swagger-router-controller: moviesRoute
-      operationId: getMoviePremieres
+      x-swagger-router-controller: cinemasRoute
+      operationId: getCinemaById
       tags:
-        - /movies
+        - /cinemas
       description: >-
-        get movie list
-      responses:
-        '200':
-          description: Successful request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Movies'
-        default:
-          description: Invalid request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorSummary'
-  /movies/{id}:
-    get:
-      x-swagger-router-controller: moviesRoute
-      operationId: getMovie
-      tags:
-        - /movies
-      description: >-
-        get a movie
+        we have selected the cinema to display the movie premieres
       parameters:
-        - name: id
+        - name: cinema_id
+          in: path
+          description: id of a cinema
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CinemaPremieres'
+        default:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorSummary'
+  /cinemas/{cinema_id}/{movie_id}:
+    get:
+      x-swagger-router-controller: cinemasRoute
+      operationId: getCinemaScheduleByMovie
+      tags:
+        - /cinemas
+      description: >-
+        we have selceted a movie to display the schedules
+      parameters:
+        - name: cinema_id
+          in: path
+          description: id of a cinema
+          required: true
+          schema:
+            type: integer
+        - name: movie_id
           in: path
           description: id of a movie
           required: true
@@ -68,130 +88,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Movies'
+                $ref: '#/components/schemas/CinemaMovieSchedules'
         default:
           description: Invalid request.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorSummary'
-  /uploadImage:
-    post:
-      x-swagger-router-controller: uploadImageRoute
-      operationId: uploadImagePost
-      tags:
-        - /uploadImage
-      description: >-
-        upload Image file
-      requestBody:
-        description: Callback payload
-        x-name: uploadImage
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/UploadImage'
-      responses:
-        '200':
-          description: Successful request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Hello'
-        default:
-          description: Invalid request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorSummary'
-  /hello:
-    post:
-      x-swagger-router-controller: helloWorldRoute
-      operationId: helloWorldPost
-      tags:
-        - /hello
-      description: >-
-        Returns greeting.
-      requestBody:
-        description: Callback payload
-        x-name: pet
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Pet'
-      responses:
-        '200':
-          description: Successful request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Hello'
-        default:
-          description: Invalid request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorSummary'
-    get:
-      x-swagger-router-controller: helloWorldRoute
-      operationId: helloWorldGet
-      tags:
-        - /hello
-      description: >-
-        Returns greeting.
-      parameters:
-        - name: greeting
-          in: query
-          description: Name of greeting
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Hello'
-        default:
-          description: Invalid request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorSummary'
-  /goodbye/{postId}:
-    post:
-      x-swagger-router-controller: goodbyeWorldRoute
-      operationId: goodbyeWorldPost
-      tags:
-        - /goodbye
-      description: >-
-        Returns greeting.
-      parameters:
-        - name: postId
-          in: path
-          description: id of a post
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Successful request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Goodbye'
-        default:
-          description: Invalid request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorSummary'
-
-
-
-
 servers:
   - url: '/api'
 components:
@@ -219,15 +122,126 @@ components:
           type: string
         path:
           type: string
-    Movies:
+    Cinemas:
       type: object
       properties:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/Movie'
+            $ref: '#/components/schemas/CinemaData'
       required:
         - data
+    CinemaData:
+      type: object
+      properties:
+        type:
+          type: string
+          example: "cinemas" # always cinemas
+        id:
+          type: string
+          example: "588ac3a02d029a6d15d0b5c4"
+        attributes:
+          $ref: '#/components/schemas/CinemaAttributes'
+      required:
+        - type
+        - id
+        - attributes
+    CinemaAttributes:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Plaza Morelia"
+      required:
+        - name
+    CinemaPremieres:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CinemaPremiereData'
+        include:
+          type: array
+          items:
+              $ref: '#/components/schemas/Movie'
+      required:
+        - data
+    CinemaPremiereData:
+      type: object
+      properties:
+        type:
+          type: string
+          example: "cinemas" # always cinemas
+        id:
+          type: string
+          example: "588ac3a02d029a6d15d0b5c4"
+        attributes:
+          $ref: '#/components/schemas/CinemaAttributes'
+        relationships:
+          type: object
+          properties:
+            movies:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/MovieRelationship'
+      required:
+        - type
+        - id
+        - attributes
+        - relationships
+    CinemaMovieSchedules:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CinemaMovieScheduleData'
+        includes:
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/Movie'
+              - $ref: '#/components/schemas/Room'
+      required:
+        - data
+        - includes
+    CinemaMovieScheduleData:
+      type: object
+      properties:
+        type:
+          type: string
+          example: "cinemas" # always cinemas
+        id:
+          type: string
+          example: "588ac3a02d029a6d15d0b5c4"
+        attributes:
+          $ref: '#/components/schemas/CinemaAttributes'
+        relationships:
+          type: object
+          properties:
+            movies:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/MovieRelationship'
+            rooms:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/RoomRelationship'
+      required:
+        - type
+        - id
+        - attributes
+        - relationships
     Movie:
       type: object
       properties:
@@ -266,41 +280,69 @@ components:
         - title
         - runtime
         - released-at
-    UploadImage:
+    MovieRelationship:
       type: object
       properties:
-        file: # <- this is the form field name that needs to be present in the POST payload 
+        type:
           type: string
-          format: binary
-          description: a binary file uploaded via openAPI spec
+          example: "movies" # always movies
         id:
-          type: string # it's a form field, so will always be a string 
-        name:
           type: string
+          example: "1"
       required:
+        - type
         - id
-        - name
-    Hello:
-      properties:
-        msg:
-          type: string
-      required:
-        - msg
-    Pet:
+    Room:
       type: object
-      discriminator:
-        propertyName: petType
+      properties:
+        type:
+          type: string
+          example: "rooms" # always schedules
+        id:
+          type: string
+          example: "588ac3a02d029a6d15d0b5c4"
+        attributes:
+          $ref: '#/components/schemas/RoomAttributes'
+      required:
+        - type
+        - id
+        - attributes
+    RoomAttributes:
+      type: object
       properties:
         name:
           type: string
-        petType:
-          type: string
+          example: "2.0"
+        capacity:
+          type: number
+          example: 100
+        schedules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Schedule'
       required:
         - name
-        - petType
-    Goodbye:
+        - schedules
+    RoomRelationship:
+      type: object
       properties:
-        msg:
+        type:
           type: string
+          example: "rooms" # always rooms
+        id:
+          type: string
+          example: "688ac3a02d029a6d15d0b5c7"
       required:
-        - msg
+        - type
+        - id
+    Schedule:
+      type: object
+      properties:
+        time:
+          type: string
+          example: "10:15"
+        price:
+          type: number
+          example: 90
+      required:
+        - time
