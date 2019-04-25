@@ -22,16 +22,12 @@ const mysql = serverlessMysql({
 // should be configurable
 const host = "http://localhost:8002/";
 
+// should have error handling, handling response status, should be a part of utility package
 const http = async (request: RequestInfo): Promise<any> => {
-  return new Promise(resolve => {
-    fetch(request)
-      .then(response => response.json())
-      .then(body => {
-        resolve(body);
-      });
-  });
+  const response = await fetch(request);
+  const json = await response.json();
+  return json;
 };
-
 
 @injectable()
 export class CinemaRepository implements ICinemaRepository {
