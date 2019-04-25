@@ -16,3 +16,5 @@ export const cinemaPremieresByIdSerializer = new jsonapiSerializer.Serializer("c
     return (record && record.type) ? record.type : attribute;
   }
 });
+
+export const cinemaDeserializer =  new jsonapiSerializer.Deserializer();

@@ -10,7 +10,7 @@ import { IMovieRepository } from "../inversify/interfaces";
 const mysql = serverlessMysql({
   config: {
     host     : "localhost",
-    database : "cinema",
+    database : "movie",
     user     : "foo",
     password : "bar",
     dateStrings: true

@@ -5,6 +5,8 @@ import * as serverlessMysql from "serverless-mysql";
 import "reflect-metadata";
 import { injectable } from "inversify";
 import { ICinemaRepository } from "../inversify/interfaces";
+import fetch from "node-fetch";
+import { cinemaDeserializer } from "../serializers/cinemasSerializer";
 
 // should be configurable
 const mysql = serverlessMysql({
@@ -16,6 +18,20 @@ const mysql = serverlessMysql({
     dateStrings: true
   }
 });
+
+// should be configurable
+const host = "http://localhost:8002/";
+
+const http = async (request: RequestInfo): Promise<any> => {
+  return new Promise(resolve => {
+    fetch(request)
+      .then(response => response.json())
+      .then(body => {
+        resolve(body);
+      });
+  });
+};
+
 
 @injectable()
 export class CinemaRepository implements ICinemaRepository {
@@ -59,33 +75,19 @@ export class CinemaRepository implements ICinemaRepository {
   }
 
   public async getCinemaById(id: string): P<any> {
-    const testCinemaPremieresById = {
-      "id": "588ac3a02d029a6d15d0b5c4",
-      "name": "Plaza Morelia",
-      "movies": [
-        {
-          id: "1",
-          title: "Assasins Creed",
-          runtime: 115,
-          plot: "Lorem ipsum dolor sit amet",
-          poster: "link to poster..."
-        },
-        {
-          id: "2",
-          title: "Aliados",
-          runtime: 124,
-          plot: "Lorem ipsum dolor sit amet",
-          poster: "link to poster..."
-        },
-        {
-          id: "3",
-          title: "xXx: Reactivado",
-          runtime: 107,
-          plot: "Lorem ipsum dolor sit amet",
-          poster: "link to poster..."
-        }
-      ]
-    };
-    return P.props(testCinemaPremieresById);
+    const results = await mysql.query(
+      "SELECT id, name FROM cinema WHERE id = ?",
+      [id]
+    );
+    await mysql.end();
+
+    const premieres = await http(host + "api/movies/premieres");
+    const deserializedPremieres = await cinemaDeserializer.deserialize(premieres);
+
+    const cinemas = Object.assign({}, results[0], {
+      movies: deserializedPremieres
+    });
+
+    return P.props(cinemas);
   }
 }
