@@ -86,4 +86,51 @@ export class CinemaRepository implements ICinemaRepository {
 
     return P.props(cinemas);
   }
+
+  public async getCinemaScheduleByMovie(cinemaId: string, movieId: string): P<any> {
+    const cinema = await mysql.query(
+      "SELECT id, name FROM cinema WHERE id = ?",
+      [cinemaId]
+    );
+    await mysql.end();
+
+    const rooms = await mysql.query(
+      `SELECT cinemaRoom.id, name, capacity, format, time, price
+         FROM cinemaRoom
+   INNER JOIN schedule
+           ON cinemaRoom.id = schedule.cinemaRoom_id
+        WHERE cinemaRoom.cinema_id = ?`,
+      [cinemaId]
+    );
+    await mysql.end();
+
+    // transform object array to nested object to reduce data redandancy
+    const nestedRooms = rooms.reduce((result, room) => {
+      const a = result.find(({id}) => id === room.id);
+      const { time, price } = room;
+      if (a) {
+        a.schedules.push({time, price});
+      } else {
+        result.push(
+          {
+            id: room.id,
+            name: room.name,
+            capacity: room.capacity,
+            schedules: [{time, price}]
+          }
+        );
+      }
+      return result;
+    }, []);
+
+    const movie = await http(host + "api/movies/" + movieId);
+    const deserializedMovie = await cinemaDeserializer.deserialize(movie);
+
+    const cinemaSchedules = Object.assign({}, cinema[0], {
+      movie: deserializedMovie,
+      rooms: nestedRooms
+    });
+
+    return P.all([cinemaSchedules]);
+  }
 }

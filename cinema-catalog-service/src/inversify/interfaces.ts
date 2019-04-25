@@ -6,4 +6,5 @@ export interface ICinemaRepository {
   getMovieById(id: string): P<any>;
   getCinemasByCity(id: string): P<any>;
   getCinemaById(id: string): P<any>;
+  getCinemaScheduleByMovie(cinemaId: string, movieId: string): P<any>;
 }

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import * as P from "bluebird";
 import { TDebug } from "../log";
-import { cinemaSerializer, cinemaPremieresByIdSerializer } from "../serializers/cinemasSerializer";
+import { cinemaSerializer, cinemaPremieresByIdSerializer, cinemaSchedulesSerializer } from "../serializers/cinemasSerializer";
 import { ICinemaRepository } from "../inversify/interfaces";
 
 const debug = new TDebug("app:src:controllers:movies");
@@ -73,5 +73,22 @@ export class CinemasController {
     const serializedCinemaPremieres = cinemaPremieresByIdSerializer.serialize(cinema);
     debug.log("cinema: ", serializedCinemaPremieres);
     res.send(serializedCinemaPremieres);
+  }
+
+  public async getCinemaScheduleByMovie(req: Request, res: Response): P<any> {
+    const cinemaId = req.swagger.params.cinema_id.value;
+    const movieId = req.swagger.params.movie_id.value;
+    const cinemaSchedule = await this.repo.getCinemaScheduleByMovie(cinemaId, movieId);
+
+    // if (cinemaSchedule.rooms.length === 0) {
+    //   res.status(404).send({
+    //     message: "Sorry, can not find that!!"
+    //   });
+    //   return;
+    // }
+
+    const serializedCinemaSchedules = cinemaSchedulesSerializer.serialize(cinemaSchedule);
+    debug.log("cinemaSchedule: ", serializedCinemaSchedules);
+    res.send(serializedCinemaSchedules);
   }
 }

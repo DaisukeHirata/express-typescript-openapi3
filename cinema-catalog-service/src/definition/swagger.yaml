@@ -82,7 +82,7 @@ paths:
           description: id of a cinema
           required: true
           schema:
-            type: integer
+            type: string
         - name: movie_id
           in: path
           description: id of a movie
@@ -205,7 +205,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CinemaMovieScheduleData'
-        includes:
+        included:
           type: array
           items:
             anyOf:
@@ -213,7 +213,7 @@ components:
               - $ref: '#/components/schemas/Room'
       required:
         - data
-        - includes
+        - included
     CinemaMovieScheduleData:
       type: object
       properties:
@@ -232,9 +232,7 @@ components:
               type: object
               properties:
                 data:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/MovieRelationship'
+                  $ref: '#/components/schemas/MovieRelationship'
             rooms:
               type: object
               properties:
@@ -283,8 +281,6 @@ components:
           example: '2018-12-01T00:00:00Z'
       required:
         - title
-        - runtime
-        - released-at
     MovieRelationship:
       type: object
       properties:

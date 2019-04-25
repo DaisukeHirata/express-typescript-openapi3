@@ -12,4 +12,4 @@ const cinemasController = new CinemasController(repo);
 
 export const getCinemasByCity = Router().use("/", asyncHandler((req: Request, res: Response) => cinemasController.getCinemasByCity(req, res), "getCinemasByCity"));
 export const getCinemaById = Router().use("/", asyncHandler((req: Request, res: Response) => cinemasController.getCinemaById(req, res), "getCinemaById"));
-export const getCinemaSchedulesByMovie = Router().use("/", asyncHandler((req: Request, res: Response) => cinemasController.getMovieById(req, res), "getCinemaSchedulesByMovie"));
+export const getCinemaSchedulesByMovie = Router().use("/", asyncHandler((req: Request, res: Response) => cinemasController.getCinemaScheduleByMovie(req, res), "getCinemaSchedulesByMovie"));
