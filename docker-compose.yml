@@ -1,0 +1,49 @@
+version: '3'
+volumes:
+    object-vol: # Volume to host s3 service data locally.
+        driver: 'local'
+    data-vol: # Volume to host db service data locally.
+        driver: 'local'
+services: 
+    db:
+        image: mysql:latest
+        ports:
+            - "3306:3306" # host:container
+        volumes:
+        - data-vol:/var/lib/postgresql/data
+        environment:
+            - MYSQL_ROOT_PASSWORD=mysql
+        container_name: db-cont
+
+    cinema-catalog-service:
+        build: ./cinema-catalog-service
+        links:
+            - db:db
+            - movies-service:movies-service
+            # [other container]:[alias in this container]
+            # this will create environment variables in the go container
+            # with ip and port info for the postgres container
+            # also creates entries in /etc/hosts with ip info
+        depends_on:
+            - db
+        ports:
+            - "8001:8001" # host:container
+        volumes:
+            - ./cinema-catalog-service/src:/home/nupp/app/src
+        container_name: cinema-catalog-service-cont
+
+    movies-service:
+        build: ./movies-service
+        links:
+            - db:db 
+            # [other container]:[alias in this container]
+            # this will create environment variables in the go container
+            # with ip and port info for the postgres container
+            # also creates entries in /etc/hosts with ip info
+        depends_on:
+            - db
+        ports:
+            - "8002:8001" # host:container
+        volumes:
+            - ./movies-service/src:/home/nupp/app/src
+        container_name: movies-service-cont

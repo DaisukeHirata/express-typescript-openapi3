@@ -11,7 +11,7 @@ import { cinemaDeserializer } from "../serializers/cinemasSerializer";
 // should be configurable
 const mysql = serverlessMysql({
   config: {
-    host     : "localhost",
+    host     : "db",
     database : "cinema_catalog",
     user     : "foo",
     password : "bar",
@@ -20,9 +20,10 @@ const mysql = serverlessMysql({
 });
 
 // should be configurable
-const host = "http://localhost:8002/";
+const host = "http://movies-service:8001/";
 
 // should have error handling, handling response status, should be a part of utility package
+// https://github.com/Crizstian/cinema-microservice/blob/master/booking-service/src/services/payment.service.js
 const http = async (request: RequestInfo): Promise<any> => {
   const response = await fetch(request);
   const json = await response.json();
