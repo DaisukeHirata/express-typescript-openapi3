@@ -1,8 +1,8 @@
 import { Container } from "inversify";
 import { TYPES } from "./types";
-import { MovieRepository } from "../repositories/cinemasRepository";
+import { CinemaRepository } from "../repositories/cinemasRepository";
 
 const myContainer = new Container();
-myContainer.bind<MovieRepository>(TYPES.IMovieRepository).to(MovieRepository);
+myContainer.bind<CinemaRepository>(TYPES.ICinemaRepository).to(CinemaRepository);
 
 export { myContainer };

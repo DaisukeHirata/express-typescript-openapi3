@@ -1,5 +1,5 @@
 const TYPES = {
-  IMovieRepository: Symbol.for("IMovieRepository")
+  ICinemaRepository: Symbol.for("ICinemaRepository")
 };
 
 export { TYPES };

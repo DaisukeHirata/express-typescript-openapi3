@@ -2,7 +2,7 @@ import "reflect-metadata";
 import * as P from "bluebird";
 import { Container, injectable } from "inversify";
 import { TYPES } from "../src/inversify/types";
-import { MovieRepository } from "../src/repositories/moviesRepository";
+import { MovieRepository } from "../src/repositories/cinemasRepository";
 import { IMovieRepository } from "../src/inversify/interfaces";
 
 @injectable()

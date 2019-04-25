@@ -17,33 +17,48 @@ const dataSet = {
   }]
 };
 
-const testCinemaId = {
-  '_id': '588ac3a02d029a6d15d0b5c4',
-  'name': 'Plaza Morelia',
-  'cinemaPremieres': [
+const testCinemaPremieresById = {
+  "id": "588ac3a02d029a6d15d0b5c4",
+  "name": "Plaza Morelia",
+  "movies": [
     {
-      'id': '1',
-      'title': 'Assasins Creed',
-      'runtime': 115,
-      'plot': 'Lorem ipsum dolor sit amet',
-      'poster': 'link to poster...'
+      id: "1",
+      title: "Assasins Creed",
+      runtime: 115,
+      plot: "Lorem ipsum dolor sit amet",
+      poster: "link to poster..."
     },
     {
-      'id': '2',
-      'title': 'Aliados',
-      'runtime': 124,
-      'plot': 'Lorem ipsum dolor sit amet',
-      'poster': 'link to poster...'
+      id: "2",
+      title: "Aliados",
+      runtime: 124,
+      plot: "Lorem ipsum dolor sit amet",
+      poster: "link to poster..."
     },
     {
-      'id': '3',
-      'title': 'xXx: Reactivado',
-      'runtime': 107,
-      'plot': 'Lorem ipsum dolor sit amet',
-      'poster': 'link to poster...'
+      id: "3",
+      title: "xXx: Reactivado",
+      runtime: 107,
+      plot: "Lorem ipsum dolor sit amet",
+      poster: "link to poster..."
     }
   ]
 };
+
+const json2 = new jsonapiSerializer.Serializer("cinemaPremieresById", {
+  attributes: ["name", "movies"],
+  movies: {
+    ref: (cinema, movie) => {
+      return movie.id;
+    },
+    attributes: ["title", "runtime", "plot", "poster"]
+  },
+  typeForAttribute: (attribute, record) => {
+    return (record && record.type) ? record.type : attribute;
+  }
+}).serialize(testCinemaPremieresById);
+
+console.log(JSON.stringify(json2));
 
 const testSchedulesMovie = [
   {

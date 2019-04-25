@@ -54,7 +54,7 @@ paths:
           description: id of a cinema
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         '200':
           description: Successful request.
@@ -165,9 +165,7 @@ components:
       type: object
       properties:
         data:
-          type: array
-          items:
-            $ref: '#/components/schemas/CinemaPremiereData'
+          $ref: '#/components/schemas/CinemaPremiereData'
         include:
           type: array
           items:

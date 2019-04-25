@@ -1,15 +1,15 @@
 import { Request, Response } from "express";
 import * as P from "bluebird";
 import { TDebug } from "../log";
-import { cinemaSerializer } from "../serializers/cinemasSerializer";
-import { IMovieRepository } from "../inversify/interfaces";
+import { cinemaSerializer, cinemaPremieresByIdSerializer } from "../serializers/cinemasSerializer";
+import { ICinemaRepository } from "../inversify/interfaces";
 
 const debug = new TDebug("app:src:controllers:movies");
 
-export class MoviesController {
-  private repo: IMovieRepository;
+export class CinemasController {
+  private repo: ICinemaRepository;
 
-  constructor(repo: IMovieRepository) {
+  constructor(repo: ICinemaRepository) {
     this.repo = repo;
   }
 
@@ -57,5 +57,21 @@ export class MoviesController {
     const serializedCinemas = cinemaSerializer.serialize(cinemas);
     debug.log("cinemas: ", serializedCinemas);
     res.send(serializedCinemas);
+  }
+
+  public async getCinemaById(req: Request, res: Response): P<any> {
+    const cinemaId = req.swagger.params.cinema_id.value;
+    const cinema = await this.repo.getCinemaById(cinemaId);
+
+    if (cinema.movies.length === 0) {
+      res.status(404).send({
+        message: "Sorry, can not find that!!"
+      });
+      return;
+    }
+
+    const serializedCinemaPremieres = cinemaPremieresByIdSerializer.serialize(cinema);
+    debug.log("cinema: ", serializedCinemaPremieres);
+    res.send(serializedCinemaPremieres);
   }
 }
