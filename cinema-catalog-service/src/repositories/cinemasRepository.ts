@@ -31,34 +31,6 @@ const http = async (request: RequestInfo): Promise<any> => {
 
 @injectable()
 export class CinemaRepository implements ICinemaRepository {
-  public async getAllMovies(): P<any[]> {
-    const results = await mysql.query("SELECT id, title, runtime, format, plot, DATE_FORMAT(released_at, \'%Y-%m-%dT%TZ\') as released_at FROM movie");
-
-    await mysql.end();
-
-    return results;
-  }
-
-  public async getMoviePremieres(): P<any[]> {
-    // const currentDay = new Date();
-    const results = await mysql.query("SELECT id, title, runtime, format, plot, DATE_FORMAT(released_at, \'%Y-%m-%dT%TZ\') as released_at FROM movie");
-    console.log(results);
-    await mysql.end();
-
-    return results;
-  }
-
-  public async getMovieById(id: string): P<any> {
-    const results = await mysql.query(
-      "SELECT id, title, runtime, format, plot, DATE_FORMAT(released_at, \'%Y-%m-%dT%TZ\') as released_at FROM movie WHERE id = ?",
-      [id]
-    );
-
-    await mysql.end();
-
-    return results;
-  }
-
   public async getCinemasByCity(id: string): P<any> {
     const results = await mysql.query(
       "SELECT id, name FROM cinema WHERE city_id = ?",
@@ -111,14 +83,12 @@ export class CinemaRepository implements ICinemaRepository {
       if (a) {
         a.schedules.push({time, price});
       } else {
-        result.push(
-          {
-            id: room.id,
-            name: room.name,
-            capacity: room.capacity,
-            schedules: [{time, price}]
-          }
-        );
+        result.push({
+          id: room.id,
+          name: room.name,
+          capacity: room.capacity,
+          schedules: [{time, price}]
+        });
       }
       return result;
     }, []);

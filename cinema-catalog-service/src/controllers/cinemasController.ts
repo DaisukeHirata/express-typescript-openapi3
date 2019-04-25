@@ -4,43 +4,13 @@ import { TDebug } from "../log";
 import { cinemaSerializer, cinemaPremieresByIdSerializer, cinemaSchedulesSerializer } from "../serializers/cinemasSerializer";
 import { ICinemaRepository } from "../inversify/interfaces";
 
-const debug = new TDebug("app:src:controllers:movies");
+const debug = new TDebug("app:src:controllers:cinemas");
 
 export class CinemasController {
   private repo: ICinemaRepository;
 
   constructor(repo: ICinemaRepository) {
     this.repo = repo;
-  }
-
-  public async getAllMovies(req: Request, res: Response): P<any> {
-    const movies = await this.repo.getAllMovies();
-    debug.log("movies: ", movies);
-    const serializedMovies = cinemaSerializer.serialize(movies);
-    res.send(serializedMovies);
-  }
-
-  public async getMoviePremieres(req: Request, res: Response): P<any> {
-    const movies = await this.repo.getMoviePremieres();
-    debug.log("movies: ", movies);
-    const serializedMovies = cinemaSerializer.serialize(movies);
-    res.send(serializedMovies);
-  }
-
-  public async getMovieById(req: Request, res: Response): P<any> {
-    const id = req.swagger.params.id.value;
-    const movies = await this.repo.getMovieById(id);
-
-    if (movies.length === 0) {
-      res.status(404).send({
-        message: "Sorry, can not find that!!"
-      });
-      return;
-    }
-
-    const serializedMovie = cinemaSerializer.serialize(movies);
-    debug.log("movie: ", serializedMovie);
-    res.send(serializedMovie);
   }
 
   public async getCinemasByCity(req: Request, res: Response): P<any> {
@@ -80,12 +50,12 @@ export class CinemasController {
     const movieId = req.swagger.params.movie_id.value;
     const cinemaSchedule = await this.repo.getCinemaScheduleByMovie(cinemaId, movieId);
 
-    // if (cinemaSchedule.rooms.length === 0) {
-    //   res.status(404).send({
-    //     message: "Sorry, can not find that!!"
-    //   });
-    //   return;
-    // }
+    if (cinemaSchedule.length === 0) {
+      res.status(404).send({
+        message: "Sorry, can not find that!!"
+      });
+      return;
+    }
 
     const serializedCinemaSchedules = cinemaSchedulesSerializer.serialize(cinemaSchedule);
     debug.log("cinemaSchedule: ", serializedCinemaSchedules);

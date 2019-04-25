@@ -2,7 +2,7 @@ import "reflect-metadata";
 import * as P from "bluebird";
 import { Container, injectable } from "inversify";
 import { TYPES } from "../src/inversify/types";
-import { MovieRepository } from "../src/repositories/cinemasRepository";
+import { CinemaRepository } from "../src/repositories/cinemasRepository";
 import { IMovieRepository } from "../src/inversify/interfaces";
 
 @injectable()
@@ -45,6 +45,6 @@ class DummyMovieRepository implements IMovieRepository {
 }
 
 const testContainer = new Container();
-testContainer.bind<MovieRepository>(TYPES.IMovieRepository).to(DummyMovieRepository);
+testContainer.bind<CinemaRepository>(TYPES.ICinemaRepository).to(DummyMovieRepository);
 
 export { testContainer };
