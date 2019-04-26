@@ -1,4 +1,4 @@
-service: serverless-express-typescript
+service: movies-service
 
 provider:
   name: aws
@@ -17,8 +17,30 @@ package:
     - "!package.json"
 
 functions:
-  http:
-    handler: dist/lambda.http
+  hello-get:
+    handler: dist/src/lambda.http
+    events:
+      - http:
+          path: /api/hello
+          method: get
+          cors: true
+          request:
+            parameters:
+              querystrings:
+                greeting: true
+  goodbye-post:
+    handler: dist/src/lambda.http
+    events:
+      - http:
+          path: /api/goodbye/{postId}
+          method: post
+          cors: true
+          request:
+            parameters:
+              paths:
+                postId: true
+  other:
+    handler: dist/src/lambda.http
     events:
       - http: ANY /
       - http: ANY /{proxy+}

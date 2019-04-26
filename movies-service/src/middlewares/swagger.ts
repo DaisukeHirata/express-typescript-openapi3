@@ -27,8 +27,9 @@ export const initSwaggerMiddlware = function (app: express.Express, basePath: st
         router: true,
         validator: true,
         docs: {
-            swaggerUi: "/docs",
-            swaggerUiPrefix: "",
+            // uncomment following 2 lines causes Lambda crash due to writeFileSync
+            // swaggerUi: "/docs",
+            // swaggerUiPrefix: "",
             apiDocs: "/api-docs",
             apiDocsPrefix: ""
         }

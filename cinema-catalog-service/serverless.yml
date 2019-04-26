@@ -1,4 +1,4 @@
-service: serverless-express-typescript
+service: cinema-catalog-service
 
 provider:
   name: aws
@@ -18,7 +18,7 @@ package:
 
 functions:
   http:
-    handler: dist/lambda.http
+    handler: dist/src/lambda.http
     events:
       - http: ANY /
       - http: ANY /{proxy+}
