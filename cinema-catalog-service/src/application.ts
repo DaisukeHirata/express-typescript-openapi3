@@ -1,4 +1,5 @@
 import * as bodyParser from "body-parser";
+import * as compression from "compression";
 import * as cors from "cors";
 import * as express from "express";
 import * as multer from "multer";
@@ -17,6 +18,7 @@ export const initApp = (container: Container): express.Express => {
   env.set("DIContainer", container);
   const app = express();
   monit.init(app);
+  app.use(compression());
   app.use(cors(getCorsOptions()));
   app.use(cls.setRequestId);
   app.use(inOutLogger);

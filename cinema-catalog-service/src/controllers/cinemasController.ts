@@ -25,7 +25,6 @@ export class CinemasController {
     }
 
     const serializedCinemas = cinemaSerializer.serialize(cinemas);
-    debug.log("cinemas: ", serializedCinemas);
     res.send(serializedCinemas);
   }
 
@@ -41,7 +40,6 @@ export class CinemasController {
     }
 
     const serializedCinemaPremieres = cinemaPremieresByIdSerializer.serialize(cinema);
-    debug.log("cinema: ", serializedCinemaPremieres);
     res.send(serializedCinemaPremieres);
   }
 
@@ -58,7 +56,6 @@ export class CinemasController {
     }
 
     const serializedCinemaSchedules = cinemaSchedulesSerializer.serialize(cinemaSchedule);
-    debug.log("cinemaSchedule: ", serializedCinemaSchedules);
     res.send(serializedCinemaSchedules);
   }
 }

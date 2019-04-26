@@ -1,11 +1,11 @@
 // import { TDebug } from "../log";
-// const debug = new TDebug("app:src:repositories:movies");
+// const debug = new TDebug("app:src:repositories:cinemas");
 import * as P from "bluebird";
 import * as serverlessMysql from "serverless-mysql";
 import "reflect-metadata";
 import { injectable } from "inversify";
 import { ICinemaRepository } from "../inversify/interfaces";
-import fetch from "node-fetch";
+import { fetchRetry } from "../lib/fetch-retry";
 import { cinemaDeserializer } from "../serializers/cinemasSerializer";
 
 // should be configurable
@@ -21,14 +21,6 @@ const mysql = serverlessMysql({
 
 // should be configurable
 const host = "http://movies-service:8001/";
-
-// should have error handling, handling response status, should be a part of utility package
-// https://github.com/Crizstian/cinema-microservice/blob/master/booking-service/src/services/payment.service.js
-const http = async (request: RequestInfo): Promise<any> => {
-  const response = await fetch(request);
-  const json = await response.json();
-  return json;
-};
 
 @injectable()
 export class CinemaRepository implements ICinemaRepository {
@@ -50,7 +42,8 @@ export class CinemaRepository implements ICinemaRepository {
     );
     await mysql.end();
 
-    const premieres = await http(host + "api/movies/premieres");
+    const response = await fetchRetry(host + "api/movies/premieres");
+    const premieres = await response.json();
     const deserializedPremieres = await cinemaDeserializer.deserialize(premieres);
 
     const cinemas = Object.assign({}, results[0], {
@@ -94,7 +87,8 @@ export class CinemaRepository implements ICinemaRepository {
       return result;
     }, []);
 
-    const movie = await http(host + "api/movies/" + movieId);
+    const response = await fetchRetry(host + "api/movies/" + movieId);
+    const movie = await response.json();
     const deserializedMovie = await cinemaDeserializer.deserialize(movie);
 
     const cinemaSchedules = Object.assign({}, cinema[0], {

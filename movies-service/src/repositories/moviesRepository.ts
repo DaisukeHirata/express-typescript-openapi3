@@ -30,7 +30,6 @@ export class MovieRepository implements IMovieRepository {
   public async getMoviePremieres(): P<any[]> {
     // const currentDay = new Date();
     const results = await mysql.query("SELECT id, title, runtime, format, plot, DATE_FORMAT(released_at, \'%Y-%m-%dT%TZ\') as released_at FROM movie");
-    console.log(results);
     await mysql.end();
 
     return results;

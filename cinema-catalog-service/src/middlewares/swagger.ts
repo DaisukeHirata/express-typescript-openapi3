@@ -22,7 +22,7 @@ export const initSwaggerMiddlware = function (app: express.Express, basePath: st
     const swaggerDoc = loadDocumentSync(basePath + "/definition/swagger.yaml");
     const options = {
         controllers: basePath + "/routes",
-        loglevel: "debug",
+        loglevel: "info",
         strict: true,
         router: true,
         validator: true,

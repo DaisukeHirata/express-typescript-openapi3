@@ -29,7 +29,7 @@ services:
         ports:
             - "8001:8001" # host:container
         volumes:
-            - ./cinema-catalog-service/src:/home/nupp/app/src
+            - ./cinema-catalog-service:/home/nupp/app
         container_name: cinema-catalog-service-cont
 
     movies-service:
@@ -45,5 +45,5 @@ services:
         ports:
             - "8002:8001" # host:container
         volumes:
-            - ./movies-service/src:/home/nupp/app/src
+            - ./movies-service:/home/nupp/app
         container_name: movies-service-cont

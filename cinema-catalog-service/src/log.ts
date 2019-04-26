@@ -53,7 +53,7 @@ export class TDebug {
   }
 }
 
-const debug = new TDebug("fes:src:lib:log");
+const debug = new TDebug("app:src:lib:log");
 
 export enum Levels {
   Log = "LOG",

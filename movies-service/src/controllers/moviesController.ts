@@ -15,14 +15,12 @@ export class MoviesController {
 
   public async getAllMovies(req: Request, res: Response): P<any> {
     const movies = await this.repo.getAllMovies();
-    debug.log("movies: ", movies);
     const serializedMovies = movieSerializer.serialize(movies);
     res.send(serializedMovies);
   }
 
   public async getMoviePremieres(req: Request, res: Response): P<any> {
     const movies = await this.repo.getMoviePremieres();
-    debug.log("movies: ", movies);
     const serializedMovies = movieSerializer.serialize(movies);
     res.send(serializedMovies);
   }
@@ -39,7 +37,6 @@ export class MoviesController {
     }
 
     const serializedMovie = movieSerializer.serialize(movies);
-    debug.log("movie: ", serializedMovie);
     res.send(serializedMovie);
   }
 }
