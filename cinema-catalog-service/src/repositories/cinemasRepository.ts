@@ -1,5 +1,6 @@
 // import { TDebug } from "../log";
 // const debug = new TDebug("app:src:repositories:cinemas");
+import * as env from "../env";
 import * as P from "bluebird";
 import * as serverlessMysql from "serverless-mysql";
 import "reflect-metadata";
@@ -8,19 +9,18 @@ import { ICinemaRepository } from "../inversify/interfaces";
 import { fetchRetry } from "../lib/fetch-retry";
 import { cinemaDeserializer } from "../serializers/cinemasSerializer";
 
-// should be configurable
 const mysql = serverlessMysql({
   config: {
-    host     : "db",
-    database : "cinema_catalog",
-    user     : "foo",
-    password : "bar",
+    host     : env.get("databaseHost"),
+    database : env.get("database"),
+    user     : env.get("databaseUser"),
+    password : env.get("databasePassword"),
     dateStrings: true
   }
 });
 
 // should be configurable
-const host = "http://movies-service:8001/";
+const host = env.get("moviesServiceHost");
 
 @injectable()
 export class CinemaRepository implements ICinemaRepository {

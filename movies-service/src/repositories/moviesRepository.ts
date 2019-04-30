@@ -1,18 +1,18 @@
 // import { TDebug } from "../log";
 // const debug = new TDebug("app:src:repositories:movies");
+import * as env from "../env";
 import * as P from "bluebird";
 import * as serverlessMysql from "serverless-mysql";
 import "reflect-metadata";
 import { injectable } from "inversify";
 import { IMovieRepository } from "../inversify/interfaces";
 
-// should be configurable
 const mysql = serverlessMysql({
   config: {
-    host     : "db",
-    database : "movie",
-    user     : "foo",
-    password : "bar",
+    host     : env.get("databaseHost"),
+    database : env.get("database"),
+    user     : env.get("databaseUser"),
+    password : env.get("databasePassword"),
     dateStrings: true
   }
 });

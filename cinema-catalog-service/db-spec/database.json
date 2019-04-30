@@ -1,0 +1,13 @@
+{
+  "init": {
+    "driver": "mysql",
+    "user": "foo",
+    "password": "bar"
+  },
+  "dev": {
+    "driver": "mysql", 
+    "user": "foo",
+    "password": "bar",
+    "database": "cinema_catalog"
+  }
+} 
