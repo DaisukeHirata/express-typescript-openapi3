@@ -11,16 +11,16 @@ import { cinemaDeserializer } from "../serializers/cinemasSerializer";
 
 const mysql = serverlessMysql({
   config: {
-    host     : env.get("databaseHost"),
-    database : env.get("database"),
-    user     : env.get("databaseUser"),
-    password : env.get("databasePassword"),
+    host     : env.get("DATABASE_HOST"),
+    database : env.get("DATABASE"),
+    user     : env.get("DATABASE_USER"),
+    password : env.get("DATABASE_PASSWORD"),
     dateStrings: true
   }
 });
 
 // should be configurable
-const host = env.get("moviesServiceHost");
+const host = env.get("MOVIES_SERVICE_HOST");
 
 @injectable()
 export class CinemaRepository implements ICinemaRepository {

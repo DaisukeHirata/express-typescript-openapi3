@@ -9,10 +9,10 @@ import { IMovieRepository } from "../inversify/interfaces";
 
 const mysql = serverlessMysql({
   config: {
-    host     : env.get("databaseHost"),
-    database : env.get("database"),
-    user     : env.get("databaseUser"),
-    password : env.get("databasePassword"),
+    host     : env.get("DATABASE_HOST"),
+    database : env.get("DATABASE"),
+    user     : env.get("DATABASE_USER"),
+    password : env.get("DATABASE_PASSWORD"),
     dateStrings: true
   }
 });

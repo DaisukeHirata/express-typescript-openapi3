@@ -5,38 +5,38 @@ const configs = {
   local: {
     LOG_LEVEL: "silly",
     CORS: "*",
-    databaseHost: "db",
-    database: "cinema_catalog",
-    databaseUser: "foo", // can be stored in environment variable
-    databasePassword: "bar", // can be stored in environment variable
-    moviesServiceHost: "http://movies-service:8001/"
+    DATABASE_HOST: "db",
+    DATABASE: "cinema_catalog",
+    DATABASE_USER: "foo", // can be stored in environment variable
+    DATABASE_PASSWORD: "bar", // can be stored in environment variable
+    MOVIES_SERVICE_HOST: "http://movies-service:8001/"
   },
   development: {
     LOG_LEVEL: "silly",
     CORS: "*",
-    databaseHost: "db",
-    database: "cinema_catalog",
-    databaseUser: "foo", // can be stored in environment variable
-    databasePassword: "bar", // can be stored in environment variable
-    moviesServiceHost: "http://movies-service:8001/"
+    DATABASE_HOST: "db",
+    DATABASE: "cinema_catalog",
+    DATABASE_USER: "foo", // can be stored in environment variable
+    DATABASE_PASSWORD: "bar", // can be stored in environment variable
+    MOVIES_SERVICE_HOST: "http://movies-service:8001/"
   },
   staging: {
     LOG_LEVEL: "silly",
     CORS: "*",
-    databaseHost: "db",
-    database: "cinema_catalog",
-    databaseUser: "foo", // can be stored in environment variable
-    databasePassword: "bar", // can be stored in environment variable
-    moviesServiceHost: "http://movies-service:8001/"
+    DATABASE_HOST: "db",
+    DATABASE: "cinema_catalog",
+    DATABASE_USER: "foo", // can be stored in environment variable
+    DATABASE_PASSWORD: "bar", // can be stored in environment variable
+    MOVIES_SERVICE_HOST: "http://movies-service:8001/"
   },
   production : {
     LOG_LEVEL: "silly",
     CORS: "*",
-    databaseHost: "db",
-    database: "cinema_catalog",
-    databaseUser: "foo", // can be stored in environment variable
-    databasePassword: "bar", // can be stored in environment variable
-    moviesServiceHost: "http://movies-service:8001/"
+    DATABASE_HOST: "db",
+    DATABASE: "cinema_catalog",
+    DATABASE_USER: "foo", // can be stored in environment variable
+    DATABASE_PASSWORD: "bar", // can be stored in environment variable
+    MOVIES_SERVICE_HOST: "http://movies-service:8001/"
   }
 };
 
