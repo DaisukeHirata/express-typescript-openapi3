@@ -1,5 +1,5 @@
-// import { TDebug } from "../log";
-// const debug = new TDebug("app:src:repositories:cinemas");
+import { TDebug } from "../log";
+const debug = new TDebug("app:src:repositories:cinemas");
 import * as env from "../env";
 import * as P from "bluebird";
 import * as serverlessMysql from "serverless-mysql";
@@ -19,7 +19,6 @@ const mysql = serverlessMysql({
   }
 });
 
-// should be configurable
 const host = env.get("MOVIES_SERVICE_HOST");
 
 @injectable()
@@ -36,21 +35,39 @@ export class CinemaRepository implements ICinemaRepository {
   }
 
   public async getCinemaById(id: string): P<any> {
-    const results = await mysql.query(
-      "SELECT id, name FROM cinema WHERE id = ?",
+    const cinemaPremieres = await mysql.query(
+      `SELECT cinema.id, name, movie_id
+         FROM cinema_catalog.cinema
+   INNER JOIN cinema_catalog.cinemaPremiere
+           ON cinema.id = cinemaPremiere.cinema_id
+        WHERE cinema.id = ?`,
       [id]
     );
     await mysql.end();
 
-    const response = await fetchRetry(host + "api/movies/premieres");
-    const premieres = await response.json();
-    const deserializedPremieres = await cinemaDeserializer.deserialize(premieres);
+    const premiereMovieIds = cinemaPremieres.map((premiere) => premiere.movie_id);
 
-    const cinemas = Object.assign({}, results[0], {
-      movies: deserializedPremieres
+    // make api requests parallel
+    const parallelRequests = premiereMovieIds.map((movieId) => {
+      const url = host + "api/movies/" + movieId;
+      return fetchRetry(url);
     });
 
-    return P.props(cinemas);
+    // deserialize response
+    const movies = P.map(parallelRequests, async (response) => {
+      const movie = await response.json();
+      const deserializedMovie = await cinemaDeserializer.deserialize(movie);
+      return deserializedMovie[0];
+    });
+
+    const cinema = {
+      id: cinemaPremieres[0].id,
+      name: cinemaPremieres[0].name,
+      movies: await movies
+    };
+
+    // return object
+    return P.props(cinema);
   }
 
   public async getCinemaScheduleByMovie(cinemaId: string, movieId: string): P<any> {
@@ -96,6 +113,7 @@ export class CinemaRepository implements ICinemaRepository {
       rooms: nestedRooms
     });
 
+    // return array of objects
     return P.all([cinemaSchedules]);
   }
 }
