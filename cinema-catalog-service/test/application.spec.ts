@@ -20,7 +20,7 @@ describe("App", () => {
 
   it("works", (done: () => void): void => {
     chai.request(app)
-      .get("/docs/")
+      .get("/api-docs/")
       .send({})
       .end((err: Error, res: any): void => {
           expect(res.statusCode).to.be.equal(200);
