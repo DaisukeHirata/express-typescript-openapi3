@@ -1,5 +1,3 @@
-import { TDebug } from "../log";
-const debug = new TDebug("app:src:repositories:cinemas");
 import * as env from "../env";
 import * as P from "bluebird";
 import * as serverlessMysql from "serverless-mysql";
@@ -8,6 +6,8 @@ import { injectable } from "inversify";
 import { ICinemaRepository } from "../inversify/interfaces";
 import { fetchRetry } from "../lib/fetch-retry";
 import { cinemaDeserializer } from "../serializers/cinemasSerializer";
+// import { TDebug } from "../log";
+// const debug = new TDebug("app:src:repositories:cinemas");
 
 const mysql = serverlessMysql({
   config: {

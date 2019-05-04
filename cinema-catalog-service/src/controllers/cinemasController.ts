@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
 import * as P from "bluebird";
-import { TDebug } from "../log";
 import { cinemaSerializer, cinemaPremieresByIdSerializer, cinemaSchedulesSerializer } from "../serializers/cinemasSerializer";
 import { ICinemaRepository } from "../inversify/interfaces";
-
-const debug = new TDebug("app:src:controllers:cinemas");
+// import { TDebug } from "../log";
+// const debug = new TDebug("app:src:controllers:cinemas");
 
 export class CinemasController {
   private repo: ICinemaRepository;

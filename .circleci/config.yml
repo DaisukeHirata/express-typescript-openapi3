@@ -1,12 +1,7 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
 version: 2
 jobs:
-  build:
+  movies-service:
     docker:
-      # specify the version you desire here
       - image: circleci/node:8.10
 
       # Specify service dependencies here if necessary
@@ -19,7 +14,6 @@ jobs:
     steps:
       - checkout
 
-      # movies service
       - restore_cache:
           name: movies service restore cache
           keys:
@@ -50,3 +44,55 @@ jobs:
           name: movies service test
           command: npm run test
           working_directory: movies-service
+
+  cinema-catalog-service:
+    docker:
+      - image: circleci/node:8.10
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # cinema catalog service
+      - restore_cache:
+          name: cinema catalog service restore cache
+          keys:
+            - v1-dependencies-{{ checksum "cinema-catalog-service/package.json" }}
+
+      - run:
+          name: cinema catalog service temporary remove .git from oas-tools
+          command: rm -rf /home/circleci/repo/cinema-catalog-service/node_modules/oas-tools/.git
+          working_directory: cinema-catalog-service
+
+      - run: 
+          name: cinema catalog service npm install
+          command: npm install
+          working_directory: cinema-catalog-service
+
+      - save_cache:
+          name: cinema catalog service save cache
+          paths:
+            - cinema-catalog-service/node_modules
+          key: v1-dependencies-{{ checksum "cinema-catalog-service/package.json" }}
+
+      - run:
+          name: cinema catalog service lint
+          command: npm run lint
+          working_directory: cinema-catalog-service
+
+      - run:
+          name: cinema catalog service test
+          command: npm run test
+          working_directory: cinema-catalog-service
+workflows:
+  version: 2
+  lint_and_test:
+    jobs: 
+      - movies-service
+      - cinema-catalog-service
