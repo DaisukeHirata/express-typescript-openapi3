@@ -21,10 +21,13 @@ jobs:
 
       # movies service
       - restore_cache:
+          name: movies service restore cache
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+            - v1-dependencies-{{ checksum "movies-service/package.json" }}
+
+      - run:
+          name: movies service temporary remove .git from oas-tools
+          command: rm -rf /home/circleci/repo/movies-service/node_modules/oas-tools/.git
           working_directory: movies-service
 
       - run: 
@@ -33,10 +36,10 @@ jobs:
           working_directory: movies-service
 
       - save_cache:
+          name: movies service save cache
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-          working_directory: movies-service
+            - movies-service/node_modules
+          key: v1-dependencies-{{ checksum "movies-service/package.json" }}
 
       - run:
           name: movies service lint
