@@ -1,102 +1,96 @@
-version: 2
-jobs:
-  movies-service:
+version: 2.1
+
+orbs:
+  slack: circleci/slack@0.1.0
+
+executors:
+  default:
     docker:
       - image: circleci/node:8.10
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
-
-    working_directory: ~/repo
-
+commands:
+  movies_service_npm_install:
     steps:
-      - checkout
-
       - restore_cache:
           name: movies service restore cache
           keys:
             - v1-dependencies-{{ checksum "movies-service/package.json" }}
-
       - run:
           name: movies service temporary remove .git from oas-tools
           command: rm -rf /home/circleci/repo/movies-service/node_modules/oas-tools/.git
           working_directory: movies-service
-
       - run: 
           name: movies service npm install 
           command: npm install
           working_directory: movies-service
-
       - save_cache:
           name: movies service save cache
           paths:
             - movies-service/node_modules
           key: v1-dependencies-{{ checksum "movies-service/package.json" }}
-
-      - run:
-          name: movies service lint
-          command: npm run lint
-          working_directory: movies-service
-
-      - run:
-          name: movies service test
-          command: npm run test
-          working_directory: movies-service
-
-      # should be considered to use codecov
-      - run:
-          name: movies service codecov
-          command: npm run codecov
-          working_directory: movies-service
-
-  cinema-catalog-service:
-    docker:
-      - image: circleci/node:8.10
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
-
-    working_directory: ~/repo
-
+  cinema_catalog_service_npm_install:
     steps:
-      - checkout
-
-      # cinema catalog service
       - restore_cache:
           name: cinema catalog service restore cache
           keys:
             - v1-dependencies-{{ checksum "cinema-catalog-service/package.json" }}
-
       - run:
           name: cinema catalog service temporary remove .git from oas-tools
           command: rm -rf /home/circleci/repo/cinema-catalog-service/node_modules/oas-tools/.git
           working_directory: cinema-catalog-service
-
       - run: 
           name: cinema catalog service npm install
           command: npm install
           working_directory: cinema-catalog-service
-
       - save_cache:
           name: cinema catalog service save cache
           paths:
             - cinema-catalog-service/node_modules
           key: v1-dependencies-{{ checksum "cinema-catalog-service/package.json" }}
 
+jobs:
+  movies_service_lint:
+    executor: default      
+    steps:
+      - checkout
+      - movies_service_npm_install
+      - run:
+          name: movies service lint
+          command: npm run lint
+          working_directory: movies-service
+  movies_service_test:
+    executor: default
+    steps:
+      - checkout
+      - movies_service_npm_install
+      - run:
+          name: movies service test
+          command: npm run test
+          working_directory: movies-service
+      # should be considered to use codecov
+      - run:
+          name: movies service codecov
+          command: npm run codecov
+          working_directory: movies-service
+
+  cinema_catalog_service_lint:
+    executor: default
+    steps:
+      - checkout
+      - cinema_catalog_service_npm_install
       - run:
           name: cinema catalog service lint
           command: npm run lint
           working_directory: cinema-catalog-service
-
+  cinema_catalog_service_test:
+    executor: default
+    steps:
+      - checkout
+      - cinema_catalog_service_npm_install
       - run:
           name: cinema catalog service test
           command: npm run test
           working_directory: cinema-catalog-service
-
       # should be considered to use codecov
       - run:
           name: cinema catalog service codecov
@@ -104,8 +98,15 @@ jobs:
           working_directory: cinema-catalog-service
 
 workflows:
-  version: 2
-  lint_and_test:
+  movies_service:
     jobs: 
-      - movies-service
-      - cinema-catalog-service
+      - movies_service_lint
+      - movies_service_test:
+          requires:
+            - movies_service_lint
+  cinema_catalog_service:
+    jobs: 
+      - cinema_catalog_service_lint
+      - cinema_catalog_service_test:
+          requires:
+            - cinema_catalog_service_lint
