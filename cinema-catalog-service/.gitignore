@@ -11,3 +11,4 @@ plato
 launch.json
 dist
 .serverless
+.nyc_output
