@@ -5,7 +5,7 @@
   ],
   "rules": {
     "only-arrow-functions": [
-      false
+      true
     ],
     "trailing-comma": [
       true,

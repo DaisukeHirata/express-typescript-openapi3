@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import * as P from "bluebird";
 import { movieSerializer } from "../serializers/moviesSerializer";
 import { IMovieRepository } from "../inversify/interfaces";
-// import { TDebug } from "../log";
-// const debug = new TDebug("app:src:controllers:movies");
+import { TDebug } from "../log";
+const debug = new TDebug("app:src:controllers:movies");
 
 export class MoviesController {
   private repo: IMovieRepository;

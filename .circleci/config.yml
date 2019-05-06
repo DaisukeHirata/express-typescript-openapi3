@@ -7,6 +7,8 @@ executors:
   default:
     docker:
       - image: circleci/node:8.10
+    environment:
+      REVIEWDOG_VERSION: 0.9.11
     working_directory: ~/repo
 
 commands:
@@ -64,8 +66,12 @@ jobs:
       - checkout
       - movies_service_npm_install
       - run:
+          name: Install reviewdog
+          command: |
+            curl -fSL https://github.com/haya14busa/reviewdog/releases/download/$REVIEWDOG_VERSION/reviewdog_linux_amd64 -o reviewdog && chmod +x ./reviewdog
+      - run:
           name: movies service lint
-          command: npm run lint
+          command: ./node_modules/.bin/tslint -p tsconfig.json -t checkstyle | tee /dev/stderr | ../reviewdog -f=checkstyle -name="tslint" -reporter=github-pr-check -diff="git diff master"
           working_directory: movies-service
   movies_service_test:
     executor: default
@@ -98,8 +104,12 @@ jobs:
       - checkout
       - cinema_catalog_service_npm_install
       - run:
+          name: Install reviewdog
+          command: |
+            curl -fSL https://github.com/haya14busa/reviewdog/releases/download/$REVIEWDOG_VERSION/reviewdog_linux_amd64 -o reviewdog && chmod +x ./reviewdog
+      - run:
           name: cinema catalog service lint
-          command: npm run lint
+          command: ./node_modules/.bin/tslint -p tsconfig.json -t checkstyle | tee /dev/stderr | ../reviewdog -f=checkstyle -name="tslint" -reporter=github-pr-check -diff="git diff master"
           working_directory: cinema-catalog-service
   cinema_catalog_service_test:
     executor: default
