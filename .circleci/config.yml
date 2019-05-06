@@ -45,6 +45,12 @@ jobs:
           command: npm run test
           working_directory: movies-service
 
+      # should be considered to use codecov
+      - run:
+          name: movies service codecov
+          command: npm run codecov
+          working_directory: movies-service
+
   cinema-catalog-service:
     docker:
       - image: circleci/node:8.10
@@ -90,6 +96,13 @@ jobs:
           name: cinema catalog service test
           command: npm run test
           working_directory: cinema-catalog-service
+
+      # should be considered to use codecov
+      - run:
+          name: cinema catalog service codecov
+          command: npm run codecov
+          working_directory: cinema-catalog-service
+
 workflows:
   version: 2
   lint_and_test:
