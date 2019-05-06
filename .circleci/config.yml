@@ -7,6 +7,7 @@ executors:
   default:
     docker:
       - image: circleci/node:8.10
+    working_directory: ~/repo
 
 commands:
   movies_service_npm_install:
@@ -47,6 +48,14 @@ commands:
           paths:
             - cinema-catalog-service/node_modules
           key: v1-dependencies-{{ checksum "cinema-catalog-service/package.json" }}
+  serverless_install:
+    steps:
+      - run:
+          name: install serverless
+          command: sudo npm install -g serverless@1.40.0
+      - run:
+          name: init serverless config
+          command: serverless config credentials -k ${AWS_ACCESS_KEY} -s ${AWS_SECRET_KEY} -p aws
 
 jobs:
   movies_service_lint:
@@ -71,6 +80,16 @@ jobs:
       - run:
           name: movies service codecov
           command: npm run codecov
+          working_directory: movies-service
+  movies_service_deploy:
+    executor: default
+    steps:
+      - checkout
+      - movies_service_npm_install
+      - serverless_install
+      - deploy:
+          name: movies service deploy
+          command: npm run deploy
           working_directory: movies-service
 
   cinema_catalog_service_lint:
@@ -104,6 +123,12 @@ workflows:
       - movies_service_test:
           requires:
             - movies_service_lint
+      - movies_service_deploy:
+          requires:
+            - movies_service_test
+          filters:
+            branches:
+              only: deploy-movies-service
   cinema_catalog_service:
     jobs: 
       - cinema_catalog_service_lint
