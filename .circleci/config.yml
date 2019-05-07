@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  slack: circleci/slack@0.1.0
+  slack: circleci/slack@2.5.0
 
 executors:
   default:
@@ -91,6 +91,11 @@ jobs:
           name: movies service deploy
           command: npm run deploy
           working_directory: movies-service
+      - slack/notify:
+          color: '#42e2f4'
+          mentions: 'dh'
+          message: movies_service_deploy is done
+          webhook: webhook
 
   cinema_catalog_service_lint:
     executor: default
