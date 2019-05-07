@@ -6,8 +6,8 @@ import { injectable } from "inversify";
 import { ICinemaRepository } from "../inversify/interfaces";
 import { fetch } from "../lib/circuitBreaker";
 import { cinemaDeserializer } from "../serializers/cinemasSerializer";
-// import { TDebug } from "../log";
-// const debug = new TDebug("app:src:repositories:cinemas");
+import { TDebug } from "../log";
+const debug = new TDebug("app:src:repositories:cinemas");
 
 const mysql = serverlessMysql({
   config: {
