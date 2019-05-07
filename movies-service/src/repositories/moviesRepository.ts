@@ -1,11 +1,11 @@
-// import { TDebug } from "../log";
-// const debug = new TDebug("app:src:repositories:movies");
 import * as env from "../env";
 import * as P from "bluebird";
 import * as serverlessMysql from "serverless-mysql";
 import "reflect-metadata";
 import { injectable } from "inversify";
 import { IMovieRepository } from "../inversify/interfaces";
+import { TDebug } from "../log";
+const debug = new TDebug("app:src:repositories:movies");
 
 const mysql = serverlessMysql({
   config: {
