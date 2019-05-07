@@ -4,10 +4,10 @@ import * as serverlessMysql from "serverless-mysql";
 import "reflect-metadata";
 import { injectable } from "inversify";
 import { ICinemaRepository } from "../inversify/interfaces";
-import { fetchRetry } from "../lib/fetch-retry";
+import { fetch } from "../lib/circuitBreaker";
 import { cinemaDeserializer } from "../serializers/cinemasSerializer";
-// import { TDebug } from "../log";
-// const debug = new TDebug("app:src:repositories:cinemas");
+import { TDebug } from "../log";
+const debug = new TDebug("app:src:repositories:cinemas");
 
 const mysql = serverlessMysql({
   config: {
@@ -50,12 +50,11 @@ export class CinemaRepository implements ICinemaRepository {
     // make api requests parallel
     const parallelRequests = premiereMovieIds.map((movieId) => {
       const url = host + "api/movies/" + movieId;
-      return fetchRetry(url);
+      return fetch(url);
     });
 
     // deserialize response
-    const movies = P.map(parallelRequests, async (response) => {
-      const movie = await response.json();
+    const movies = P.map(parallelRequests, async (movie) => {
       const deserializedMovie = await cinemaDeserializer.deserialize(movie);
       return deserializedMovie[0];
     });
@@ -104,8 +103,7 @@ export class CinemaRepository implements ICinemaRepository {
       return result;
     }, []);
 
-    const response = await fetchRetry(host + "api/movies/" + movieId);
-    const movie = await response.json();
+    const movie = await fetch(host + "api/movies/" + movieId);
     const deserializedMovie = await cinemaDeserializer.deserialize(movie);
 
     const cinemaSchedules = Object.assign({}, cinema[0], {
