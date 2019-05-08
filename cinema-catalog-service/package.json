@@ -41,7 +41,7 @@
     "@types/node": "8.0.46",
     "@types/node-uuid": "0.0.28",
     "@types/opossum": "^1.10.0",
-    "@types/swagger-tools": "0.10.4",
+    "@types/swagger-tools": "0.10.6",
     "@types/winston": "^2.3.7",
     "chai": "4.2.0",
     "chai-http": "^4.2.1",
