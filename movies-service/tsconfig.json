@@ -8,7 +8,8 @@
     "types": ["reflect-metadata"],
     "moduleResolution": "node",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*.ts",
