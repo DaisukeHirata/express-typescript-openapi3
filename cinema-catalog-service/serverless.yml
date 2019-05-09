@@ -6,11 +6,11 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: ap-northeast-1
   environment:
-    DATABASE_HOST: shared-infra-dev-aurorardscluster-8yyiaws3s6oe.cluster-c70smiaqrdnm.ap-northeast-1.rds.amazonaws.com
+    DATABASE_HOST: ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessAuroraEndpointAddress}
     DATABASE: cinema_catalog
     DATABASE_USER: foo
     DATABASE_PASSWORD: bar
-    MOVIES_SERVICE_HOST: https://a48wfef9x6.execute-api.ap-northeast-1.amazonaws.com/dev/
+    MOVIES_SERVICE_HOST: ${cf.${self:provider.region}:movies-service-${opt:stage, self:provider.stage}.ServiceEndpoint}
 
 package:
   exclude:
@@ -21,17 +21,6 @@ package:
     - "node_modules/**"
     - "*"
     - "!package.json"
-
-custom:
-  AURORA:
-    DB_NAME: aurora${opt:stage, self:provider.stage}
-    USERNAME: master
-    PASSWORD: password
-    # HOST:
-    #  Fn::GetAtt: [AuroraRDSCluster, Endpoint.Address]
-    # PORT:
-    #  Fn::GetAtt: [AuroraRDSCluster, Endpoint.Port]
-    VPC_CIDR: 10
 
 functions:
   http:
@@ -49,6 +38,6 @@ functions:
       securityGroupIds:
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessDefaultSecurityGroup}
       subnetIds:
-        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessSubnetA}
-        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessSubnetB}
-        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessSubnetC}
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetA}
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetB}
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetC}
