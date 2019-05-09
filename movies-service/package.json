@@ -54,7 +54,7 @@
     "mocha": "^5.2.0",
     "nodemon": "^1.19.0",
     "nyc": "^14.1.0",
-    "serverless": "^1.40.0",
+    "serverless": "^1.42.1",
     "sinon": "^4.1.5",
     "supertest": "3.0.0",
     "ts-mocha": "1.2.0",
