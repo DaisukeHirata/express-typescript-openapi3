@@ -6,8 +6,8 @@ import { injectable } from "inversify";
 import { ICinemaRepository } from "../inversify/interfaces";
 import { fetch } from "../lib/circuitBreaker";
 import { cinemaDeserializer } from "../serializers/cinemasSerializer";
-import { TDebug } from "../log";
-const debug = new TDebug("app:src:repositories:cinemas");
+// import { TDebug } from "../log";
+// const debug = new TDebug("app:src:repositories:cinemas");
 
 const mysql = serverlessMysql({
   config: {
@@ -49,7 +49,7 @@ export class CinemaRepository implements ICinemaRepository {
 
     // make api requests parallel
     const parallelRequests = premiereMovieIds.map((movieId) => {
-      const url = host + "api/movies/" + movieId;
+      const url = host + "/api/movies/" + movieId;
       return fetch(url);
     });
 
@@ -103,7 +103,7 @@ export class CinemaRepository implements ICinemaRepository {
       return result;
     }, []);
 
-    const movie = await fetch(host + "api/movies/" + movieId);
+    const movie = await fetch(host + "/api/movies/" + movieId);
     const deserializedMovie = await cinemaDeserializer.deserialize(movie);
 
     const cinemaSchedules = Object.assign({}, cinema[0], {

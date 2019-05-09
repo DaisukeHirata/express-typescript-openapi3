@@ -34,7 +34,7 @@ resources:
         EnableDnsHostnames: true
         InstanceTenancy: default
     # Subnet
-    ServerlessSubnetA:
+    ServerlessPrivateSubnetA:
       DependsOn: ServerlessVPC
       Type: AWS::EC2::Subnet
       Properties:
@@ -42,7 +42,7 @@ resources:
           Ref: ServerlessVPC
         AvailabilityZone: ${self:provider.region}a
         CidrBlock: ${self:custom.AURORA.VPC_CIDR}.0.0.0/24
-    ServerlessSubnetB:
+    ServerlessPrivateSubnetB:
       DependsOn: ServerlessVPC
       Type: AWS::EC2::Subnet
       Properties:
@@ -50,7 +50,7 @@ resources:
           Ref: ServerlessVPC
         AvailabilityZone: ${self:provider.region}c
         CidrBlock: ${self:custom.AURORA.VPC_CIDR}.0.1.0/24
-    ServerlessSubnetC:
+    ServerlessPrivateSubnetC:
       DependsOn: ServerlessVPC
       Type: AWS::EC2::Subnet
       Properties:
@@ -127,21 +127,21 @@ resources:
       Type: AWS::EC2::SubnetRouteTableAssociation
       Properties:
         SubnetId:
-          Ref: ServerlessSubnetA
+          Ref: ServerlessPrivateSubnetA
         RouteTableId:
           Ref: DefaultPrivateRouteTable
     SubnetRouteTableAssociationLambdaPrivateB:
       Type: AWS::EC2::SubnetRouteTableAssociation
       Properties:
         SubnetId:
-          Ref: ServerlessSubnetB
+          Ref: ServerlessPrivateSubnetB
         RouteTableId:
           Ref: DefaultPrivateRouteTable
     SubnetRouteTableAssociationLambdaPrivateC:
       Type: AWS::EC2::SubnetRouteTableAssociation
       Properties:
         SubnetId:
-          Ref: ServerlessSubnetC
+          Ref: ServerlessPrivateSubnetC
         RouteTableId:
           Ref: DefaultPrivateRouteTable
     # Aurora DB config
@@ -150,9 +150,9 @@ resources:
       Properties:
         DBSubnetGroupDescription: "Aurora Subnet Group"
         SubnetIds:
-          - Ref: ServerlessSubnetA
-          - Ref: ServerlessSubnetB
-          - Ref: ServerlessSubnetC
+          - Ref: ServerlessPrivateSubnetA
+          - Ref: ServerlessPrivateSubnetB
+          - Ref: ServerlessPrivateSubnetC
     AuroraRDSClusterParameter:
       Type: AWS::RDS::DBClusterParameterGroup
       Properties:
@@ -190,15 +190,20 @@ resources:
         Fn::GetAtt: ServerlessVPC.DefaultSecurityGroup
       Export:
         Name: ServerlessDefaultSecurityGroup
-    ServerlessSubnetA:
-      Value: !Ref ServerlessSubnetA
+    ServerlessPrivateSubnetA:
+      Value: !Ref ServerlessPrivateSubnetA
       Export:
-        Name: ServerlessSubnetA
-    ServerlessSubnetB:
-      Value: !Ref ServerlessSubnetB
+        Name: ServerlessPrivateSubnetA
+    ServerlessPrivateSubnetB:
+      Value: !Ref ServerlessPrivateSubnetB
       Export:
-        Name: ServerlessSubnetB
-    ServerlessSubnetC:
-      Value: !Ref ServerlessSubnetC
+        Name: ServerlessPrivateSubnetB
+    ServerlessPrivateSubnetC:
+      Value: !Ref ServerlessPrivateSubnetC
       Export:
-        Name: ServerlessSubnetC
+        Name: ServerlessPrivateSubnetC
+    ServerlessAuroraEndpointAddress:
+      Value:
+        Fn::GetAtt: [AuroraRDSCluster, Endpoint.Address]
+      Export:
+        Name: ServerlessAuroraEndpointAddress
