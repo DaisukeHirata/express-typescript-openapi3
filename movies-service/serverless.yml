@@ -11,6 +11,7 @@ provider:
     DATABASE_USER: foo
     DATABASE_PASSWORD: bar
     MOVIES_SERVICE_HOST: ${cf.${self:provider.region}:movies-service-${opt:stage, self:provider.stage}.ServiceEndpoint}
+    DEBUG: app:*
 
 package:
   exclude:

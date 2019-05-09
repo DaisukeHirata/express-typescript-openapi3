@@ -90,7 +90,7 @@ export async function inOutLogger(req: express.Request, res: express.Response, n
     headers: req.headers,
     params: req.query
   } as RequestLog;
-  debug.log("Incoming Request: %O", reqLog);
+  debug.log("Incoming Request: %o", reqLog);
 
   const oldWrite = res.write;
   const oldEnd = res.end;
@@ -130,11 +130,11 @@ export async function inOutLogger(req: express.Request, res: express.Response, n
       headers: res.getHeaders ? res.getHeaders() : undefined // Added in 7.7.0
     } as ResponseLog;
     if (resLog.statusCode >= 500) {
-      debug.error("Outgoing Response: %O", resLog);
+      debug.error("Outgoing Response: %o", resLog);
     } else if (resLog.statusCode >= 400) {
-      debug.warn("Outgoing Response: %O", resLog);
+      debug.warn("Outgoing Response: %o", resLog);
     } else {
-      debug.log("Outgoing Response: %O", resLog);
+      debug.log("Outgoing Response: %o", resLog);
     }
   };
 
