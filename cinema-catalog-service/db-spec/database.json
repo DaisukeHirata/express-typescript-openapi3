@@ -1,13 +1,21 @@
 {
+  "defaultEnv": "local",
   "init": {
     "driver": "mysql",
     "user": "foo",
     "password": "bar"
   },
-  "dev": {
+  "local": {
+    "driver": "mysql",
+    "user": "foo",
+    "password": "bar",
+    "database": "cinema_catalog"
+  },
+  "lambda": {
+    "host": {"ENV": "DATABASE_HOST"},
     "driver": "mysql", 
     "user": "foo",
     "password": "bar",
     "database": "cinema_catalog"
   }
-} 
+}

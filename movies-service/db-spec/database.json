@@ -1,13 +1,21 @@
 {
+  "defaultEnv": "local",
   "init": {
-      "driver": "mysql",
-      "user": "foo",
-      "password": "bar"
+    "driver": "mysql",
+    "user": "foo",
+    "password": "bar"
   },
-  "dev": {
-      "driver": "mysql", 
-      "user": "foo",
-      "password": "bar",
-      "database": "movie"
+  "local": {
+    "driver": "mysql",
+    "user": "foo",
+    "password": "bar",
+    "database": "movie"
+  },
+  "lambda": {
+    "host": {"ENV": "DATABASE_HOST"},
+    "driver": "mysql",
+    "user": "foo",
+    "password": "bar",
+    "database": "movie"
   }
 } 

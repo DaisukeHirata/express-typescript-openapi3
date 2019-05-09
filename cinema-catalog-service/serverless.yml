@@ -42,3 +42,12 @@ functions:
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetA}
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetB}
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetC}
+  db-migrate-up:
+    handler: dist/src/lib/db-migrate.migrate
+    vpc:
+      securityGroupIds:
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessDefaultSecurityGroup}
+      subnetIds:
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetA}
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetB}
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetC}
