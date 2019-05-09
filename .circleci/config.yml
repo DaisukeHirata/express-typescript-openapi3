@@ -87,6 +87,10 @@ jobs:
       - checkout
       - movies_service_npm_install
       - serverless_install
+      - dbmigrate:
+          name: movies service db migrate
+          command: serverless invoke -f db-migrate-up -l | grep 500
+          working_directory: movies-service
       - deploy:
           name: movies service deploy
           command: npm run deploy
