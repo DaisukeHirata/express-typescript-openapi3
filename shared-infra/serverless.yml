@@ -1,0 +1,209 @@
+service: shared-infra
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${opt:stage, 'dev'}
+  region: ap-northeast-1
+  environment:
+    AURORA_HOST: ${self:custom.AURORA.HOST}
+    AURORA_PORT: ${self:custom.AURORA.PORT}
+    AURORA_DB_NAME: ${self:custom.AURORA.DB_NAME}
+    AURORA_USERNAME: ${self:custom.AURORA.USERNAME}
+    AURORA_PASSWORD: ${self:custom.AURORA.PASSWORD}
+
+custom:
+  AURORA:
+    DB_NAME: aurora${opt:stage, self:provider.stage}
+    USERNAME: master
+    PASSWORD: password
+    HOST:
+     Fn::GetAtt: [AuroraRDSCluster, Endpoint.Address]
+    PORT:
+     Fn::GetAtt: [AuroraRDSCluster, Endpoint.Port]
+    VPC_CIDR: 10
+
+resources:
+  Resources:
+    # VPC
+    ServerlessVPC:
+      Type: AWS::EC2::VPC
+      Properties:
+        CidrBlock: ${self:custom.AURORA.VPC_CIDR}.0.0.0/16
+        EnableDnsSupport: true
+        EnableDnsHostnames: true
+        InstanceTenancy: default
+    # Subnet
+    ServerlessPrivateSubnetA:
+      DependsOn: ServerlessVPC
+      Type: AWS::EC2::Subnet
+      Properties:
+        VpcId:
+          Ref: ServerlessVPC
+        AvailabilityZone: ${self:provider.region}a
+        CidrBlock: ${self:custom.AURORA.VPC_CIDR}.0.0.0/24
+    ServerlessPrivateSubnetB:
+      DependsOn: ServerlessVPC
+      Type: AWS::EC2::Subnet
+      Properties:
+        VpcId:
+          Ref: ServerlessVPC
+        AvailabilityZone: ${self:provider.region}c
+        CidrBlock: ${self:custom.AURORA.VPC_CIDR}.0.1.0/24
+    ServerlessPrivateSubnetC:
+      DependsOn: ServerlessVPC
+      Type: AWS::EC2::Subnet
+      Properties:
+        VpcId:
+          Ref: ServerlessVPC
+        AvailabilityZone: ${self:provider.region}d
+        CidrBlock: ${self:custom.AURORA.VPC_CIDR}.0.2.0/24
+    ServerlessPublicSubnetA:
+      DependsOn: ServerlessVPC
+      Type: AWS::EC2::Subnet
+      Properties:
+        VpcId:
+          Ref: ServerlessVPC
+        AvailabilityZone: ${self:provider.region}a
+        CidrBlock: ${self:custom.AURORA.VPC_CIDR}.0.3.0/24
+    # InternetGateway
+    InternetGatewayLambda:
+      Type: AWS::EC2::InternetGateway
+    VPCGatewayAttachmentLambda:
+      Type: AWS::EC2::VPCGatewayAttachment
+      Properties:
+        VpcId:
+          Ref: ServerlessVPC
+        InternetGatewayId:
+          Ref: InternetGatewayLambda
+    DefaultPublicRouteTable:
+      Type: AWS::EC2::RouteTable
+      Properties:
+        VpcId:
+          Ref: ServerlessVPC
+    DefaultPublicRoute:
+      Type: AWS::EC2::Route
+      Properties:
+        RouteTableId:
+          Ref: DefaultPublicRouteTable
+        DestinationCidrBlock: 0.0.0.0/0
+        GatewayId:
+          Ref: InternetGatewayLambda
+    SubnetRouteTableAssociationLambdaPublicA:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+        SubnetId:
+          Ref: ServerlessPublicSubnetA
+        RouteTableId:
+          Ref: DefaultPublicRouteTable    
+    # NatGateway
+    ElasticIpLambda:
+      Type: AWS::EC2::EIP
+      Properties:
+        Domain: vpc
+    NatGatewayLambda:
+      Type: AWS::EC2::NatGateway
+      Properties:
+        AllocationId:
+          Fn::GetAtt:
+            - ElasticIpLambda
+            - AllocationId
+        SubnetId:
+          Ref: ServerlessPublicSubnetA
+    DefaultPrivateRouteTable:
+      Type: AWS::EC2::RouteTable
+      Properties:
+        VpcId:
+          Ref: ServerlessVPC
+    DefaultPrivateRoute:
+      Type: AWS::EC2::Route
+      Properties:
+        RouteTableId:
+          Ref: DefaultPrivateRouteTable
+        DestinationCidrBlock: 0.0.0.0/0
+        NatGatewayId:
+          Ref: NatGatewayLambda
+    SubnetRouteTableAssociationLambdaPrivateA:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+        SubnetId:
+          Ref: ServerlessPrivateSubnetA
+        RouteTableId:
+          Ref: DefaultPrivateRouteTable
+    SubnetRouteTableAssociationLambdaPrivateB:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+        SubnetId:
+          Ref: ServerlessPrivateSubnetB
+        RouteTableId:
+          Ref: DefaultPrivateRouteTable
+    SubnetRouteTableAssociationLambdaPrivateC:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+        SubnetId:
+          Ref: ServerlessPrivateSubnetC
+        RouteTableId:
+          Ref: DefaultPrivateRouteTable
+    # Aurora DB config
+    AuroraSubnetGroup:
+      Type: AWS::RDS::DBSubnetGroup
+      Properties:
+        DBSubnetGroupDescription: "Aurora Subnet Group"
+        SubnetIds:
+          - Ref: ServerlessPrivateSubnetA
+          - Ref: ServerlessPrivateSubnetB
+          - Ref: ServerlessPrivateSubnetC
+    AuroraRDSClusterParameter:
+      Type: AWS::RDS::DBClusterParameterGroup
+      Properties:
+        Description: Parameter group for the Serverless Aurora RDS DB.
+        Family: aurora5.6
+        Parameters:
+          character_set_database: "utf32"
+    AuroraRDSCluster:
+      Type: "AWS::RDS::DBCluster"
+      Properties:
+        MasterUsername: ${self:custom.AURORA.USERNAME}
+        MasterUserPassword: ${self:custom.AURORA.PASSWORD}
+        DatabaseName: ${self:custom.AURORA.DB_NAME}
+        Engine: aurora
+        EngineMode: serverless
+        BackupRetentionPeriod: 3
+        DBSubnetGroupName:
+          Ref: AuroraSubnetGroup
+        DBClusterParameterGroupName:
+          Ref: AuroraRDSClusterParameter
+        VpcSecurityGroupIds:
+          - Fn::GetAtt: ServerlessVPC.DefaultSecurityGroup
+        ScalingConfiguration:
+          AutoPause: true
+          MaxCapacity: 16
+          MinCapacity: 2
+          SecondsUntilAutoPause: 300
+  Outputs:
+    ServerlessVPC:
+      Value: !Ref ServerlessVPC
+      Export:
+        Name: ServerlessVPC
+    ServerlessDefaultSecurityGroup:
+      Value: 
+        Fn::GetAtt: ServerlessVPC.DefaultSecurityGroup
+      Export:
+        Name: ServerlessDefaultSecurityGroup
+    ServerlessPrivateSubnetA:
+      Value: !Ref ServerlessPrivateSubnetA
+      Export:
+        Name: ServerlessPrivateSubnetA
+    ServerlessPrivateSubnetB:
+      Value: !Ref ServerlessPrivateSubnetB
+      Export:
+        Name: ServerlessPrivateSubnetB
+    ServerlessPrivateSubnetC:
+      Value: !Ref ServerlessPrivateSubnetC
+      Export:
+        Name: ServerlessPrivateSubnetC
+    ServerlessAuroraEndpointAddress:
+      Value:
+        Fn::GetAtt: [AuroraRDSCluster, Endpoint.Address]
+      Export:
+        Name: ServerlessAuroraEndpointAddress

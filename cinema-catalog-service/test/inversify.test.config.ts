@@ -3,10 +3,10 @@ import * as P from "bluebird";
 import { Container, injectable } from "inversify";
 import { TYPES } from "../src/inversify/types";
 import { CinemaRepository } from "../src/repositories/cinemasRepository";
-import { IMovieRepository } from "../src/inversify/interfaces";
+import { ICinemaRepository } from "../src/inversify/interfaces";
 
 @injectable()
-class DummyMovieRepository implements IMovieRepository {
+class DummyCinemaRepository implements ICinemaRepository {
 
   private testMovies = [{
     id: "3",
@@ -31,20 +31,21 @@ class DummyMovieRepository implements IMovieRepository {
     released_at: "2018-12-01T00:00:00Z"
   }];
 
-  public async getAllMovies(): P<any[]> {
+  public async getCinemasByCity(id: string): P<any> {
     return P.all(this.testMovies);
   }
 
-  public async getMoviePremieres(): P<any[]> {
+  public async getCinemaById(id: string): P<any> {
     return P.all(this.testMovies);
   }
 
-  public async getMovieById(id: string): P<any> {
+  public async getCinemaScheduleByMovie(cinemaId: string, movieId: string): P<any> {
     return P.all(this.testMovies);
   }
+
 }
 
 const testContainer = new Container();
-testContainer.bind<CinemaRepository>(TYPES.ICinemaRepository).to(DummyMovieRepository);
+testContainer.bind<CinemaRepository>(TYPES.ICinemaRepository).to(DummyCinemaRepository);
 
 export { testContainer };

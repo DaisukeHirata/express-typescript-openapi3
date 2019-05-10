@@ -49,7 +49,7 @@ export class CinemaRepository implements ICinemaRepository {
 
     // make api requests parallel
     const parallelRequests = premiereMovieIds.map((movieId) => {
-      const url = host + "api/movies/" + movieId;
+      const url = host + "/api/movies/" + movieId;
       return fetch(url);
     });
 
@@ -103,7 +103,7 @@ export class CinemaRepository implements ICinemaRepository {
       return result;
     }, []);
 
-    const movie = await fetch(host + "api/movies/" + movieId);
+    const movie = await fetch(host + "/api/movies/" + movieId);
     const deserializedMovie = await cinemaDeserializer.deserialize(movie);
 
     const cinemaSchedules = Object.assign({}, cinema[0], {
