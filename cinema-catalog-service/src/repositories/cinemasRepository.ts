@@ -6,8 +6,6 @@ import { injectable } from "inversify";
 import { ICinemaRepository } from "../inversify/interfaces";
 import { fetch } from "../lib/circuitBreaker";
 import { cinemaDeserializer } from "../serializers/cinemasSerializer";
-// import { TDebug } from "../log";
-// const debug = new TDebug("app:src:repositories:cinemas");
 
 const mysql = serverlessMysql({
   config: {
@@ -24,7 +22,7 @@ const host = env.get("MOVIES_SERVICE_HOST");
 @injectable()
 export class CinemaRepository implements ICinemaRepository {
   public async getCinemasByCity(id: string): P<any> {
-    const results = await mysql.query(
+    const results = await mysql.query<[]>(
       "SELECT id, name FROM cinema WHERE city_id = ?",
       [id]
     );
@@ -35,7 +33,7 @@ export class CinemaRepository implements ICinemaRepository {
   }
 
   public async getCinemaById(id: string): P<any> {
-    const cinemaPremieres = await mysql.query(
+    const cinemaPremieres = await mysql.query<any>(
       `SELECT cinema.id, name, movie_id
          FROM cinema_catalog.cinema
    INNER JOIN cinema_catalog.cinemaPremiere
@@ -76,7 +74,7 @@ export class CinemaRepository implements ICinemaRepository {
     );
     await mysql.end();
 
-    const rooms = await mysql.query(
+    const rooms = await mysql.query<any>(
       `SELECT cinemaRoom.id, name, capacity, format, time, price
          FROM cinemaRoom
    INNER JOIN schedule
