@@ -154,12 +154,9 @@ export async function inOutLogger(req: express.Request, res: express.Response, n
   next();
 }
 
-const logger = new (winston.Logger)({
+const logger = winston.createLogger({
   transports: [
-    new (winston.transports.Console)({
-      timestamp: true,
-      "level": env.get("LOG_LEVEL")
-    })
+    new winston.transports.Console({ level: env.get("LOG_LEVEL") })
   ]
 });
 
