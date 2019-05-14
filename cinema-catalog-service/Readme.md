@@ -132,18 +132,26 @@ The folder structure of this app is explained below:
 | Name | Description |
 | ------------------------ | --------------------------------------------------------------------------------------------- |
 | **dist**                 | Contains the distributable (or output) from your TypeScript build.  |
-| **node_modules**         | Contains all  npm dependencies                                                            |
-| **src**                  | Contains  source code that will be compiled to the dist dir                               |
-| **src/config**           | Application configuration including environment-specific configs
-| **src/controllers**      | Controllers define functions to serve various express routes.
-| **src/lib**              | Common libraries to be used across your app.  
-| **src/middlewares**      | Express middlewares which process the incoming requests before handling them down to the routes
-| **src/routes**           | Contain all express routes, separated by module/area of application
-| **src/models**           | Models define schemas that will be used in storing and retrieving data from Application database  |
-| **src/monitoring**      | Prometheus metrics |
-| **src**/index.ts         | Entry point to express app                                                               |
-| package.json             | Contains npm dependencies as well as [build scripts](#what-if-a-library-isnt-on-definitelytyped)   | tsconfig.json            | Config settings for compiling source code only written in TypeScript
-| tslint.json              | Config settings for TSLint code style checking                                                |
+| **node_modules**         | Contains all npm dependencies   |
+| **src**                  | Contains source code that will be compiled to the dist dir    |
+| **src/config**           | Application configuration including environment-specific configs   |
+| **src/controllers**      | Controllers define functions to serve various express routes.    |
+| **src/lib**              | Common libraries to be used across your app.   |
+| **src/middlewares**      | Express middlewares which process the incoming requests before handling them down to the routes    |
+| **src/routes**           | Contain all express routes, separated by module/area of application    |
+| **src/models**           | Models define schemas that will be used in storing and retrieving data from Application database |
+| **src/monitoring**       | Prometheus metrics   |
+| **src**/index.ts         | Entry point to express app   |
+| **test**                 | Contains test code that tests all of codes in src directory   |
+| **integration-test**     | Contains integration test run by `npm run integration-test` and load test (currently jmeter) `npm run jmeter`   |
+| **db-spec**              | Contains a db-migration config file, dbspec.md in plantuml, test-data.sql   |
+| **migrations**           | Contains db-migration files by `db-migrate create`  |
+| **postman**              | Contains postman collection files  |
+| package.json             | Contains npm dependencies as well as [build scripts](#what-if-a-library-isnt-on-definitelytyped)   |
+| tsconfig.json            | Config settings for compiling source code only written in TypeScript
+| tslint.json              | Config settings for TSLint code style checking   |
+| serverless.yml           | Config settings for [Serverless Framework](https://serverless.com/)   |
+| nodemon.json             | Config settings for nodemon to watch file changed to make local env development smoother   |
 
 ---
 
@@ -293,3 +301,20 @@ const swaggerDoc = loadDocumentSync(basePath + "/definition/swagger.yaml");
   ```
 
 The fields `x-swagger-router-controller` will point the middleware to a `helloWorldRoute.ts` file in the route's directory, while the `operationId` names the handler function to be invoked.
+
+---
+
+## Pagination
+
+### keyset pagination
+
+- [Pagination of Ordered Queries](https://www.citusdata.com/blog/2016/03/30/five-ways-to-paginate/)
+
+  Like many engineering decisions, choosing pagination techniques involves tradeoffs. It’s safe to say that keyset pagination is most applicable for the average site with ordered linear access
+  Since users typically access pages of information in a linear fashion, keyset pagination is usually considered the best choice for paginating ordered records in high-traffic web servers.
+
+- [json:api cursor-pagination](https://jsonapi.org/profiles/ethanresnick/cursor-pagination/)
+
+  Cursor-based pagination (aka keyset pagination) is a common pagination strategy that avoids many of the pitfalls of “offset–limit” pagination.
+
+- [keyset pagination example](https://docs.google.com/spreadsheets/d/1c_usVedCveFM3eBZ3t-7_hV8T4UJx--wVIy9kBvhk24/edit#gid=0)

@@ -33,7 +33,30 @@ paths:
       tags:
         - /movies
       description: >-
-        get movie list
+        get movie pager example
+      parameters:
+        - name: page[size]
+          in: query
+          description: The page[size] parameter indicates the number of results that the client would like to see in the response.
+          required: false
+          schema:
+            type: number
+        - name: page[before]
+          in: query
+          description: The page[after] and page[before] parameters are both optional and both, if provided, take a cursor as their value. If their value is not a valid cursor
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: '2018-12-01T00:00:00Z'
+        - name: page[after]
+          in: query
+          description: The page[after] and page[before] parameters are both optional and both, if provided, take a cursor as their value. If their value is not a valid cursor
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: '2018-12-01T00:00:00Z'
       responses:
         '200':
           description: Successful request.
@@ -226,6 +249,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Movie'
+        links:
+          $ref: '#/components/schemas/Links'
       required:
         - data
     Movie:
@@ -262,10 +287,27 @@ components:
           type: string
           format: date-time
           example: '2018-12-01T00:00:00Z'
+        created-at:
+          type: string
+          format: date-time
+          example: '2018-12-01T00:00:00Z'
+        updated-at:
+          type: string
+          format: date-time
+          example: '2018-12-01T00:00:00Z'
       required:
         - title
         - runtime
         - released-at
+    Links:
+      type: object
+      properties:
+        self:
+          type: string
+        prev:
+          type: string
+        next:
+          type: string
     UploadImage:
       type: object
       properties:

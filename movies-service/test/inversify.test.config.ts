@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import * as P from "bluebird";
 import { Container, injectable } from "inversify";
+import { Moment } from "moment";
 import { TYPES } from "../src/inversify/types";
 import { MovieRepository } from "../src/repositories/moviesRepository";
 import { IMovieRepository } from "../src/inversify/interfaces";
@@ -35,7 +36,7 @@ class DummyMovieRepository implements IMovieRepository {
     return P.all(this.testMovies);
   }
 
-  public async getMoviePremieres(): P<any[]> {
+  public async getMoviePremieres(pageSize: number, pageBefore: Moment, pageAfter: Moment): P<any[]> {
     return P.all(this.testMovies);
   }
 
