@@ -57,3 +57,13 @@ docker-compose stop
 ```shell
 docker-compose down
 ```
+
+---
+
+## Serverless infra
+
+![](https://i.imgur.com/cP8OuQi.png)
+
+This is a basic infra structure for each microservices.
+Redis is Aurora Serverless (this diagram will be fixed soon). 
+
