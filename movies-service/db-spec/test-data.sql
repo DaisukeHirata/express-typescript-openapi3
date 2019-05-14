@@ -1,8 +1,10 @@
 -- movie
-INSERT INTO movie.movie (id, title, runtime, format, plot, released_at) VALUES ("1", "Assasins Creed", 115, "IMAX", "Lorem ipsum dolor sit amet", "2018-12-01 00:00:00");
-INSERT INTO movie.movie (id, title, runtime, format, plot, released_at) VALUES ("2", "Aliados", 124, "IMAX", "Lorem ipsum dolor sit amet", "2019-12-01 00:00:00");
-INSERT INTO movie.movie (id, title, runtime, format, plot, released_at) VALUES ("3", "xXx: Reactivado", 107, "IMAX", "Lorem ipsum dolor sit amet", "2020-12-01 00:00:00");
-INSERT INTO movie.movie (id, title, runtime, format, plot, released_at) VALUES ("4", "Resident Evil: Capitulo Final", 107, "IMAX", "Lorem ipsum dolor sit amet", "2021-12-01 00:00:00");
-INSERT INTO movie.movie (id, title, runtime, format, plot, released_at) VALUES ("5", "Moana Un Mar de Aventuras", 114, "IMAX", "Lorem ipsum dolor sit amet", "2022-12-01 00:00:00");
-
-
+INSERT INTO movie.movie (id, title, runtime, format, plot, released_at, created_at, updated_at) VALUES ("1", "Assasins Creed", 115, "IMAX", "Lorem ipsum dolor sit amet", "2018-12-01 00:00:00", "2018-12-01 00:00:00", "2018-12-01 00:00:00");
+INSERT INTO movie.movie (id, title, runtime, format, plot, released_at, created_at, updated_at) VALUES ("2", "Aliados", 124, "IMAX", "Lorem ipsum dolor sit amet", "2019-12-01 00:00:00", "2018-12-02 00:00:00", "2018-12-02 00:00:00");
+INSERT INTO movie.movie (id, title, runtime, format, plot, released_at, created_at, updated_at) VALUES ("3", "xXx: Reactivado", 107, "IMAX", "Lorem ipsum dolor sit amet", "2020-12-01 00:00:00", "2018-12-03 00:00:00", "2018-12-03 00:00:00");
+INSERT INTO movie.movie (id, title, runtime, format, plot, released_at, created_at, updated_at) VALUES ("4", "Resident Evil: Capitulo Final", 107, "IMAX", "Lorem ipsum dolor sit amet", "2021-12-01 00:00:00", "2018-12-04 00:00:00", "2018-12-04 00:00:00");
+INSERT INTO movie.movie (id, title, runtime, format, plot, released_at, created_at, updated_at) VALUES ("5", "Moana Un Mar de Aventuras", 114, "IMAX", "Lorem ipsum dolor sit amet", "2022-12-01 00:00:00", "2018-12-05 00:00:00", "2018-12-05 00:00:00");
+INSERT INTO movie.movie (id, title, runtime, format, plot, released_at, created_at, updated_at) VALUES ("6", "Toy Story", 116, "IMAX", "Lorem ipsum dolor sit amet", "2023-12-01 00:00:00", "2018-12-06 00:00:00", "2018-12-06 00:00:00");
+INSERT INTO movie.movie (id, title, runtime, format, plot, released_at, created_at, updated_at) VALUES ("7", "Big Hero 6", 98, "IMAX", "Lorem ipsum dolor sit amet", "2024-12-01 00:00:00", "2018-12-07 00:00:00", "2018-12-07 00:00:00");
+INSERT INTO movie.movie (id, title, runtime, format, plot, released_at, created_at, updated_at) VALUES ("8", "Cinderella", 120, "IMAX", "Lorem ipsum dolor sit amet", "2025-12-01 00:00:00", "2018-12-08 00:00:00", "2018-12-08 00:00:00");
+INSERT INTO movie.movie (id, title, runtime, format, plot, released_at, created_at, updated_at) VALUES ("9", "Game of thrones", 110, "IMAX", "Lorem ipsum dolor sit amet", "2026-12-01 00:00:00", "2018-12-09 00:00:00", "2018-12-09 00:00:00");

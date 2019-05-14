@@ -21,8 +21,16 @@ exports.up = function(db) {
     runtime: "int",
     format: "string",
     plot: "string",
-    released_at: "datetime"
-  });
+    released_at: "datetime",
+    created_at: "datetime",
+    updated_at: "datetime"
+  }, (err) => {
+    if (!err) {
+      db.addIndex("movie", "movie_created_at_idx", ["created_at"]);
+    } else {
+      console.log(err);
+    }
+  })
   return null;
 };
 

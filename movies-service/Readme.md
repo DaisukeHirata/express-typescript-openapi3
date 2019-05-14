@@ -1,44 +1,99 @@
-# Nodejs FES Template
+# Movies Service
 
-This version includes support for OpenAPI 3.0
+manage movies and premiere movies.
 
-# Environment vars
+## Architechtere
 
-This project uses the following environment variables:
+![](https://i.imgur.com/hWEQsDC.png)
 
-| Name                          | Description                         | Default Value                                  |
-| ----------------------------- | ------------------------------------| -----------------------------------------------|
-|CORS           | Cors accepted values            | "*"      |
+![](https://i.imgur.com/cP8OuQi.png)
 
+---
 
-# Pre-requisites
-
-- Install [Node.js](https://nodejs.org/en/) version 8.0.0
-
-
-# Getting started
-
-- Clone the repository
+## Running tests using NPM Scripts
 
 ```shell
-git clone  <git lab template url> <project_name>
+npm run test
 ```
 
-- Install dependencies
+### How to write tests
+
+The tests are  written in Mocha and the assertions done using Chai
+
+```json
+"mocha",
+"chai",
+"chai-http",
+```
+
+Test files are created under test folder.
+
+---
+
+## Deploy to AWS manually
+
+[Configure AWS Credentials](https://serverless.com/framework/docs/providers/aws/guide/credentials/) before running this command.
 
 ```shell
-cd <project_name>
-npm install
+npm run deploy
 ```
 
-- Build and run the project
+---
+
+## Deploy to AWS by CircleCI
+
+- make PR from master to deploy-movies-service in GitHub, merge it.
+
+![](https://i.imgur.com/UOBPO7A.png)
+
+---
+
+## Database migration locally
 
 ```shell
-npm start
+db-migrate up --config db-spec/database.json -e dev
 ```
 
-  Navigate to `http://localhost:8001`
+---
 
+## Database migration in AWS
+
+```shell
+serverless invoke -f db-migrate-up -l
+```
+
+---
+
+## TSLint
+
+TSLint is a code linter that helps catch minor code quality and style issues.
+
+### TSLint rules
+
+All rules are configured through `tslint.json`.
+
+### Running TSLint
+
+To run TSLint you can call the main build script or just the TSLint task.
+
+```shell
+npm run build:live   // runs full build including TSLint
+npm run lint  // runs only TSLint
+```
+
+---
+
+## Request flow
+
+- _plantuml_
+
+![](https://i.imgur.com/hWEQsDC.png)
+
+---
+
+## Endpoint
+
+- see swagger.yaml
 - API Document endpoints
 
   swagger Spec Endpoint : `http://localhost:8001/api-docs`
@@ -46,17 +101,29 @@ npm start
   swagger-ui  Endpoint : `http://localhost:8001/docs`
 
 
-# TypeScript + Node 
+---
 
-The main purpose of this repository is to show a project setup and workflow for writing microservice. The Rest APIs will be using the Swagger (OpenAPI) Specification.
+## Service Dependency
 
-## Getting TypeScript
+- _plantuml_
 
-Add Typescript to project `npm`.
+![](https://i.imgur.com/hWEQsDC.png)
 
-```shell
-npm install -D typescript
-```
+---
+
+## FAQ
+
+---
+
+## Environment vars
+
+This project uses the following environment variables:
+
+| Name                          | Description                         | Default Value                                  |
+| ----------------------------- | ------------------------------------| -----------------------------------------------|
+|CORS           | Cors accepted values            | "*"      |
+
+---
 
 ## Project Structure
 
@@ -65,59 +132,47 @@ The folder structure of this app is explained below:
 | Name | Description |
 | ------------------------ | --------------------------------------------------------------------------------------------- |
 | **dist**                 | Contains the distributable (or output) from your TypeScript build.  |
-| **node_modules**         | Contains all  npm dependencies                                                            |
-| **src**                  | Contains  source code that will be compiled to the dist dir                               |
-| **src/config**           | Application configuration including environment-specific configs
-| **src/controllers**      | Controllers define functions to serve various express routes.
-| **src/lib**              | Common libraries to be used across your app.  
-| **src/middlewares**      | Express middlewares which process the incoming requests before handling them down to the routes
-| **src/routes**           | Contain all express routes, separated by module/area of application
-| **src/models**           | Models define schemas that will be used in storing and retrieving data from Application database  |
-| **src/monitoring**      | Prometheus metrics |
-| **src**/index.ts         | Entry point to express app                                                               |
-| package.json             | Contains npm dependencies as well as [build scripts](#what-if-a-library-isnt-on-definitelytyped)   | tsconfig.json            | Config settings for compiling source code only written in TypeScript
-| tslint.json              | Config settings for TSLint code style checking                                                |
+| **node_modules**         | Contains all npm dependencies   |
+| **src**                  | Contains source code that will be compiled to the dist dir    |
+| **src/config**           | Application configuration including environment-specific configs   |
+| **src/controllers**      | Controllers define functions to serve various express routes.    |
+| **src/lib**              | Common libraries to be used across your app.   |
+| **src/middlewares**      | Express middlewares which process the incoming requests before handling them down to the routes    |
+| **src/routes**           | Contain all express routes, separated by module/area of application    |
+| **src/models**           | Models define schemas that will be used in storing and retrieving data from Application database |
+| **src/monitoring**       | Prometheus metrics   |
+| **src**/index.ts         | Entry point to express app   |
+| **test**                 | Contains test code that tests all of codes in src directory   |
+| **integration-test**     | Contains integration test run by `npm run integration-test` and load test (currently jmeter) `npm run jmeter`   |
+| **db-spec**              | Contains a db-migration config file, dbspec.md in plantuml, test-data.sql   |
+| **migrations**           | Contains db-migration files by `db-migrate create`  |
+| **postman**              | Contains postman collection files  |
+| package.json             | Contains npm dependencies as well as [build scripts](#what-if-a-library-isnt-on-definitelytyped)   |
+| tsconfig.json            | Config settings for compiling source code only written in TypeScript
+| tslint.json              | Config settings for TSLint code style checking   |
+| serverless.yml           | Config settings for [Serverless Framework](https://serverless.com/)   |
+| nodemon.json             | Config settings for nodemon to watch file changed to make local env development smoother   |
 
-## Building the project
+---
 
-### Configuring TypeScript compilation
-
-```json
-{
-    "compilerOptions": {
-      "target": "es5",
-      "module": "commonjs",
-      "outDir": "dist",
-      "sourceMap": true
-    },
-
-    "include": [
-      "src/**/*.ts"
-    ],
-    "exclude": [
-      "src/**/*.spec.ts",
-      "test",
-      "node_modules"
-    ]
-  }
-```
-
-### Running the build
+## npm scripts
 
 All the different build steps are orchestrated via [npm scripts](https://docs.npmjs.com/misc/scripts).
 Npm scripts basically allow us to call (and chain) terminal commands via npm.
 
 | Npm Script | Description |
 | ------------------------- | ------------------------------------------------------------------------------------------------- |
-| `start`                   | Runs full build and runs node on dist/index.js. Can be invoked with `npm start`                  |
-| `build:copy`                   | copy the *.yaml file to dist/ folder      |
-| `build:live`                   | Full build. Runs ALL build tasks       |
-| `build:dev`                   | Full build. Runs ALL build tasks with all watch tasks        |
-| `dev`                   | Runs full build before starting all watch tasks. Can be invoked with `npm dev`                                         |
-| `test`                    | Runs build and run tests using mocha        |
-| `lint`                    | Runs TSLint on project files       |
+| `start`                   | Runs full build and runs node on dist/index.js. Can be invoked with `npm start`   |
+| `build:copy`              | copy the *.yaml file to dist/ folder    |
+| `build:live`              | Full build. Runs ALL build tasks    |
+| `build:dev`               | Full build. Runs ALL build tasks with all watch tasks   |
+| `dev`                     | Runs full build before starting all watch tasks. Can be invoked with `npm dev`  |
+| `test`                    | Runs build and run tests using mocha    |
+| `lint`                    | Runs TSLint on project files    |
 
-### Using the debugger in VS Code
+---
+
+## Using the debugger in VS Code
 
 Node.js debugging in VS Code is easy to setup and even easier to use.
 Press `F5` in VS Code, it looks for a top level `.vscode` folder with a `launch.json` file.
@@ -158,129 +213,7 @@ Press `F5` in VS Code, it looks for a top level `.vscode` folder with a `launch.
     }
 ```
 
-## Testing
-
-The tests are  written in Mocha and the assertions done using Chai
-
-```json
-"mocha": "3.4.2",
-"chai": "4.1.2",
-"chai-http": "3.0.0",
-```
-
-### Example application.spec.ts
-
-```javascript
-import chaiHttp = require("chai-http")
-import * as chai from "chai"
-import app from './application'
-
-const expect = chai.expect;
-chai.use(chaiHttp);
-
-
-describe('App', () => {
-  it('works', (done:Function): void => {
-  chai.request(app)
-      .get('/api/hello?greeting=world')
-      .send({})
-      .end((err:Error, res: any): void => {
-          expect(res.statusCode).to.be.equal(200);
-          expect(res.body.msg).to.be.equal("hello world");
-          done();
-      });
-  
-    });
-});
-```
-
-### Running tests using NPM Scripts
-
-```shell
-npm run test
-````
-
-Test files are created under test folder.
-
-# Swagger
-
-## Specification
-
-The swagger specification file is named as swagger.yaml. The file is located under definition folder.
-Example:
-
-```yaml
-paths:
-  /hello:
-    get:
-      x-swagger-router-controller: helloWorldRoute
-      operationId: helloWorldGet
-      tags:
-        - /hello
-      description: >-
-        Returns the current weather for the requested location using the
-        requested unit.
-      parameters:
-        - name: greeting
-          in: query
-          description: Name of greeting
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Hello'
-        default:
-          description: Invalid request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-servers:
-  - url: '/api'
-components:
-  schemas:
-    Hello:
-      properties:
-        msg:
-          type: string
-      required:
-        - msg
-    Error:
-      properties:
-        message:
-          type: string
-      required:
-        - message
-```
-
-### Highlights of the swagger.yaml File
-
-- /hello:
-  
-  Specifies how users should be routed when they make a request to this endpoint.
-- x-swagger-router-controller: helloWorldRoute
-
-  Specifies  which code file acts as the controller for this endpoint.
-- get:
-
-  Specifies the method being requested (GET, PUT, POST, etc.).
-- operationId: hello
-  
-  Specifies the direct method to invoke for this endpoint within the controller/router
-- parameters:
-  
-   This section defines the parameters of your endpoint. They can be defined as path, query, header, formData, or body.
-- definitions:
-
-   This section defines the structure of objects used in responses or as parameters.
-- servers:
-
-   Defines the base path or the servers available.
+---
 
 ## Swagger Middleware
 
@@ -369,27 +302,19 @@ const swaggerDoc = loadDocumentSync(basePath + "/definition/swagger.yaml");
 
 The fields `x-swagger-router-controller` will point the middleware to a `helloWorldRoute.ts` file in the route's directory, while the `operationId` names the handler function to be invoked.
 
-# TSLint
+---
 
-TSLint is a code linter that helps catch minor code quality and style issues.
+## Pagination
 
-## TSLint rules
+### keyset pagination
 
-All rules are configured through `tslint.json`.
+- [Pagination of Ordered Queries](https://www.citusdata.com/blog/2016/03/30/five-ways-to-paginate/)
 
-## Running TSLint
+  Like many engineering decisions, choosing pagination techniques involves tradeoffs. It’s safe to say that keyset pagination is most applicable for the average site with ordered linear access
+  Since users typically access pages of information in a linear fashion, keyset pagination is usually considered the best choice for paginating ordered records in high-traffic web servers.
 
-To run TSLint you can call the main build script or just the TSLint task.
+- [json:api cursor-pagination](https://jsonapi.org/profiles/ethanresnick/cursor-pagination/)
 
-```shell
-npm run build:live   // runs full build including TSLint
-npm run lint  // runs only TSLint
-```
+  Cursor-based pagination (aka keyset pagination) is a common pagination strategy that avoids many of the pitfalls of “offset–limit” pagination.
 
-## Deploy to AWS Serverless
-
-[Configure AWS Credentials](https://serverless.com/framework/docs/providers/aws/guide/credentials/) before running this command.
-
-```shell
-npm run deploy
-```
+- [keyset pagination example](https://docs.google.com/spreadsheets/d/1c_usVedCveFM3eBZ3t-7_hV8T4UJx--wVIy9kBvhk24/edit#gid=0)
