@@ -48,7 +48,7 @@
     "@types/winston": "^2.3.7",
     "chai": "4.2.0",
     "chai-http": "^4.3.0",
-    "codecov": "^3.4.0",
+    "codecov": "^3.5.0",
     "cpx": "1.5.0",
     "kill-port": "^1.5.0",
     "mocha": "^5.2.0",
