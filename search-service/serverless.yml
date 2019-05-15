@@ -1,0 +1,92 @@
+service: movies-service
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${opt:stage, 'dev'}
+  region: ap-northeast-1
+  environment:
+    DATABASE_HOST: ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessAuroraEndpointAddress}
+    DATABASE: movie
+    DATABASE_USER: foo
+    DATABASE_PASSWORD: bar
+    MOVIES_SERVICE_HOST: ${cf.${self:provider.region}:movies-service-${opt:stage, self:provider.stage}.ServiceEndpoint}
+    DEBUG: app:*
+
+package:
+  exclude:
+    - "**/*.ts"
+    - "test/**"
+    - "scripts/**"
+    - ".vscode/**"
+    - "node_modules/**"
+    - "*"
+    - "!package.json"
+
+functions:
+  hello-get:
+    handler: dist/src/lambda.http
+    events:
+      - http:
+          path: /api/hello
+          method: get
+          cors: true
+          request:
+            parameters:
+              querystrings:
+                greeting: true
+    vpc:
+      securityGroupIds:
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessDefaultSecurityGroup}
+      subnetIds:
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetA}
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetB}
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetC}
+
+  goodbye-post:
+    handler: dist/src/lambda.http
+    events:
+      - http:
+          path: /api/goodbye/{postId}
+          method: post
+          cors: true
+          request:
+            parameters:
+              paths:
+                postId: true
+    vpc:
+      securityGroupIds:
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessDefaultSecurityGroup}
+      subnetIds:
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetA}
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetB}
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetC}
+
+  other:
+    handler: dist/src/lambda.http
+    events:
+      - http:
+          path: /
+          method: any
+          cors: true
+      - http:
+          path: /{proxy+}
+          method: any
+          cors: true
+    vpc:
+      securityGroupIds:
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessDefaultSecurityGroup}
+      subnetIds:
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetA}
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetB}
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetC}
+
+  db-migrate-up:
+    handler: dist/src/lib/db-migrate.migrate
+    vpc:
+      securityGroupIds:
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessDefaultSecurityGroup}
+      subnetIds:
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetA}
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetB}
+        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetC}
