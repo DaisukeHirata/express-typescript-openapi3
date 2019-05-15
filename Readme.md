@@ -4,6 +4,10 @@ Rewritting codes of [this good article](https://medium.com/@cramirez92/build-a-n
 
 ![](https://i.imgur.com/ANuiuJj.png)
 
+## Infra Architecture for each microservice
+
+![Infra Arch](./Infra_Architecture_level2.svg)
+
 ---
 
 ## TypeScript + Node 
@@ -57,13 +61,3 @@ docker-compose stop
 ```shell
 docker-compose down
 ```
-
----
-
-## Serverless infra
-
-![](https://i.imgur.com/cP8OuQi.png)
-
-This is a basic infra structure for each microservices.
-Redis is Aurora Serverless (this diagram will be fixed soon). 
-

@@ -29,6 +29,10 @@ Rel_R(search, elastic, "Uses", "HTTP")
 @enduml
 ```
 
+### Infra Architecture
+
+![Infra Arch](../Infra_Architecture_level2.svg)
+
 #### To see plantuml diagram in github
 
 - install chrome extension [Pegmatite](https://chrome.google.com/webstore/detail/pegmatite/jegkfbnfbfnohncpcfcimepibmhlkldo)
