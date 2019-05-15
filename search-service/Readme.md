@@ -4,6 +4,36 @@ search cinemas.
 
 ## Architechtere
 
+### Service Architecture
+
+```uml
+@startuml level2
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+LAYOUT_TOP_DOWN
+'LAYOUT_AS_SKETCH
+LAYOUT_WITH_LEGEND
+skinparam backgroundColor #FFFFFF
+
+System_Ext(client, "Client")
+
+System_Boundary(c1, 'Micro Services') {
+  Container(search, "Search", "Microservice", "search cinema data also provides endpoints that perform CRUD operations on indices in Elastic.")
+  Container(cinemas_catalog, "cinemas catalog", "Microservice", "Cinema catalog, movie schedules")
+  ContainerDb(elastic, "Elastic Search", "6.3", "Stores cinema information")
+}
+
+Rel(client, search, "Uses", "HTTP")
+Rel(search, cinemas_catalog, "Uses", "HTTP")
+Rel_R(search, elastic, "Uses", "HTTP")
+
+@enduml
+```
+
+#### To see plantuml diagram in github
+
+- install chrome extension [Pegmatite](https://chrome.google.com/webstore/detail/pegmatite/jegkfbnfbfnohncpcfcimepibmhlkldo)
+
+
 ---
 
 ## Sequence to sync data with Cinemas
@@ -17,6 +47,13 @@ search cinemas.
 
 ```uml
 @startuml
+skinparam sequence {
+  ParticipantBorderColor #4B7EBB
+  ParticipantBackgroundColor #548CD0
+  ParticipantFontColor White
+  ArrowColor #B2B2B2
+  LifeLineBorderColor #A1A1A1
+}
 
 == Success ==
 
@@ -44,6 +81,13 @@ search cinemas.
 
 ```uml
 @startuml
+skinparam sequence {
+  ParticipantBorderColor #4B7EBB
+  ParticipantBackgroundColor #548CD0
+  ParticipantFontColor White
+  ArrowColor #B2B2B2
+  LifeLineBorderColor #A1A1A1
+}
 
 == Success ==
 
@@ -73,6 +117,13 @@ search cinemas.
 
 ```uml
 @startuml
+skinparam sequence {
+  ParticipantBorderColor #4B7EBB
+  ParticipantBackgroundColor #548CD0
+  ParticipantFontColor White
+  ArrowColor #B2B2B2
+  LifeLineBorderColor #A1A1A1
+}
 
 == Success ==
 
@@ -98,12 +149,42 @@ search cinemas.
 @enduml
 ```
 
+### Sync one cinemas data (Pull style)
+
+- It will update the cinema of given id.
+
+```uml
+@startuml
+skinparam sequence {
+  ParticipantBorderColor #4B7EBB
+  ParticipantBackgroundColor #548CD0
+  ParticipantFontColor White
+  ArrowColor #B2B2B2
+  LifeLineBorderColor #A1A1A1
+}
+
+"Client" -> "Search Service": GET /search/cinemas/:id/sync
+"Cinema Catalog Service" <- "Search Service": GET the cinema of given id
+"Cinema Catalog Service" -> "Search Service": res the cinema
+"Search Service" -> "Search Service": put a cinemas index into Elasticsearch
+"Client" <- "Search Service": res done
+
+@enduml
+```
+
 ### Sync All cinemas data
 
 - use this way or logstash
 
 ```uml
 @startuml
+skinparam sequence {
+  ParticipantBorderColor #4B7EBB
+  ParticipantBackgroundColor #548CD0
+  ParticipantFontColor White
+  ArrowColor #B2B2B2
+  LifeLineBorderColor #A1A1A1
+}
 
 "Client" -> "Search Service": req /search/cinemas/sync
 
