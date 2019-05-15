@@ -6,40 +6,114 @@ search cinemas.
 
 ---
 
-## Sequence
+## Sequence to sync data with Cinemas
 
-### Sync All cinemas data
+- pick [Transaction](https://qafoo.com/blog/086_how_to_synchronize_a_database_with_elastic_search.html) programatically
+- We can not use go-mysql-elasticsearch. because Aurora serverless does not support binlog
+- We don't use logstash for realtime syncing because it's not good at DELETE index for realtime syncing
+- We don't use AWS specific service to sync at first. because we have to manage in a different manner in locan and serverless environment
 
-/sync/cinemas
+### Create a cinema data
 
 ```uml
 @startuml
 
-"Any Service" -> "Search Service": req sync/cinemas
+== Success ==
 
-loop until end of all cinemas
-  "Cinema Catalog Service" <- "Search Service": req cinemas
-  "Cinema Catalog Service" -> "Search Service": res cinemas
-  "Search Service" -> "Search Service": put cinemas info into Elasticsearch
-end
+"Client" -> "Cinema Catalog Service": POST /cinemas
+"Cinema Catalog Service" -> "Cinema Catalog Service": insert a cinema into DB
+"Cinema Catalog Service" -> "Search Service": PUT /search/cinemas/:id
+"Search Service" -> "Search Service": create a cinema index into ES
+"Cinema Catalog Service" <- "Search Service": res done
+"Client" <- "Cinema Catalog Service": res done
 
-"Any Service" <- "Search Service": res done
+== Error transaction ==
+
+"Client" -> "Cinema Catalog Service": POST /cinemas
+"Cinema Catalog Service" -> "Cinema Catalog Service": insert a cinema into DB
+"Cinema Catalog Service" -> "Search Service": PUT /search/cinemas/:id
+"Search Service" -[#red]> "Search Service": create a cinema index into ES
+"Cinema Catalog Service" <[#red]- "Search Service": res ERROR!!
+"Cinema Catalog Service" -> "Cinema Catalog Service": delete a cinema from DB
+"Client" <[#red]- "Cinema Catalog Service": res ERROR!!
 
 @enduml
 ```
 
-### Sync a cinema data
-
-/sync/cinemas/:id
+### Update a cinema data
 
 ```uml
 @startuml
 
-"Any Service" -> "Search Service": req sync/cinemas/:id
-"Cinema Catalog Service" <- "Search Service": req cinemas/:id
-"Cinema Catalog Service" -> "Search Service": res a cinema
-"Search Service" -> "Search Service": put a cinema info into Elasticsearch
-"Any Service" <- "Search Service": res done
+== Success ==
+
+"Client" -> "Cinema Catalog Service": PUT /cinemas/:id
+"Cinema Catalog Service" -> "Cinema Catalog Service": select for update
+"Cinema Catalog Service" -> "Cinema Catalog Service": update a cinema in DB
+"Cinema Catalog Service" -> "Search Service": PUT /search/cinemas/:id
+"Search Service" -> "Search Service": update a cinema index in ES
+"Cinema Catalog Service" <- "Search Service": res done
+"Client" <- "Cinema Catalog Service": res done
+
+== Error transaction ==
+
+"Client" -> "Cinema Catalog Service": PUT /cinemas/:id
+"Cinema Catalog Service" -> "Cinema Catalog Service": select for update
+"Cinema Catalog Service" -> "Cinema Catalog Service": update a cinema in DB
+"Cinema Catalog Service" -> "Search Service": PUT /search/cinemas/:id
+"Search Service" -[#red]> "Search Service": update a cinema index into ES
+"Cinema Catalog Service" <[#red]- "Search Service": res ERROR!!
+"Cinema Catalog Service" -> "Cinema Catalog Service": update a cinema in DB to rollback
+"Client" <[#red]- "Cinema Catalog Service": res ERROR!!
+
+@enduml
+```
+
+### DELETE a cinema data
+
+```uml
+@startuml
+
+== Success ==
+
+"Client" -> "Cinema Catalog Service": DELETE /cinemas/:id
+"Cinema Catalog Service" -> "Cinema Catalog Service": select for update
+"Cinema Catalog Service" -> "Cinema Catalog Service": delete a cinema in DB
+"Cinema Catalog Service" -> "Search Service": DELETE /search/cinemas/:id
+"Search Service" -> "Search Service": delete a cinema index in ES
+"Cinema Catalog Service" <- "Search Service": res done
+"Client" <- "Cinema Catalog Service": res done
+
+== Error transaction ==
+
+"Client" -> "Cinema Catalog Service": DELETE /cinemas/:id
+"Cinema Catalog Service" -> "Cinema Catalog Service": select for update
+"Cinema Catalog Service" -> "Cinema Catalog Service": delete a cinema in DB
+"Cinema Catalog Service" -> "Search Service": DELETE /search/cinemas/:id
+"Search Service" -[#red]> "Search Service": delete a cinema index into ES
+"Cinema Catalog Service" <[#red]- "Search Service": res ERROR!!
+"Cinema Catalog Service" -> "Cinema Catalog Service": insert a cinema in DB to rollback
+"Client" <[#red]- "Cinema Catalog Service": res ERROR!!
+
+@enduml
+```
+
+### Sync All cinemas data
+
+- use this way or logstash
+
+```uml
+@startuml
+
+"Client" -> "Search Service": req /search/cinemas/sync
+
+loop until end of all cinemas
+  "Cinema Catalog Service" <- "Search Service": req cinemas
+  "Cinema Catalog Service" -> "Search Service": res cinemas
+  "Search Service" -> "Search Service": put a cinemas index into Elasticsearch
+end
+
+"Client" <- "Search Service": res done
 
 @enduml
 ```
