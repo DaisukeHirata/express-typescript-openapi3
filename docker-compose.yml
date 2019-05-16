@@ -1,6 +1,6 @@
-version: '3'
+version: '3.7'
 volumes:
-    object-vol: # Volume to host s3 service data locally.
+    elk-vol:  # Volume to host elk service data locally.
         driver: 'local'
     data-vol: # Volume to host db service data locally.
         driver: 'local'
@@ -10,10 +10,32 @@ services:
         ports:
             - "3306:3306" # host:container
         volumes:
-        - data-vol:/var/lib/postgresql/data
+            - data-vol:/var/lib/mysql/data
         environment:
             - MYSQL_ROOT_PASSWORD=mysql
         container_name: db-cont
+
+    elk:
+        image: sebp/elk:701
+        ports:
+            - "5601:5601" # host:container kibana
+            - "9200:9200" # host:container elasticsearch
+            - "5044:5044" # host:container logstash
+        volumes:
+            - elk-vol:/usr/share/elasticsearch/data
+        container_name: elk-cont
+
+    filebeat:
+        build: ./filebeat
+        links:
+            - elk:elk
+        depends_on:
+            - elk
+        volumes:
+            - ./filebeat/data:/usr/share/filebeat/data:rw # needed to persist filebeat tracking data :
+            - /var/lib/docker/containers:/usr/share/filebeat/dockerlogs/:ro # needed to access all docker logs (read only) :
+            - /var/run/docker.sock:/var/run/docker.sock # needed to access additional informations about containers
+        container_name: filebeat-cont
 
     cinema-catalog-service:
         build: ./cinema-catalog-service
@@ -21,7 +43,7 @@ services:
             - db:db
             - movies-service:movies-service
             # [other container]:[alias in this container]
-            # this will create environment variables in the go container
+            # this will create environment variables in the node.js container
             # with ip and port info for the postgres container
             # also creates entries in /etc/hosts with ip info
         depends_on:
@@ -30,6 +52,11 @@ services:
             - "8001:8001" # host:container
         volumes:
             - ./cinema-catalog-service:/home/nupp/app
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "200k"
+                max-file: "10"
         container_name: cinema-catalog-service-cont
 
     movies-service:
@@ -37,7 +64,7 @@ services:
         links:
             - db:db 
             # [other container]:[alias in this container]
-            # this will create environment variables in the go container
+            # this will create environment variables in the node.js container
             # with ip and port info for the postgres container
             # also creates entries in /etc/hosts with ip info
         depends_on:
@@ -46,4 +73,9 @@ services:
             - "8002:8001" # host:container
         volumes:
             - ./movies-service:/home/nupp/app
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "200k"
+                max-file: "10"
         container_name: movies-service-cont

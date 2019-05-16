@@ -1,0 +1,19 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /usr/share/filebeat/dockerlogs/*/*.log
+  include_lines: ['Outgoing']
+ 
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+setup.template.settings:
+  index.number_of_shards: 1
+  
+setup.kibana:
+  host: "elk:5601"
+
+output.elasticsearch:
+  hosts: ["elk:9200"]
