@@ -22,7 +22,7 @@ services:
             - "9200:9200" # host:container elasticsearch
             - "5044:5044" # host:container logstash
         volumes:
-            - elk-vol:/usr/share/elasticsearch/data
+           - elk-vol:/usr/share/elasticsearch/data
         container_name: elk-cont
 
     filebeat:
@@ -32,7 +32,7 @@ services:
         depends_on:
             - elk
         volumes:
-            - ./filebeat/data:/usr/share/filebeat/data:rw # needed to persist filebeat tracking data :
+            - ./filebeat/filebeat-data:/usr/share/filebeat/data:rw # needed to persist filebeat tracking data :
             - /var/lib/docker/containers:/usr/share/filebeat/dockerlogs/:ro # needed to access all docker logs (read only) :
             - /var/run/docker.sock:/var/run/docker.sock # needed to access additional informations about containers
         container_name: filebeat-cont

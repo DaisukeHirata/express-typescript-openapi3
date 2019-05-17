@@ -1,0 +1,4 @@
+{
+  "host": "http://localhost:9200",
+  "name": dev
+}
