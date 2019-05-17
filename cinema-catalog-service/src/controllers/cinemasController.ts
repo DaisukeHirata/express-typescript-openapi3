@@ -57,4 +57,16 @@ export class CinemasController {
     const serializedCinemaSchedules = cinemaSchedulesSerializer.serialize(cinemaSchedule);
     res.send(serializedCinemaSchedules);
   }
+
+  public async sendTestDataToEs(req: Request, res: Response): P<any> {
+    // test filebeat and ingest Node pipeline
+    console.log(JSON.stringify({
+      INGEST_TO_ES: true,
+      id: "1b1252c8d280",
+      abc: "Outgoing",
+      def: "furafura",
+      deleted_at: true
+    }));
+    res.send({"msg": "done"});
+  }
 }

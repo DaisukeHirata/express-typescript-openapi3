@@ -40,6 +40,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorSummary'
+  /cinemas/beattest:
+    get:
+      x-swagger-router-controller: cinemasRoute
+      operationId: sendTestDataToEs
+      tags:
+        - /cinemas
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hello'
+
   /cinemas/{cinema_id}:
     get:
       x-swagger-router-controller: cinemasRoute
@@ -347,3 +361,9 @@ components:
           example: 90
       required:
         - time
+    Hello:
+      properties:
+        msg:
+          type: string
+      required:
+        - msg
