@@ -1,16 +1,14 @@
 GET  /cinemas/_search
 {
   "query": {
-    "query_string"
-     : {"default_field" : "cinema", "query" : "*INGEST_TO_ES*"}
-
+    "term": {"cinema.INGEST_TO_ES" : true}
   }
 }
 
 GET  /movies/_search
 {
   "query": {
-    "query_string" : {"default_field" : "cinema", "query" : "*Incoming*"}
+    "query_string" : {"default_field" : "message", "query" : "*Incoming*"}
   } 
 }
 

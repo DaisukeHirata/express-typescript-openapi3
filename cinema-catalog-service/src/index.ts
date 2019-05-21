@@ -1,3 +1,8 @@
+require("elastic-apm-node").start({
+  serviceName: "cinema-catalog-service",   // Override service name from package.json
+  serverUrl: "http://apm:8200" // Set custom APM Server URL
+});
+
 import { initApp } from "./application";
 import { myContainer } from "./inversify/inversify.config";
 import log from "./log";

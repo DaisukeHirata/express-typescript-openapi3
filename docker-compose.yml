@@ -37,6 +37,16 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock # needed to access additional informations about containers
         container_name: filebeat-cont
 
+    apm:
+        image: docker.elastic.co/apm/apm-server:7.1.0
+        volumes:
+            - ./filebeat/apm-server.docker.yml:/usr/share/apm-server/apm-server.yml:ro # apm config
+        links:
+            - elk:elk
+        depends_on:
+            - elk
+        container_name: apm-cont
+
     cinema-catalog-service:
         build: ./cinema-catalog-service
         links:

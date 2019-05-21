@@ -1,3 +1,8 @@
+// require("elastic-apm-node").start({
+//   serviceName: "cinema-catalog-service",   // Override service name from package.json
+//   serverUrl: "http://apm:8200" // Set custom APM Server URL
+// });
+
 import * as sourceMapSupport from "source-map-support";
 import { createServer, proxy } from "aws-serverless-express";
 import { eventContext } from "aws-serverless-express/middleware";
