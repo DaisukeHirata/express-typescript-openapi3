@@ -26,7 +26,7 @@
     "node-fetch": "^2.6.0",
     "node-uuid": "^1.4.8",
     "oas-tools": "^2.1.5",
-    "opossum": "^1.11.0",
+    "opossum": "^1.11.1",
     "perfy": "^1.1.2",
     "prom-client": "11.3.0",
     "reflect-metadata": "^0.1.13",
