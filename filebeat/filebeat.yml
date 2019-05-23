@@ -3,7 +3,7 @@ filebeat.inputs:
   enabled: true
   paths:
     - /usr/share/filebeat/dockerlogs/*/*.log
-  include_lines: ["INGEST_TO_ES", "Incoming"]
+  include_lines: ["ingest", "Incoming"]
 
 filebeat.config.modules:
   path: ${path.config}/modules.d/*.yml
@@ -17,15 +17,14 @@ setup.kibana:
 
 output.elasticsearch:
   hosts: ["elk:9200"]
-  #index: "filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
   pipelines:
-    - pipeline: mutating_filebeat_log
-      when.contains:
-        message: "INGEST_TO_ES"
+  - pipeline: mutating_filebeat_log
+    when.contains:
+      message: "ingest"
   indices:
     - index: "cinemas"
       when.contains:
-        message: "INGEST_TO_ES"
+        message: "ingest"
     - index: "movies"
       when.contains:
         message: "Incoming"

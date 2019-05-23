@@ -60,8 +60,8 @@ export class CinemasController {
 
   public async sendTestDataToEs(req: Request, res: Response): P<any> {
     // test filebeat and ingest Node pipeline
-    console.log(JSON.stringify({
-      INGEST_TO_ES: true,
+    const log = require("../log").default;
+    log.ingest(JSON.stringify({
       id: "1b1252c8d280",
       abc: "Outgoing",
       def: "furafura",

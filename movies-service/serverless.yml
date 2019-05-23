@@ -11,7 +11,19 @@ provider:
     DATABASE_USER: foo
     DATABASE_PASSWORD: bar
     MOVIES_SERVICE_HOST: ${cf.${self:provider.region}:movies-service-${opt:stage, self:provider.stage}.ServiceEndpoint}
+    ESCLOUD_SECRET_TOKEN: ${self:custom.escloudSecretToken.${opt:stage, self:provider.stage}}
+    ESCLOUD_SERVER_URL: ${self:custom.escloudSecretUrl.${opt:stage, self:provider.stage}}
     DEBUG: app:*
+
+custom:
+  stages:
+    - dev
+    - stg
+    - prd
+  escloudSecretToken:
+    dev: ${ssm:/essearch/dev/escloud-secret-token} #get from ssm parameter store
+  escloudSecretUrl:
+    dev: ${ssm:/essearch/dev/escloud-secret-url} #get from ssm parameter store
 
 package:
   exclude:
@@ -24,45 +36,7 @@ package:
     - "!package.json"
 
 functions:
-  hello-get:
-    handler: dist/src/lambda.http
-    events:
-      - http:
-          path: /api/hello
-          method: get
-          cors: true
-          request:
-            parameters:
-              querystrings:
-                greeting: true
-    vpc:
-      securityGroupIds:
-        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessDefaultSecurityGroup}
-      subnetIds:
-        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetA}
-        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetB}
-        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetC}
-
-  goodbye-post:
-    handler: dist/src/lambda.http
-    events:
-      - http:
-          path: /api/goodbye/{postId}
-          method: post
-          cors: true
-          request:
-            parameters:
-              paths:
-                postId: true
-    vpc:
-      securityGroupIds:
-        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessDefaultSecurityGroup}
-      subnetIds:
-        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetA}
-        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetB}
-        - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetC}
-
-  other:
+  http:
     handler: dist/src/lambda.http
     events:
       - http:

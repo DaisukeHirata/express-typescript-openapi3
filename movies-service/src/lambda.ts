@@ -1,7 +1,9 @@
-// require("elastic-apm-node").start({
-//   serviceName: "movies-service",   // Override service name from package.json
-//   serverUrl: "http://apm:8200" // Set custom APM Server URL
-// });
+import * as env from "./env";
+const apm = require("elastic-apm-node").start({
+  serviceName: "movies-service",   // Override service name from package.json
+  secretToken: env.get("ESCLOUD_SECRET_TOKEN"), // Use if APM Server requires a token
+  serverUrl: env.get("ESCLOUD_SERVER_URL") // Set custom APM Server URL
+});
 
 import * as sourceMapSupport from "source-map-support";
 import { createServer, proxy } from "aws-serverless-express";
@@ -39,9 +41,4 @@ const app = initApp(myContainer);
 app.use(eventContext);
 const server = createServer(app, undefined, binaryMimeTypes);
 
-// export const http = (event: any, context: Context, callback: any) => {
-//   context.callbackWaitsForEmptyEventLoop = false;
-//   proxy(server, event, context, "CALLBACK", callback);
-// };
-
-export const http = (event: any, context: Context, callback: any) => proxy(server, event, context);
+export const http = apm.lambda((event: any, context: Context, callback: any) => proxy(server, event, context));

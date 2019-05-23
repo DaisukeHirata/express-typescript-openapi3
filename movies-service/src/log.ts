@@ -154,7 +154,18 @@ export async function inOutLogger(req: express.Request, res: express.Response, n
   next();
 }
 
+const LOG_LEVEL = {
+  error: 0,
+  warn: 1,
+  ingest: 2,  // this level is used for ingest log to elastic search by beat
+  info: 3,
+  verbose: 4,
+  debug: 5,
+  silly: 6
+};
+
 const logger = winston.createLogger({
+  levels: LOG_LEVEL,
   transports: [
     new winston.transports.Console({ level: env.get("LOG_LEVEL") })
   ]

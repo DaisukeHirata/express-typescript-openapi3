@@ -11,7 +11,19 @@ provider:
     DATABASE_USER: foo
     DATABASE_PASSWORD: bar
     MOVIES_SERVICE_HOST: ${cf.${self:provider.region}:movies-service-${opt:stage, self:provider.stage}.ServiceEndpoint}
+    ESCLOUD_SECRET_TOKEN: ${self:custom.escloudSecretToken.${opt:stage, self:provider.stage}}
+    ESCLOUD_SERVER_URL: ${self:custom.escloudSecretUrl.${opt:stage, self:provider.stage}}
     DEBUG: app:*
+
+custom:
+  stages:
+    - dev
+    - stg
+    - prd
+  escloudSecretToken:
+    dev: ${ssm:/essearch/dev/escloud-secret-token} #get from ssm parameter store
+  escloudSecretUrl:
+    dev: ${ssm:/essearch/dev/escloud-secret-url} #get from ssm parameter store
 
 package:
   exclude:
