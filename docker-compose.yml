@@ -66,7 +66,7 @@ services:
             driver: "json-file"
             options:
                 max-size: "200k"
-                max-file: "10"
+                max-file: "3"
         container_name: cinema-catalog-service-cont
 
     movies-service:
@@ -87,5 +87,5 @@ services:
             driver: "json-file"
             options:
                 max-size: "200k"
-                max-file: "10"
+                max-file: "3"
         container_name: movies-service-cont

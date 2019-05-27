@@ -58,6 +58,11 @@ export class CinemasController {
     res.send(serializedCinemaSchedules);
   }
 
+  public async ingestAllCinemasToES(req: Request, res: Response): P<any> {
+    await this.repo.ingestAllCinemasToES();
+    res.send({"msg": "done"});
+  }
+
   public async sendTestDataToEs(req: Request, res: Response): P<any> {
     // test filebeat and ingest Node pipeline
     const log = require("../log").default;

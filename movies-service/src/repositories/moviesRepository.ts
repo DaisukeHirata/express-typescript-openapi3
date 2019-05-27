@@ -21,7 +21,7 @@ const mysql = serverlessMysql({
 @injectable()
 export class MovieRepository implements IMovieRepository {
   public async getAllMovies(): P<any[]> {
-    const results = await mysql.query("SELECT id, title, runtime, format, plot, DATE_FORMAT(released_at, \'%Y-%m-%dT%TZ\') as released_at FROM movie");
+    const results = await mysql.query("SELECT id, title, genre, runtime, format, plot, DATE_FORMAT(released_at, \'%Y-%m-%dT%TZ\') as released_at FROM movie");
     await mysql.end();
 
     return results;
@@ -33,7 +33,7 @@ export class MovieRepository implements IMovieRepository {
     debug.log(pageAfter.format(f));
 
     const results = await mysql.query<any>(
-      `SELECT id, title, runtime, format, plot,
+      `SELECT id, title, genre, runtime, format, plot,
               DATE_FORMAT(released_at, \'%Y-%m-%dT%TZ\') as released_at,
               DATE_FORMAT(created_at, \'%Y-%m-%dT%TZ\') as created_at,
               DATE_FORMAT(updated_at, \'%Y-%m-%dT%TZ\') as updated_at
@@ -51,7 +51,7 @@ export class MovieRepository implements IMovieRepository {
 
   public async getMovieById(id: string): P<any> {
     const results = await mysql.query(
-      "SELECT id, title, runtime, format, plot, DATE_FORMAT(released_at, \'%Y-%m-%dT%TZ\') as released_at FROM movie WHERE id = ?",
+      "SELECT id, title, genre, runtime, format, plot, DATE_FORMAT(released_at, \'%Y-%m-%dT%TZ\') as released_at FROM movie WHERE id = ?",
       [id]
     );
 

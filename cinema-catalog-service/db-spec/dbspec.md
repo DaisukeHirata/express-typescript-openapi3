@@ -68,6 +68,8 @@ frame "cinemas" {
       ==
       # city_id [FK]
       name:string
+      latitude:double(9, 6)
+      longitude:double(9, 6)
   }
 
   entity "cinemaPremiere" {

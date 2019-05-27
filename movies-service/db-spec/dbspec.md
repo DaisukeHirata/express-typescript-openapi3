@@ -12,6 +12,7 @@ frame "movie" {
       + id:string [PK]
       ==
       title:string
+      genre:string
       runtime:innt
       format:string
       plot:string

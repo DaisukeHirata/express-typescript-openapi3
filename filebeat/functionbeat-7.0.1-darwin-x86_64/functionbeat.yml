@@ -218,11 +218,11 @@ output.elasticsearch:
   pipelines:
    - pipeline: mutating_functionbeat_log
      when.contains:
-       message: "ingest"
+       message: "ingest_to_index_cinemas"
   indices:
     - index: "cinemas"
       when.contains:
-        message: "ingest"
+        message: "ingest_to_index_cinemas"
     - index: "movies"
       when.contains:
         message: "Incoming"

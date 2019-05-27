@@ -274,6 +274,9 @@ components:
         title:
           type: string
           example: "Assasins Creed"
+        genre:
+          type: string
+          example: "Comedy"
         runtime:
           type: number
           example: 115
