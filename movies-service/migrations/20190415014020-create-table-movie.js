@@ -18,6 +18,7 @@ exports.up = function(db) {
   db.createTable("movie", {
     id: {type: "string", primaryKey: true},
     title: "string",
+    genre: "string",
     runtime: "int",
     format: "string",
     plot: "string",

@@ -18,14 +18,14 @@ INSERT INTO cinema_catalog.city (id, name, state_id) VALUES ("588ababf2d029a6d15
 INSERT INTO cinema_catalog.city (id, name, state_id) VALUES ("588ababf2d029a6d15d0b5c3", "Santiago de Chile", "588aba4d2d029a6d15d0b5be");
 
 -- cinema
-INSERT INTO cinema_catalog.cinema (id, name, city_id) VALUES ("588ac3a02d029a6d15d0b5c4", "Plaza Morelia", "588ababf2d029a6d15d0b5bf");
-INSERT INTO cinema_catalog.cinema (id, name, city_id) VALUES ("588ac3a02d029a6d15d0b5c5", "Las Americas", "588ababf2d029a6d15d0b5bf");
-INSERT INTO cinema_catalog.cinema (id, name, city_id) VALUES ("588ac3a02d029a6d15d0b5c6", "Estacion Central", "588ababf2d029a6d15d0b5c3");
-INSERT INTO cinema_catalog.cinema (id, name, city_id) VALUES ("588ac3a02d029a6d15d0b5c7", "San Agustin", "588ababf2d029a6d15d0b5c3");
-INSERT INTO cinema_catalog.cinema (id, name, city_id) VALUES ("588ac65f2d029a6d15d0b5c8", "Calima", "588ababf2d029a6d15d0b5c2");
-INSERT INTO cinema_catalog.cinema (id, name, city_id) VALUES ("588ac3a02d029a6d15d0b5c9", "Hayuelos Colombia", "588ababf2d029a6d15d0b5c2");
-INSERT INTO cinema_catalog.cinema (id, name, city_id) VALUES ("588ac3a02d029a6d15d0b5ca", "City Plaza", "588ababf2d029a6d15d0b5c1");
-INSERT INTO cinema_catalog.cinema (id, name, city_id) VALUES ("588ac3a02d029a6d15d0b5cb", "Juriquilla Uptown", "588ababf2d029a6d15d0b5c0");
+INSERT INTO cinema_catalog.cinema (id, name, latitude, longitude, city_id) VALUES ("588ac3a02d029a6d15d0b5c4", "Plaza Morelia", 19.688698, -101.2023151, "588ababf2d029a6d15d0b5bf");
+INSERT INTO cinema_catalog.cinema (id, name, latitude, longitude, city_id) VALUES ("588ac3a02d029a6d15d0b5c5", "Las Americas", 19.6911278, -101.1571229, "588ababf2d029a6d15d0b5bf");
+INSERT INTO cinema_catalog.cinema (id, name, latitude, longitude, city_id) VALUES ("588ac3a02d029a6d15d0b5c6", "Estacion Central", -33.462563, -70.7207433, "588ababf2d029a6d15d0b5c3");
+INSERT INTO cinema_catalog.cinema (id, name, latitude, longitude, city_id) VALUES ("588ac3a02d029a6d15d0b5c7", "San Agustin", -33.4743655, -70.672479, "588ababf2d029a6d15d0b5c3");
+INSERT INTO cinema_catalog.cinema (id, name, latitude, longitude, city_id) VALUES ("588ac65f2d029a6d15d0b5c8", "Calima", 3.9583347, -76.7760561, "588ababf2d029a6d15d0b5c2");
+INSERT INTO cinema_catalog.cinema (id, name, latitude, longitude, city_id) VALUES ("588ac3a02d029a6d15d0b5c9", "Hayuelos Colombia", 4.6634729, -74.1330269, "588ababf2d029a6d15d0b5c2");
+INSERT INTO cinema_catalog.cinema (id, name, latitude, longitude, city_id) VALUES ("588ac3a02d029a6d15d0b5ca", "City Plaza", 22.0825263, -105.4940266, "588ababf2d029a6d15d0b5c1");
+INSERT INTO cinema_catalog.cinema (id, name, latitude, longitude, city_id) VALUES ("588ac3a02d029a6d15d0b5cb", "Juriquilla Uptown", 20.675774, -100.4328721, "588ababf2d029a6d15d0b5c0");
 
 -- cinema premieres
 INSERT INTO cinema_catalog.cinemaPremiere (id, movie_id, cinema_id) VALUES ("688ac3a02d029a6d15d0b5c1", "1", "588ac3a02d029a6d15d0b5c4");

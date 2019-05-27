@@ -100,24 +100,56 @@ PUT _ingest/pipeline/mutating_filebeat_log
     {
       "json" : {
         "field" : "data.log",
-        "target_field" : "data"
+        "target_field" : "data",
+        "on_failure" : [
+          {
+            "set" : {
+              "field" : "error",
+              "value" : "json data.log"
+            }
+          }
+        ]
       }
     },
     {
       "json" : {
         "field" : "data.message",
-        "target_field" : "data"
+        "target_field" : "data",
+        "on_failure" : [
+          {
+            "set" : {
+              "field" : "error",
+              "value" : "json data.message"
+            }
+          }
+        ]
       }
     },
     {
       "set": {
         "field": "_id",
-        "value": "{{data.id}}"
+        "value": "{{data.id}}",
+        "on_failure" : [
+          {
+            "set" : {
+              "field" : "error",
+              "value" : "set _id"
+            }
+          }
+        ]
       }
     },
     {
       "remove": {
-        "field": ["input", "agent", "log", "ecs", "host", "message"]
+        "field": ["input", "agent", "log", "ecs", "host", "message"],
+        "on_failure" : [
+          {
+            "set" : {
+              "field" : "error",
+              "value" : "remove items"
+            }
+          }
+        ]
       }
     }
   ]

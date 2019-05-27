@@ -1,7 +1,7 @@
 import * as P from "bluebird";
 import * as jsonapiSerializer from "jsonapi-serializer";
 
-const attr = ["title", "runtime", "format", "plot", "released_at", "created_at", "updated_at"];
+const attr = ["title", "genre", "runtime", "format", "plot", "released_at", "created_at", "updated_at"];
 
 export const movieSerializer = new jsonapiSerializer.Serializer("movies", {
   attributes: attr
