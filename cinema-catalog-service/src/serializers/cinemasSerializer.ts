@@ -1,29 +1,26 @@
 import * as jsonapiSerializer from "jsonapi-serializer";
 
 export const cinemaSerializer = new jsonapiSerializer.Serializer("cinemas", {
-  attributes: ["name"]
+  attributes: ["name", "latitude", "longitude"]
 });
 
 export const cinemaPremieresByIdSerializer = new jsonapiSerializer.Serializer("cinemaPremieresById", {
-  attributes: ["name", "movies"],
+  attributes: ["name", "latitude", "longitude", "movies"],
   movies: {
     ref: (cinema, movie) => {
       return movie.id;
     },
-    attributes: ["title", "runtime", "plot", "poster"]
-  },
-  typeForAttribute: (attribute, record) => {
-    return (record && record.type) ? record.type : attribute;
+    attributes: ["title", "genre", "runtime", "plot", "poster"]
   }
 });
 
 export const cinemaSchedulesSerializer = new jsonapiSerializer.Serializer("cinemaSchedulesSerializer", {
-  attributes: ["name", "movie", "rooms"],
-  movie: {
-    ref: (cinema, movie) => {
-      return movie.id;
+  attributes: ["name", "latitude", "longitude", "movies", "rooms"],
+  movies: {
+    ref: (cinema, movies) => {
+      return movies.id;
     },
-    attributes: ["title", "runtime", "format", "plot", "released-at"]
+    attributes: ["title", "genre", "runtime", "format", "plot", "released-at"]
   },
   rooms: {
     ref: (cinema, rooms) => {

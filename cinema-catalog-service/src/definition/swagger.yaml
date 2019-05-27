@@ -53,6 +53,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Hello'
+  /cinemas/ingest:
+    get:
+      x-swagger-router-controller: cinemasRoute
+      operationId: ingestAllCinemasToES
+      tags:
+        - /cinemas
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hello'
 
   /cinemas/{cinema_id}:
     get:
@@ -246,7 +259,9 @@ components:
               type: object
               properties:
                 data:
-                  $ref: '#/components/schemas/MovieRelationship'
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/MovieRelationship'
             rooms:
               type: object
               properties:

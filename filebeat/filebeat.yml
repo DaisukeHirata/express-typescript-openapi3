@@ -3,7 +3,10 @@ filebeat.inputs:
   enabled: true
   paths:
     - /usr/share/filebeat/dockerlogs/*/*.log
-  include_lines: ["ingest", "Incoming"]
+  include_lines: ["ingest_to_index_cinemas", "Incoming"]
+  close_inactive: 1m
+  ignore_older: 2m
+  clean_inactive: 5m
 
 filebeat.config.modules:
   path: ${path.config}/modules.d/*.yml
@@ -20,11 +23,11 @@ output.elasticsearch:
   pipelines:
   - pipeline: mutating_filebeat_log
     when.contains:
-      message: "ingest"
+      message: "ingest_to_index_cinemas"
   indices:
     - index: "cinemas"
       when.contains:
-        message: "ingest"
+        message: "ingest_to_index_cinemas"
     - index: "movies"
       when.contains:
         message: "Incoming"

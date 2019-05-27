@@ -14,3 +14,4 @@ export const getCinemasByCity = Router().use("/", asyncHandler((req: Request, re
 export const getCinemaById = Router().use("/", asyncHandler((req: Request, res: Response) => cinemasController.getCinemaById(req, res), "getCinemaById"));
 export const getCinemaSchedulesByMovie = Router().use("/", asyncHandler((req: Request, res: Response) => cinemasController.getCinemaScheduleByMovie(req, res), "getCinemaSchedulesByMovie"));
 export const sendTestDataToEs = Router().use("/", asyncHandler((req: Request, res: Response) => cinemasController.sendTestDataToEs(req, res), "sendTestDataToEs"));
+export const ingestAllCinemasToES = Router().use("/", asyncHandler((req: Request, res: Response) => cinemasController.ingestAllCinemasToES(req, res), "ingestAllCinemasToES"));

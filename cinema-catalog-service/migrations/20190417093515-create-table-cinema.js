@@ -56,6 +56,8 @@ exports.up = function(db) {
   db.createTable("cinema", {
     id: {type: "string", primaryKey: true},
     name: {type: "string", notNull: true},
+    latitude: {type: "real", notNull: true},
+    longitude: {type: "real", notNull: true},
     city_id: {
       type: 'string',
       notNull: true,

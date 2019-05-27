@@ -23,7 +23,7 @@ const host = env.get("MOVIES_SERVICE_HOST");
 export class CinemaRepository implements ICinemaRepository {
   public async getCinemasByCity(id: string): P<any> {
     const results = await mysql.query<[]>(
-      "SELECT id, name FROM cinema WHERE city_id = ?",
+      "SELECT id, name, latitude, longitude FROM cinema WHERE city_id = ?",
       [id]
     );
 
@@ -34,7 +34,7 @@ export class CinemaRepository implements ICinemaRepository {
 
   public async getCinemaById(id: string): P<any> {
     const cinemaPremieres = await mysql.query<any>(
-      `SELECT cinema.id, name, movie_id
+      `SELECT cinema.id, name, latitude, longitude, movie_id
          FROM cinema_catalog.cinema
    INNER JOIN cinema_catalog.cinemaPremiere
            ON cinema.id = cinemaPremiere.cinema_id
@@ -60,6 +60,9 @@ export class CinemaRepository implements ICinemaRepository {
     const cinema = {
       id: cinemaPremieres[0].id,
       name: cinemaPremieres[0].name,
+      type: "cinemas",
+      latitude: cinemaPremieres[0].latitude,
+      longitude: cinemaPremieres[0].longitude,
       movies: await movies
     };
 
@@ -69,7 +72,7 @@ export class CinemaRepository implements ICinemaRepository {
 
   public async getCinemaScheduleByMovie(cinemaId: string, movieId: string): P<any> {
     const cinema = await mysql.query(
-      "SELECT id, name FROM cinema WHERE id = ?",
+      "SELECT id, latitude, longitude, name FROM cinema WHERE id = ?",
       [cinemaId]
     );
     await mysql.end();
@@ -104,12 +107,93 @@ export class CinemaRepository implements ICinemaRepository {
     const movie = await fetch(host + "/api/movies/" + movieId);
     const deserializedMovie = await cinemaDeserializer.deserialize(movie);
 
-    const cinemaSchedules = Object.assign({}, cinema[0], {
-      movie: deserializedMovie,
+    const cinemaSchedules = {
+      id: cinema[0].id,
+      name: cinema[0].name,
+      type: "cinemas",
+      latitude: cinema[0].latitude,
+      longitude: cinema[0].longitude,
+      movies: await deserializedMovie,
       rooms: nestedRooms
-    });
+    };
 
     // return array of objects
     return P.all([cinemaSchedules]);
+  }
+
+  public async ingestAllCinemasToES() {
+    const cinemas = await mysql.query<any>(
+      `SELECT cinema.id, cinema.name, latitude, longitude,
+              cinemaRoom.id as room_id, cinemaRoom.name as room_name, capacity, format,
+              time, price, movie_id
+         FROM (cinema_catalog.cinema INNER JOIN cinema_catalog.cinemaRoom ON cinema.id = cinemaRoom.cinema_id)
+        INNER JOIN cinema_catalog.schedule ON cinemaRoom.id = schedule.cinemaRoom_id
+        ORDER BY cinema.id, cinemaRoom.id`
+    );
+    await mysql.end();
+
+    const cinemaMovieIds = cinemas.map((cinema) => cinema.movie_id);
+
+    // make api requests parallel
+    const parallelRequests = cinemaMovieIds.map((movieId) => {
+      const url = host + "/api/movies/" + movieId;
+      return fetch(url);
+    });
+
+    // deserialize response
+    const movies = await P.map(parallelRequests, async (movie) => {
+      const deserializedMovie = await cinemaDeserializer.deserialize(movie);
+      return deserializedMovie[0];
+    });
+
+    // transform object array to nested object to reduce data redandancy
+    const nestedRooms = cinemas.reduce((result, cinema) => {
+      const a = result.find(({room_id}) => room_id === cinema.room_id);
+      const { name, latitude, longitude, room_name, capacity, format, time, price, movie_id } = cinema;
+      const movie = movies.find(({id}) => movie_id === id);
+      if (a) {
+        a.schedules.push({time, price, movie});
+      } else {
+        result.push({
+          ingest: "ingest_to_index_cinemas",
+          id: cinema.id,
+          name,
+          latitude,
+          longitude,
+          room_id: cinema.room_id,
+          room_name,
+          capacity,
+          format,
+          schedules: [{time, price, movie}]
+        });
+      }
+      return result;
+    }, []);
+
+    // transform object array to nested object to reduce data redandancy
+    const nestedCinemas = nestedRooms.reduce((result, cinema) => {
+      const a = result.find(({id}) => id === cinema.id);
+      const { name, latitude, longitude, room_id, room_name, capacity, format, schedules } = cinema;
+      if (a) {
+        a.rooms.push({room_id, room_name, capacity, format, schedules});
+      } else {
+        result.push({
+          ingest: "ingest_to_index_cinemas",
+          id: cinema.id,
+          name,
+          latitude,
+          longitude,
+          rooms: [{room_id, room_name, capacity, format, schedules}]
+        });
+      }
+      return result;
+    }, []);
+
+    const log = require("../log").default;
+    nestedCinemas.map((cinema) => {
+      log.ingest(JSON.stringify(cinema));
+    });
+
+    return;
   }
 }
