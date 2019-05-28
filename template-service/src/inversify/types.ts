@@ -1,0 +1,4 @@
+const TYPES = {
+};
+
+export { TYPES };
