@@ -1,0 +1,149 @@
+openapi: 3.0.0
+info:
+  title: Template API
+  description: Template API.
+  version: '1.0'
+
+paths:
+  /hello:
+    get:
+      x-swagger-router-controller: helloWorldRoute
+      operationId: helloWorldGet
+      tags:
+        - /hello
+      description: >-
+        Returns greeting.
+      parameters:
+        - name: greeting
+          in: query
+          description: Name of greeting
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hello'
+        default:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorSummary'
+  /goodbye/{postId}:
+    post:
+      x-swagger-router-controller: goodbyeWorldRoute
+      operationId: goodbyeWorldPost
+      tags:
+        - /goodbye
+      description: >-
+        Returns greeting.
+      parameters:
+        - name: postId
+          in: path
+          description: id of a post
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Goodbye'
+        default:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorSummary'
+  /uploadImage:
+    post:
+      x-swagger-router-controller: uploadImageRoute
+      operationId: uploadImagePost
+      tags:
+        - /uploadImage
+      description: >-
+        upload Image file
+      requestBody:
+        description: Callback payload
+        x-name: uploadImage
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadImage'
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hello'
+        default:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorSummary'
+
+
+
+
+servers:
+  - url: '/api'
+components:
+  schemas:
+    ErrorSummary:
+      properties:
+        message:
+          type: string
+        error:
+          $ref: '#/components/schemas/Errors'
+      required:
+        - message
+    Errors:
+      type: array
+      items:
+        $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      type: object
+      properties:
+        code:
+          type: string
+        params:
+          type: string
+        message:
+          type: string
+        path:
+          type: string
+    Hello:
+      properties:
+        msg:
+          type: string
+      required:
+        - msg
+    Goodbye:
+      properties:
+        msg:
+          type: string
+      required:
+        - msg
+    UploadImage:
+      type: object
+      properties:
+        file: # <- this is the form field name that needs to be present in the POST payload 
+          type: string
+          format: binary
+          description: a binary file uploaded via openAPI spec
+        id:
+          type: string # it's a form field, so will always be a string 
+        name:
+          type: string
+      required:
+        - id
+        - name
