@@ -45,7 +45,7 @@
     "@types/mocha": "5.2.6",
     "@types/node": "12.0.2",
     "@types/node-uuid": "0.0.28",
-    "@types/opossum": "^1.10.0",
+    "@types/opossum": "^1.10.1",
     "@types/swagger-tools": "0.10.6",
     "@types/winston": "^2.3.7",
     "chai": "4.2.0",
