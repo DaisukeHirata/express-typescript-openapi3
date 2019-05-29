@@ -61,7 +61,7 @@
     "ts-mocha": "6.0.0",
     "ts-node": "8.2.0",
     "tslint": "5.16.0",
-    "typescript": "3.4.5"
+    "typescript": "3.5.1"
   },
   "scripts": {
     "clean": "rm -rf dist",
