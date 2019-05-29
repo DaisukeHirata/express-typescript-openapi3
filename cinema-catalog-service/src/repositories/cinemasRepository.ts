@@ -132,7 +132,8 @@ export class CinemaRepository implements ICinemaRepository {
       `SELECT cinema.id, cinema.name, latitude, longitude,
               cinemaRoom.id as room_id, cinemaRoom.name as room_name, capacity, format,
               time, price, movie_id
-         FROM (cinema_catalog.cinema INNER JOIN cinema_catalog.cinemaRoom ON cinema.id = cinemaRoom.cinema_id)
+         FROM cinema_catalog.cinema
+        INNER JOIN cinema_catalog.cinemaRoom ON cinema.id = cinemaRoom.cinema_id
         INNER JOIN cinema_catalog.schedule ON cinemaRoom.id = schedule.cinemaRoom_id
         ORDER BY cinema.id, cinemaRoom.id`
     );
