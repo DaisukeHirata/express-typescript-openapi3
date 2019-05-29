@@ -1,6 +1,7 @@
 import * as env from "../env";
 import * as P from "bluebird";
-import * as serverlessMysql from "serverless-mysql";
+import serverlessMysql = require("serverless-mysql");
+import { ServerlessMysql } from "serverless-mysql";
 import "reflect-metadata";
 import { injectable } from "inversify";
 import { Moment } from "moment";
@@ -8,7 +9,12 @@ import { IMovieRepository } from "../inversify/interfaces";
 import { TDebug } from "../log";
 const debug = new TDebug("app:src:repositories:movies");
 
-const mysql = serverlessMysql({
+// current workaround. https://github.com/jeremydaly/serverless-mysql/issues/30#issuecomment-488192023
+const createConnection = (serverlessMysql as unknown) as (
+  cfg?: any
+) => ServerlessMysql;
+
+const mysql = createConnection({
   config: {
     host     : env.get("DATABASE_HOST"),
     database : env.get("DATABASE"),
