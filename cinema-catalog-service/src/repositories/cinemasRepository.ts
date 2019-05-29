@@ -1,13 +1,19 @@
 import * as env from "../env";
 import * as P from "bluebird";
-import * as serverlessMysql from "serverless-mysql";
+import serverlessMysql = require("serverless-mysql");
+import { ServerlessMysql } from "serverless-mysql";
 import "reflect-metadata";
 import { injectable } from "inversify";
 import { ICinemaRepository } from "../inversify/interfaces";
 import { fetch } from "../lib/circuitBreaker";
 import { cinemaDeserializer } from "../serializers/cinemasSerializer";
 
-const mysql = serverlessMysql({
+// current workaround. https://github.com/jeremydaly/serverless-mysql/issues/30#issuecomment-488192023
+const createConnection = (serverlessMysql as unknown) as (
+  cfg?: any
+) => ServerlessMysql;
+
+const mysql = createConnection({
   config: {
     host     : env.get("DATABASE_HOST"),
     database : env.get("DATABASE"),
@@ -149,7 +155,7 @@ export class CinemaRepository implements ICinemaRepository {
     // transform object array to nested object to reduce data redandancy
     const nestedRooms = cinemas.reduce((result, cinema) => {
       const a = result.find(({room_id}) => room_id === cinema.room_id);
-      const { name, latitude, longitude, room_name, capacity, format, time, price, movie_id } = cinema;
+      const { time, price, movie_id } = cinema;
       const movie = movies.find(({id}) => movie_id === id);
       if (a) {
         a.schedules.push({time, price, movie});
@@ -157,13 +163,13 @@ export class CinemaRepository implements ICinemaRepository {
         result.push({
           ingest: "ingest_to_index_cinemas",
           id: cinema.id,
-          name,
-          latitude,
-          longitude,
+          name: cinema.name,
+          latitude: cinema.latitude,
+          longitude: cinema.longitude,
           room_id: cinema.room_id,
-          room_name,
-          capacity,
-          format,
+          room_name: cinema.room_name,
+          capacity: cinema.capacity,
+          format: cinema.format,
           schedules: [{time, price, movie}]
         });
       }
@@ -173,16 +179,16 @@ export class CinemaRepository implements ICinemaRepository {
     // transform object array to nested object to reduce data redandancy
     const nestedCinemas = nestedRooms.reduce((result, cinema) => {
       const a = result.find(({id}) => id === cinema.id);
-      const { name, latitude, longitude, room_id, room_name, capacity, format, schedules } = cinema;
+      const { room_id, room_name, capacity, format, schedules } = cinema;
       if (a) {
         a.rooms.push({room_id, room_name, capacity, format, schedules});
       } else {
         result.push({
           ingest: "ingest_to_index_cinemas",
           id: cinema.id,
-          name,
-          latitude,
-          longitude,
+          name: cinema.name,
+          latitude: cinema.latitude,
+          longitude: cinema.longitude,
           rooms: [{room_id, room_name, capacity, format, schedules}]
         });
       }
