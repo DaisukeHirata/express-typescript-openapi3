@@ -1,9 +1,10 @@
+---
 service: shared-infra
 
 provider:
   name: aws
   runtime: nodejs8.10
-  stage: ${opt:stage, 'dev'}
+  stage: ${opt:stage, "dev"}
   region: ap-northeast-1
   environment:
     AURORA_HOST: ${self:custom.AURORA.HOST}
@@ -95,7 +96,7 @@ resources:
         SubnetId:
           Ref: ServerlessPublicSubnetA
         RouteTableId:
-          Ref: DefaultPublicRouteTable    
+          Ref: DefaultPublicRouteTable
     # NatGateway
     ElasticIpLambda:
       Type: AWS::EC2::EIP
@@ -186,7 +187,7 @@ resources:
       Export:
         Name: ServerlessVPC
     ServerlessDefaultSecurityGroup:
-      Value: 
+      Value:
         Fn::GetAtt: ServerlessVPC.DefaultSecurityGroup
       Export:
         Name: ServerlessDefaultSecurityGroup
