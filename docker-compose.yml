@@ -1,91 +1,94 @@
+---
 version: '3.7'
+
 volumes:
-    elk-vol:  # Volume to host elk service data locally.
-        driver: 'local'
-    data-vol: # Volume to host db service data locally.
-        driver: 'local'
-services: 
-    db:
-        image: mysql:latest
-        ports:
-            - "3306:3306" # host:container
-        volumes:
-            - data-vol:/var/lib/mysql/data
-        environment:
-            - MYSQL_ROOT_PASSWORD=mysql
-        container_name: db-cont
+  elk-vol:   # Volume to host elk service data locally.
+    driver: 'local'
+  data-vol:  # Volume to host db service data locally.
+    driver: 'local'
 
-    elk:
-        image: sebp/elk:701
-        ports:
-            - "5601:5601" # host:container kibana
-            - "9200:9200" # host:container elasticsearch
-            - "5044:5044" # host:container logstash
-        volumes:
-           - elk-vol:/usr/share/elasticsearch/data
-        container_name: elk-cont
+services:
+  db:
+    image: mysql:latest
+    ports:
+      - "3306:3306"  # host:container
+    volumes:
+      - data-vol:/var/lib/mysql/data
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysql
+    container_name: db-cont
 
-    filebeat:
-        build: ./filebeat
-        links:
-            - elk:elk
-        depends_on:
-            - elk
-        volumes:
-            - ./filebeat/filebeat-data:/usr/share/filebeat/data:rw # needed to persist filebeat tracking data :
-            - /var/lib/docker/containers:/usr/share/filebeat/dockerlogs/:rw # needed to access all docker logs (read only) :
-            - /var/run/docker.sock:/var/run/docker.sock # needed to access additional informations about containers
-        container_name: filebeat-cont
+  elk:
+    image: sebp/elk:701
+    ports:
+      - "5601:5601"  # host:container kibana
+      - "9200:9200"  # host:container elasticsearch
+      - "5044:5044"  # host:container logstash
+    volumes:
+      - elk-vol:/usr/share/elasticsearch/data
+    container_name: elk-cont
 
-    apm:
-        image: docker.elastic.co/apm/apm-server:7.1.0
-        volumes:
-            - ./filebeat/apm-server.docker.yml:/usr/share/apm-server/apm-server.yml:ro # apm config
-        links:
-            - elk:elk
-        depends_on:
-            - elk
-        container_name: apm-cont
+  filebeat:
+    build: ./filebeat
+    links:
+      - elk:elk
+    depends_on:
+      - elk
+    volumes:
+      - ./filebeat/filebeat-data:/usr/share/filebeat/data:rw  # needed to persist filebeat tracking data :
+      - /var/lib/docker/containers:/usr/share/filebeat/dockerlogs/:rw  # needed to access all docker logs (read only) :
+      - /var/run/docker.sock:/var/run/docker.sock  # needed to access additional informations about containers
+    container_name: filebeat-cont
 
-    cinema-catalog-service:
-        build: ./cinema-catalog-service
-        links:
-            - db:db
-            - movies-service:movies-service
-            # [other container]:[alias in this container]
-            # this will create environment variables in the node.js container
-            # with ip and port info for the postgres container
-            # also creates entries in /etc/hosts with ip info
-        depends_on:
-            - db
-        ports:
-            - "8001:8001" # host:container
-        volumes:
-            - ./cinema-catalog-service:/home/nupp/app
-        logging:
-            driver: "json-file"
-            options:
-                max-size: "200k"
-                max-file: "3"
-        container_name: cinema-catalog-service-cont
+  apm:
+    image: docker.elastic.co/apm/apm-server:7.1.0
+    volumes:
+      - ./filebeat/apm-server.docker.yml:/usr/share/apm-server/apm-server.yml:ro  # apm config
+    links:
+      - elk:elk
+    depends_on:
+      - elk
+    container_name: apm-cont
 
-    movies-service:
-        build: ./movies-service
-        links:
-            - db:db 
-            # [other container]:[alias in this container]
-            # this will create environment variables in the node.js container
-            # with ip and port info for the postgres container
-            # also creates entries in /etc/hosts with ip info
-        depends_on:
-            - db
-        ports:
-            - "8002:8001" # host:container
-        volumes:
-            - ./movies-service:/home/nupp/app
-        logging:
-            driver: "json-file"
-            options:
-                max-size: "200k"
-                max-file: "3"
-        container_name: movies-service-cont
+  cinema-catalog-service:
+    build: ./cinema-catalog-service
+    links:
+      - db:db
+      - movies-service:movies-service
+      # [other container]:[alias in this container]
+      # this will create environment variables in the node.js container
+      # with ip and port info for the postgres container
+      # also creates entries in /etc/hosts with ip info
+    depends_on:
+      - db
+    ports:
+      - "8001:8001"  # host:container
+    volumes:
+      - ./cinema-catalog-service:/home/nupp/app
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "3"
+    container_name: cinema-catalog-service-cont
+
+  movies-service:
+    build: ./movies-service
+    links:
+      - db:db
+      # [other container]:[alias in this container]
+      # this will create environment variables in the node.js container
+      # with ip and port info for the postgres container
+      # also creates entries in /etc/hosts with ip info
+    depends_on:
+      - db
+    ports:
+      - "8002:8001"  # host:container
+    volumes:
+      - ./movies-service:/home/nupp/app
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "3"
+    container_name: movies-service-cont
