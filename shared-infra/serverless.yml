@@ -2,7 +2,7 @@ service: shared-infra
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs10.x
   stage: ${opt:stage, 'dev'}
   region: ap-northeast-1
   environment:

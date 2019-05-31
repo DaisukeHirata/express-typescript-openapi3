@@ -1,3 +1,4 @@
+---
 version: 2.1
 
 orbs:
@@ -6,7 +7,7 @@ orbs:
 executors:
   default:
     docker:
-      - image: circleci/node:8.10
+      - image: circleci/node:10.15.3
     working_directory: ~/repo
 
 commands:
@@ -20,8 +21,8 @@ commands:
           name: movies service temporary remove .git from oas-tools
           command: rm -rf /home/circleci/repo/movies-service/node_modules/oas-tools/.git
           working_directory: movies-service
-      - run: 
-          name: movies service npm install 
+      - run:
+          name: movies service npm install
           command: npm install
           working_directory: movies-service
       - save_cache:
@@ -39,7 +40,7 @@ commands:
           name: cinema catalog service temporary remove .git from oas-tools
           command: rm -rf /home/circleci/repo/cinema-catalog-service/node_modules/oas-tools/.git
           working_directory: cinema-catalog-service
-      - run: 
+      - run:
           name: cinema catalog service npm install
           command: npm install
           working_directory: cinema-catalog-service
@@ -59,7 +60,7 @@ commands:
 
 jobs:
   movies_service_lint:
-    executor: default      
+    executor: default
     steps:
       - checkout
       - movies_service_npm_install
@@ -126,7 +127,7 @@ jobs:
 
 workflows:
   movies_service:
-    jobs: 
+    jobs:
       - movies_service_lint
       - movies_service_test:
           requires:
@@ -138,7 +139,7 @@ workflows:
             branches:
               only: deploy-movies-service
   cinema_catalog_service:
-    jobs: 
+    jobs:
       - cinema_catalog_service_lint
       - cinema_catalog_service_test:
           requires:
