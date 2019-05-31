@@ -1,16 +1,17 @@
+---
 version: '3.7'
 volumes:
     elk-vol:  # Volume to host elk service data locally.
         driver: 'local'
     data-vol: # Volume to host db service data locally.
         driver: 'local'
-services: 
+services:
     db:
         image: mysql:latest
         ports:
             - "3306:3306" # host:container
         volumes:
-            - data-vol:/var/lib/mysql/data
+            - data-vol:/var/lib/mysql
         environment:
             - MYSQL_ROOT_PASSWORD=mysql
         container_name: db-cont
@@ -72,7 +73,7 @@ services:
     movies-service:
         build: ./movies-service
         links:
-            - db:db 
+            - db:db
             # [other container]:[alias in this container]
             # this will create environment variables in the node.js container
             # with ip and port info for the postgres container
