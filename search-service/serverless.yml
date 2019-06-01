@@ -25,7 +25,7 @@ package:
 
 functions:
   hello-get:
-    handler: dist/src/lambda.http
+    handler: dist/lambda.http
     events:
       - http:
           path: /api/hello
@@ -44,7 +44,7 @@ functions:
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetC}
 
   goodbye-post:
-    handler: dist/src/lambda.http
+    handler: dist/lambda.http
     events:
       - http:
           path: /api/goodbye/{postId}
@@ -63,7 +63,7 @@ functions:
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetC}
 
   other:
-    handler: dist/src/lambda.http
+    handler: dist/lambda.http
     events:
       - http:
           path: /
@@ -82,7 +82,7 @@ functions:
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetC}
 
   db-migrate-up:
-    handler: dist/src/lib/db-migrate.migrate
+    handler: dist/lib/db-migrate.migrate
     vpc:
       securityGroupIds:
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessDefaultSecurityGroup}

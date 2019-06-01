@@ -65,7 +65,7 @@
   },
   "scripts": {
     "clean": "rm -rf dist",
-    "build:copy": "cpx \"src/**/*.yaml\" dist/src",
+    "build:copy": "cpx ./src/definition/* ./dist/definition",
     "start": "DEBUG=app:* node dist/src/index.js",
     "build:live": "npm run clean && npm run lint && tsc -p tsconfig.json && npm run build:copy && cp package* ./dist && npm install --production --prefix ./dist",
     "build:dev": "nodemon --exec ts-node -- ./src/index.ts",
