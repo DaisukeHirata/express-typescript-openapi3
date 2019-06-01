@@ -1,4 +1,4 @@
-FROM node:8.6.0-alpine
+FROM node:10.15.3-alpine
 
 RUN addgroup -S nupp && adduser -S -g nupp nupp
 

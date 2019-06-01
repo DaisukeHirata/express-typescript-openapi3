@@ -1,10 +1,9 @@
----
 service: movies-service
 
 provider:
   name: aws
-  runtime: nodejs8.10
-  stage: ${opt:stage, "dev"}
+  runtime: nodejs10.x
+  stage: ${opt:stage, 'dev'}
   region: ap-northeast-1
   environment:
     DATABASE_HOST: ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessAuroraEndpointAddress}
