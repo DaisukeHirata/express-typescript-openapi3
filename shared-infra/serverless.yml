@@ -160,7 +160,12 @@ resources:
         Description: Parameter group for the Serverless Aurora RDS DB.
         Family: aurora5.6
         Parameters:
-          character_set_database: "utf32"
+          character_set_client: utf8
+          character_set_connection: utf8
+          character_set_database: utf8
+          character_set_filesystem: utf8
+          character_set_results: utf8
+          character_set_server: utf8
     AuroraRDSCluster:
       Type: "AWS::RDS::DBCluster"
       Properties:
