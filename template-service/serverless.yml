@@ -1,9 +1,10 @@
+---
 service: template-service
 
 provider:
   name: aws
   runtime: nodejs8.10
-  stage: ${opt:stage, 'dev'}
+  stage: ${opt:stage, "dev"}
   region: ap-northeast-1
   environment:
     DEBUG: app:*
@@ -19,8 +20,8 @@ package:
     - "!package.json"
 
 functions:
-  http:
-    handler: dist/src/lambda.http
+  app:
+    handler: dist/lambda.http
     events:
       - http:
           path: /
@@ -37,9 +38,9 @@ functions:
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetA}
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetB}
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetC}
-        
+
   db-migrate-up:
-    handler: dist/src/lib/db-migrate.migrate
+    handler: dist/lib/db-migrate.migrate
     vpc:
       securityGroupIds:
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessDefaultSecurityGroup}

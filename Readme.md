@@ -10,7 +10,7 @@ Rewritting codes of [this good article](https://medium.com/@cramirez92/build-a-n
 
 ---
 
-## TypeScript + Node 
+## TypeScript + Node
 
 The main purpose of this repository is to show a project setup and workflow for writing microservice. The Rest APIs will be using the Swagger (OpenAPI) Specification.
 
@@ -55,8 +55,6 @@ docker-compose stop
 ```
 
 #### remove containers
-
-- be careful with this command, this makes init mysql data too.
 
 ```shell
 docker-compose down
