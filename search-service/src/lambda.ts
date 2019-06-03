@@ -10,6 +10,7 @@ import { myContainer } from "./inversify/inversify.config";
 // by aws-serverless-express and/or API Gateway. Add the necessary MIME types to
 // binaryMimeTypes below, then redeploy (`npm run package-deploy`)
 const binaryMimeTypes: string[] = [
+  "application/vnd.api+json"
   // 'application/javascript',
   // 'application/json',
   // 'application/octet-stream',
