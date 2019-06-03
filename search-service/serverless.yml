@@ -43,6 +43,7 @@ functions:
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetA}
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetB}
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetC}
+    warmup: true
 
   goodbye-post:
     handler: dist/lambda.http
@@ -62,6 +63,7 @@ functions:
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetA}
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetB}
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetC}
+    warmup: true
 
   other:
     handler: dist/lambda.http
@@ -81,6 +83,7 @@ functions:
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetA}
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetB}
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetC}
+    warmup: true
 
   db-migrate-up:
     handler: dist/lib/db-migrate.migrate
