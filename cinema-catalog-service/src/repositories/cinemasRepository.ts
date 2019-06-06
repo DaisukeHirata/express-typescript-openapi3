@@ -153,44 +153,28 @@ export class CinemaRepository implements ICinemaRepository {
       return deserializedMovie[0];
     });
 
-    // transform object array to nested object to reduce data redandancy
-    const nestedRooms = cinemas.reduce((result, cinema) => {
-      const a = result.find(({room_id}) => room_id === cinema.room_id);
-      const { time, price, movie_id } = cinema;
-      const movie = movies.find(({id}) => movie_id === id);
-      if (a) {
-        a.schedules.push({time, price, movie});
-      } else {
-        result.push({
-          ingest: "ingest_to_index_cinemas",
-          id: cinema.id,
-          name: cinema.name,
-          latitude: cinema.latitude,
-          longitude: cinema.longitude,
-          room_id: cinema.room_id,
-          room_name: cinema.room_name,
-          capacity: cinema.capacity,
-          format: cinema.format,
-          schedules: [{time, price, movie}]
-        });
-      }
-      return result;
-    }, []);
-
-    // transform object array to nested object to reduce data redandancy
-    const nestedCinemas = nestedRooms.reduce((result, cinema) => {
+    // transform object array
+    // make the object denormalize. it is easy to search in ES
+    const nestedCinemas = cinemas.reduce((result, cinema) => {
       const a = result.find(({id}) => id === cinema.id);
-      const { room_id, room_name, capacity, format, schedules } = cinema;
+      const movie = movies.find(({id}) => cinema.movie_id === id);
+
+      cinema["title"] = movie.title;
+      cinema["plot"] = movie.plot;
+      cinema["genre"] = movie.genre;
+      cinema["movie_format"] = movie.format;
+      cinema["runtime"] = movie.runtime;
+      cinema["movie_id"] = movie.id;
+      cinema["released-at"] = movie["released-at"];
+      cinema["location"] = [cinema.longitude, cinema.latitude];
+
       if (a) {
-        a.rooms.push({room_id, room_name, capacity, format, schedules});
+        a.data.push(cinema);
       } else {
         result.push({
           ingest: "ingest_to_index_cinemas",
           id: cinema.id,
-          name: cinema.name,
-          latitude: cinema.latitude,
-          longitude: cinema.longitude,
-          rooms: [{room_id, room_name, capacity, format, schedules}]
+          data: [cinema]
         });
       }
       return result;

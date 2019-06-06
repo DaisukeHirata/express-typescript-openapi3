@@ -68,15 +68,15 @@ INSERT INTO cinema_catalog.schedule (id, time, price, movie_id, cinemaRoom_id) V
 INSERT INTO cinema_catalog.schedule (id, time, price, movie_id, cinemaRoom_id) VALUES ("688ac3a02d029a6d15d0b5e2", "3:15", 71.0, "4", "688ac3a02d029a6d15d0b5cc");
 INSERT INTO cinema_catalog.schedule (id, time, price, movie_id, cinemaRoom_id) VALUES ("688ac3a02d029a6d15d0b5e3", "5:25", 71.0, "5", "688ac3a02d029a6d15d0b5cd");
 INSERT INTO cinema_catalog.schedule (id, time, price, movie_id, cinemaRoom_id) VALUES ("688ac3a02d029a6d15d0b5e4", "12:15", 71.0, "1", "688ac3a02d029a6d15d0b5ce");
-INSERT INTO cinema_catalog.schedule (id, time, price, movie_id, cinemaRoom_id) VALUES ("688ac3a02d029a6d15d0b5e5", "11:10", 54.0, "3", "688ac3a02d029a6d15d0b5cf");
+INSERT INTO cinema_catalog.schedule (id, time, price, movie_id, cinemaRoom_id) VALUES ("688ac3a02d029a6d15d0b5e5", "11:10", 54.0, "9", "688ac3a02d029a6d15d0b5cf");
 INSERT INTO cinema_catalog.schedule (id, time, price, movie_id, cinemaRoom_id) VALUES ("688ac3a02d029a6d15d0b5e6", "5:35", 71.0, "1", "688ac3a02d029a6d15d0b5cf");
 INSERT INTO cinema_catalog.schedule (id, time, price, movie_id, cinemaRoom_id) VALUES ("688ac3a02d029a6d15d0b5e7", "7:55", 79.0, "3", "688ac3a02d029a6d15d0b5cf");
-INSERT INTO cinema_catalog.schedule (id, time, price, movie_id, cinemaRoom_id) VALUES ("688ac3a02d029a6d15d0b5e8", "5:15", 71.0, "1", "688ac3a02d029a6d15d0b5d0");
+INSERT INTO cinema_catalog.schedule (id, time, price, movie_id, cinemaRoom_id) VALUES ("688ac3a02d029a6d15d0b5e8", "5:15", 71.0, "8", "688ac3a02d029a6d15d0b5d0");
 INSERT INTO cinema_catalog.schedule (id, time, price, movie_id, cinemaRoom_id) VALUES ("688ac3a02d029a6d15d0b5e9", "12:15", 71.0, "4", "688ac3a02d029a6d15d0b5d1");
-INSERT INTO cinema_catalog.schedule (id, time, price, movie_id, cinemaRoom_id) VALUES ("688ac3a02d029a6d15d0b5ea", "11:15", 71.0, "1", "688ac3a02d029a6d15d0b5d2");
+INSERT INTO cinema_catalog.schedule (id, time, price, movie_id, cinemaRoom_id) VALUES ("688ac3a02d029a6d15d0b5ea", "11:15", 71.0, "8", "688ac3a02d029a6d15d0b5d2");
 INSERT INTO cinema_catalog.schedule (id, time, price, movie_id, cinemaRoom_id) VALUES ("688ac3a02d029a6d15d0b5eb", "13:15", 79.0, "3", "688ac3a02d029a6d15d0b5d3");
 INSERT INTO cinema_catalog.schedule (id, time, price, movie_id, cinemaRoom_id) VALUES ("688ac3a02d029a6d15d0b5ec", "10:15", 54.0, "4", "688ac3a02d029a6d15d0b5d4");
-INSERT INTO cinema_catalog.schedule (id, time, price, movie_id, cinemaRoom_id) VALUES ("688ac3a02d029a6d15d0b5ed", "9:15", 71.0, "2", "688ac3a02d029a6d15d0b5d5");
+INSERT INTO cinema_catalog.schedule (id, time, price, movie_id, cinemaRoom_id) VALUES ("688ac3a02d029a6d15d0b5ed", "9:15", 71.0, "7", "688ac3a02d029a6d15d0b5d5");
 
 -- emptySeat
 INSERT INTO cinema_catalog.emptySeat (id, seat_number, schedule_id) VALUES ("688ac3a02d029a6d15d0b5ee", "0", "688ac3a02d029a6d15d0b5d6");

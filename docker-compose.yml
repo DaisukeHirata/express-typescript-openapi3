@@ -36,7 +36,7 @@ services:
     depends_on:
       - elk
     volumes:
-      - ./filebeat/filebeat-data:/usr/share/filebeat/data:rw  # needed to persist filebeat tracking data :
+      # - ./filebeat/filebeat-data:/usr/share/filebeat/data:rw  # needed to persist filebeat tracking data :
       - /var/lib/docker/containers:/usr/share/filebeat/dockerlogs/:rw  # needed to access all docker logs (read only) :
       - /var/run/docker.sock:/var/run/docker.sock  # needed to access additional informations about containers
     container_name: filebeat-cont
