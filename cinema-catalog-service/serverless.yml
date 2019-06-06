@@ -1,9 +1,10 @@
+---
 service: cinema-catalog-service
 
 provider:
   name: aws
   runtime: nodejs10.x
-  stage: ${opt:stage, 'dev'}
+  stage: ${opt:stage, "dev"}
   region: ap-northeast-1
   environment:
     DATABASE_HOST: ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessAuroraEndpointAddress}
@@ -54,6 +55,8 @@ functions:
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetA}
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetB}
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetC}
+    warmup: true
+
   db-migrate-up:
     handler: dist/lib/db-migrate.migrate
     vpc:
