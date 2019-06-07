@@ -5,10 +5,6 @@ import log from "./log";
 const serverPort = process.env.TEMPLATE_SERVICE_NODEJS_PORT || 8001;
 const app = initApp(myContainer);
 
-app.listen(serverPort, (err) => {
-  if (err) {
-    return log.error(err);
-  }
-
-  return log.info(`server is listening on ${serverPort}`);
+app.listen(serverPort, () => {
+  log.info(`server is listening on ${serverPort}`);
 });
