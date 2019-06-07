@@ -27,7 +27,7 @@ const mysql = createConnection({
 @injectable()
 export class MovieRepository implements IMovieRepository {
   public async getAllMovies(): P<any[]> {
-    const results = await mysql.query("SELECT id, title, genre, runtime, format, plot, DATE_FORMAT(released_at, \'%Y-%m-%dT%TZ\') as released_at FROM movie");
+    const results = await mysql.query<any[]>("SELECT id, title, genre, runtime, format, plot, DATE_FORMAT(released_at, \'%Y-%m-%dT%TZ\') as released_at FROM movie");
     await mysql.end();
 
     return results;
