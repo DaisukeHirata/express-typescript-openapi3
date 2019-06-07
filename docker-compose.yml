@@ -31,13 +31,13 @@ services:
     container_name: elk-cont
 
   filebeat:
-    build: ./filebeat
+    build: ./elk
     links:
       - elk:elk
     depends_on:
       - elk
     volumes:
-      # - ./filebeat/filebeat-data:/usr/share/filebeat/data:rw  # needed to persist filebeat tracking data :
+      # - ./elk/filebeat-data:/usr/share/filebeat/data:rw  # needed to persist filebeat tracking data :
       - /var/lib/docker/containers:/usr/share/filebeat/dockerlogs/:rw  # needed to access all docker logs (read only) :
       - /var/run/docker.sock:/var/run/docker.sock  # needed to access additional informations about containers
     container_name: filebeat-cont
@@ -45,7 +45,7 @@ services:
   apm:
     image: docker.elastic.co/apm/apm-server:7.1.0
     volumes:
-      - ./filebeat/apm-server.docker.yml:/usr/share/apm-server/apm-server.yml:ro  # apm config
+      - ./elk/apm-server.docker.yml:/usr/share/apm-server/apm-server.yml:ro  # apm config
     links:
       - elk:elk
     depends_on:
