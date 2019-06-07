@@ -1,6 +1,6 @@
 import * as cls from "cls-hooked";
 import CircuitBreaker from "opossum";
-import * as roi from "roi";
+import { get } from "request-promise";
 import * as Debug from "debug";
 const debug = Debug("fetch-circuit-breaker");
 
@@ -32,7 +32,7 @@ export async function fetch(url: RequestInfo, defaultResponse: any = {}) {
     resetTimeout: 30000 // After 30 seconds, try again.
   };
 
-  const circuit = CircuitBreaker(roi.get, options);
+  const circuit = CircuitBreaker(get, options);
 
   circuit.fallback(() => Promise.resolve(defaultResponse ? defaultResponse : {
     error: "Unread messages currently unavailable. Try again later"
@@ -40,8 +40,9 @@ export async function fetch(url: RequestInfo, defaultResponse: any = {}) {
 
   const requestId = request.get(REQ_NAME);
   const res = await circuit.fire({
-    endpoint: url,
-    headers: {[REQ_NAME]: requestId}
+    uri: url,
+    headers: {[REQ_NAME]: requestId},
+    resolveWithFullResponse: true
   }).catch((err) => {
     debug(`get ${url} error (${err.status}).`, err);
     throw err;

@@ -7,7 +7,6 @@ import { resolve } from "path";
 import { initSwaggerMiddlware } from "./middlewares/swagger";
 import * as env from "./env";
 import { inOutLogger } from "./log";
-import * as monit from "./monitoring";
 import * as cls from "./lib/cls";
 import { getCorsOptions } from "./cors";
 import * as helmet from "helmet";
@@ -17,7 +16,6 @@ export const initApp = (container: Container): express.Express => {
   env.checkEnv();
   env.set("DIContainer", container);
   const app = express();
-  monit.init(app);
   app.use(compression());
   app.use(cors(getCorsOptions()));
   app.use(cls.setRequestId);
