@@ -1,11 +1,12 @@
 import * as env from "../env";
 import * as P from "bluebird";
+import * as moment from "moment";
 import serverlessMysql = require("serverless-mysql");
 import { ServerlessMysql } from "serverless-mysql";
 import "reflect-metadata";
 import { injectable } from "inversify";
 import { ICinemaRepository } from "../inversify/interfaces";
-import { fetch } from "../lib/circuitBreaker";
+import { fetch, put, post, search } from "../lib/circuitBreaker";
 import { cinemaDeserializer } from "../serializers/cinemasSerializer";
 
 // current workaround. https://github.com/jeremydaly/serverless-mysql/issues/30#issuecomment-488192023
@@ -23,7 +24,8 @@ const mysql = createConnection({
   }
 });
 
-const host = env.get("MOVIES_SERVICE_HOST");
+const moviesServiceHost = env.get("MOVIES_SERVICE_HOST");
+const searchServiceHost = env.get("SEARCH_SERVICE_HOST");
 
 @injectable()
 export class CinemaRepository implements ICinemaRepository {
@@ -53,7 +55,7 @@ export class CinemaRepository implements ICinemaRepository {
 
     // make api requests parallel
     const parallelRequests = premiereMovieIds.map((movieId) => {
-      const url = host + "/api/movies/" + movieId;
+      const url = moviesServiceHost + "/api/movies/" + movieId;
       return fetch(url);
     });
 
@@ -110,7 +112,7 @@ export class CinemaRepository implements ICinemaRepository {
       return result;
     }, []);
 
-    const movie = await fetch(host + "/api/movies/" + movieId);
+    const movie = await fetch(moviesServiceHost + "/api/movies/" + movieId);
     const deserializedMovie = await cinemaDeserializer.deserialize(movie);
 
     const cinemaSchedules = {
@@ -143,7 +145,7 @@ export class CinemaRepository implements ICinemaRepository {
 
     // make api requests parallel
     const parallelRequests = cinemaMovieIds.map((movieId) => {
-      const url = host + "/api/movies/" + movieId;
+      const url = moviesServiceHost + "/api/movies/" + movieId;
       return fetch(url);
     });
 
@@ -153,10 +155,7 @@ export class CinemaRepository implements ICinemaRepository {
       return deserializedMovie[0];
     });
 
-    // transform object array
-    // make the object denormalize. it is easy to search in ES
-    const nestedCinemas = cinemas.reduce((result, cinema) => {
-      const a = result.find(({id}) => id === cinema.id);
+    const cinemasMovies = cinemas.map((cinema) => {
       const movie = movies.find(({id}) => cinema.movie_id === id);
 
       cinema["title"] = movie.title;
@@ -168,22 +167,10 @@ export class CinemaRepository implements ICinemaRepository {
       cinema["released-at"] = movie["released-at"];
       cinema["location"] = [cinema.longitude, cinema.latitude];
 
-      if (a) {
-        a.data.push(cinema);
-      } else {
-        result.push({
-          ingest: "ingest_to_index_cinemas",
-          id: cinema.id,
-          data: [cinema]
-        });
-      }
-      return result;
-    }, []);
-
-    const log = require("../log").default;
-    nestedCinemas.map((cinema) => {
-      log.ingest(JSON.stringify(cinema));
+      return cinema;
     });
+
+    await post(searchServiceHost + "/api/search/ingest", cinemasMovies);
 
     return;
   }

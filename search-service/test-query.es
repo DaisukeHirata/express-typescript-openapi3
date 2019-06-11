@@ -27,7 +27,7 @@ GET  /cinemas/_search
 {
   "query": {
     "nested": {
-      "path": "cinema.data",
+      "path": "data",
       "query": {
         "match": { "cinema.data.title": "Big Hero 6"}
       }
@@ -41,7 +41,7 @@ GET  /cinemas/_search
 {
   "query": {
     "nested": {
-      "path": "cinema.data",
+      "path": "data",
       "query": {
         "bool": {
           "must" : [
@@ -84,7 +84,7 @@ GET /cinemas/_search
 {
   "query": {
     "nested": {
-      "path": "cinema.data",
+      "path": "data",
       "query": {
         "bool" : {
           "must" : {
@@ -93,7 +93,7 @@ GET /cinemas/_search
           "filter" : {
             "geo_distance" : {
               "distance" : "500m",
-              "cinema.data.location" : {
+              "data.location" : {
                 "lat" : -33.46,
                 "lon" : -70.72
               }
@@ -105,17 +105,45 @@ GET /cinemas/_search
   }
 }
 
+"In JavaScript"
+/* const s = await search("http://elk:9200/cinemas/_search",
+  {
+    "query": {
+      "nested": {
+        "path": "data",
+        "query": {
+          "bool" : {
+            "must" : {
+              "match_all" : {}
+            },
+            "filter" : {
+              "geo_distance" : {
+                "distance" : "500m",
+                "data.location" : {
+                  "lat" : -33.46,
+                  "lon" : -70.72
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+);
+console.dir(JSON.stringify(s)); */
+
 "IN equivalent operator"
 GET  /cinemas/_search
 {
   "query": {
     "nested": {
-      "path": "cinema.data",
+      "path": "data",
       "query" : {
         "bool" : {
           "filter" : {
             "terms" : {
-              "cinema.data.id" : ["588ac3a02d029a6d15d0b5ca", "588ac3a02d029a6d15d0b5c6"]
+              "data.id" : ["588ac3a02d029a6d15d0b5ca", "588ac3a02d029a6d15d0b5c6"]
             }
           }
         }
@@ -166,21 +194,18 @@ PUT /cinemas
 {
   "mappings": {
     "properties": {
-        "cinema": {
-            "properties": {
-                "data": {
-                  "type": "nested",
-                  "properties": {
-                    "location": {
-                        "type": "geo_point"
-                    }
-                  }
-                }
-            }
+      "data": {
+        "type": "nested",
+        "properties": {
+          "location": {
+              "type": "geo_point"
+          }
         }
+      }
     }
   }
 }
+
 
 GET  /movies/_search/
 {

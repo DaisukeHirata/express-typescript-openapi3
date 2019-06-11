@@ -1,14 +1,22 @@
 import * as env from "../env";
 import * as P from "bluebird";
-import * as serverlessMysql from "serverless-mysql";
+import serverlessMysql = require("serverless-mysql");
+import { ServerlessMysql } from "serverless-mysql";
 import "reflect-metadata";
 import { injectable } from "inversify";
-import { Moment } from "moment";
-import { IMovieRepository } from "../inversify/interfaces";
+// import { Moment } from "moment";
+import * as moment from "moment";
+import { ISearchRepository } from "../inversify/interfaces";
+import { fetch, put, post, search } from "../lib/circuitBreaker";
 import { TDebug } from "../log";
-const debug = new TDebug("app:src:repositories:movies");
+const debug = new TDebug("app:src:repositories:search");
 
-const mysql = serverlessMysql({
+// current workaround. https://github.com/jeremydaly/serverless-mysql/issues/30#issuecomment-488192023
+const createConnection = (serverlessMysql as unknown) as (
+  cfg?: any
+) => ServerlessMysql;
+
+const mysql = createConnection({
   config: {
     host     : env.get("DATABASE_HOST"),
     database : env.get("DATABASE"),
@@ -18,16 +26,32 @@ const mysql = serverlessMysql({
   }
 });
 
-@injectable()
-export class MovieRepository implements IMovieRepository {
-  public async getAllMovies(): P<any[]> {
-    const results = await mysql.query("SELECT id, title, runtime, format, plot, DATE_FORMAT(released_at, \'%Y-%m-%dT%TZ\') as released_at FROM movie");
-    await mysql.end();
+const esHost = env.get("ES_HOST");
 
-    return results;
+@injectable()
+export class SearchRepository implements ISearchRepository {
+  public async ingestAllCinemas(cinemas: any[]) {
+    // transform object array
+    const nestedCinemas = cinemas.reduce((result, cinema) => {
+      const a = result.find(({id}) => id === cinema.id);
+      if (a) {
+        a.data.push(cinema);
+      } else {
+        result.push({
+          id: cinema.id,
+          "@timestamp": moment(),
+          data: [cinema]
+        });
+      }
+      return result;
+    }, []);
+
+    await nestedCinemas.map((cinema) => {
+      return put(esHost + "cinemas/_doc/" + cinema.id, cinema);
+    });
   }
 
-  public async getMoviePremieres(pageSize: number, pageBefore: Moment, pageAfter: Moment): P<any[]> {
+  public async getMoviePremieres(pageSize: number, pageBefore: moment.Moment, pageAfter: moment.Moment): P<any[]> {
     const f = "YYYY/MM/DD HH:mm:ss";
     debug.log(pageBefore.format(f));
     debug.log(pageAfter.format(f));

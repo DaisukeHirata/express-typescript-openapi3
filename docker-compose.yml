@@ -30,17 +30,6 @@ services:
       - elk-vol:/usr/share/elasticsearch/data
     container_name: elk-cont
 
-  filebeat:
-    build: ./elk
-    links:
-      - elk:elk
-    depends_on:
-      - elk
-    volumes:
-      - /var/lib/docker/containers:/usr/share/filebeat/dockerlogs/:rw  # needed to access all docker logs (read only) :
-      - /var/run/docker.sock:/var/run/docker.sock  # needed to access additional informations about containers
-    container_name: filebeat-cont
-
   apm:
     image: docker.elastic.co/apm/apm-server:7.1.0
     volumes:
@@ -55,6 +44,7 @@ services:
     build: ./cinema-catalog-service
     links:
       - db:db
+      - elk:elk
       - movies-service:movies-service
       # [other container]:[alias in this container]
       # this will create environment variables in the node.js container
@@ -62,34 +52,45 @@ services:
       # also creates entries in /etc/hosts with ip info
     depends_on:
       - db
+      - elk
     ports:
       - "8001:8001"  # host:container
     volumes:
       - ./cinema-catalog-service:/home/nupp/app
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "3"
     container_name: cinema-catalog-service-cont
 
   movies-service:
     build: ./movies-service
     links:
       - db:db
+      - elk:elk
       # [other container]:[alias in this container]
       # this will create environment variables in the node.js container
       # with ip and port info for the postgres container
       # also creates entries in /etc/hosts with ip info
     depends_on:
       - db
+      - elk
     ports:
       - "8002:8001"  # host:container
     volumes:
       - ./movies-service:/home/nupp/app
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "200k"
-        max-file: "3"
     container_name: movies-service-cont
+
+  search-service:
+    build: ./search-service
+    links:
+      - db:db
+      - elk:elk
+      # [other container]:[alias in this container]
+      # this will create environment variables in the node.js container
+      # with ip and port info for the postgres container
+      # also creates entries in /etc/hosts with ip info
+    depends_on:
+      - db
+      - elk
+    ports:
+      - "8003:8001"  # host:container
+    volumes:
+      - ./search-service:/home/nupp/app
+    container_name: search-service-cont

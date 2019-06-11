@@ -5,115 +5,21 @@ info:
   version: '1.0'
 
 paths:
-  /movies:
-    get:
-      x-swagger-router-controller: moviesRoute
-      operationId: getAllMovies
-      tags:
-        - /movies
-      description: >-
-        get movie list
-      responses:
-        '200':
-          description: Successful request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Movies'
-        default:
-          description: Invalid request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorSummary'
-  /movies/premieres:
-    get:
-      x-swagger-router-controller: moviesRoute
-      operationId: getMoviePremieres
-      tags:
-        - /movies
-      description: >-
-        get movie pager example
-      parameters:
-        - name: page[size]
-          in: query
-          description: The page[size] parameter indicates the number of results that the client would like to see in the response.
-          required: false
-          schema:
-            type: number
-        - name: page[before]
-          in: query
-          description: The page[after] and page[before] parameters are both optional and both, if provided, take a cursor as their value. If their value is not a valid cursor
-          required: false
-          schema:
-            type: string
-            format: date-time
-            example: '2018-12-01T00:00:00Z'
-        - name: page[after]
-          in: query
-          description: The page[after] and page[before] parameters are both optional and both, if provided, take a cursor as their value. If their value is not a valid cursor
-          required: false
-          schema:
-            type: string
-            format: date-time
-            example: '2018-12-01T00:00:00Z'
-      responses:
-        '200':
-          description: Successful request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Movies'
-        default:
-          description: Invalid request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorSummary'
-  /movies/{id}:
-    get:
-      x-swagger-router-controller: moviesRoute
-      operationId: getMovie
-      tags:
-        - /movies
-      description: >-
-        get a movie
-      parameters:
-        - name: id
-          in: path
-          description: id of a movie
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Successful request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Movies'
-        default:
-          description: Invalid request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorSummary'
-  /uploadImage:
+  /search/ingest:
     post:
-      x-swagger-router-controller: uploadImageRoute
-      operationId: uploadImagePost
+      x-swagger-router-controller: searchRoute
+      operationId: ingestCinemas
       tags:
-        - /uploadImage
+        - /search
       description: >-
-        upload Image file
+        search cinema
       requestBody:
-        description: Callback payload
-        x-name: uploadImage
-        required: true
+        description: Elastic Search Query
+        x-name: search
         content:
-          multipart/form-data:
+          application/json:
             schema:
-              $ref: '#/components/schemas/UploadImage'
+              $ref: '#/components/schemas/AnyValue'
       responses:
         '200':
           description: Successful request.
@@ -127,22 +33,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorSummary'
-  /hello:
-    post:
-      x-swagger-router-controller: helloWorldRoute
-      operationId: helloWorldPost
+  /search:
+    get:
+      x-swagger-router-controller: searchRoute
+      operationId: searchCinema
       tags:
-        - /hello
+        - /search
       description: >-
-        Returns greeting.
+        search cinema
       requestBody:
-        description: Callback payload
-        x-name: pet
+        description: Elastic Search Query
+        x-name: search
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Pet'
+              $ref: '#/components/schemas/AnyValue'
       responses:
         '200':
           description: Successful request.
@@ -156,64 +62,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorSummary'
-    get:
-      x-swagger-router-controller: helloWorldRoute
-      operationId: helloWorldGet
-      tags:
-        - /hello
-      description: >-
-        Returns greeting.
-      parameters:
-        - name: greeting
-          in: query
-          description: Name of greeting
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Hello'
-        default:
-          description: Invalid request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorSummary'
-  /goodbye/{postId}:
-    post:
-      x-swagger-router-controller: goodbyeWorldRoute
-      operationId: goodbyeWorldPost
-      tags:
-        - /goodbye
-      description: >-
-        Returns greeting.
-      parameters:
-        - name: postId
-          in: path
-          description: id of a post
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Successful request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Goodbye'
-        default:
-          description: Invalid request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorSummary'
-
-
-
 
 servers:
   - url: '/api'
@@ -242,105 +90,10 @@ components:
           type: string
         path:
           type: string
-    Movies:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Movie'
-        links:
-          $ref: '#/components/schemas/Links'
-      required:
-        - data
-    Movie:
-      type: object
-      properties:
-        type:
-          type: string
-          example: "movies" # always movies
-        id:
-          type: string
-          example: "1"
-        attributes:
-          $ref: '#/components/schemas/MovieAttributes'
-      required:
-        - type
-        - id
-        - attributes
-    MovieAttributes:
-      type: object
-      properties:
-        title:
-          type: string
-          example: "Assasins Creed"
-        runtime:
-          type: number
-          example: 115
-        format:
-          type: string
-          example: "IMAX"
-        plot:
-          type: string
-          example: "Lorem ipsum dolor sit amet"
-        released-at:
-          type: string
-          format: date-time
-          example: '2018-12-01T00:00:00Z'
-        created-at:
-          type: string
-          format: date-time
-          example: '2018-12-01T00:00:00Z'
-        updated-at:
-          type: string
-          format: date-time
-          example: '2018-12-01T00:00:00Z'
-      required:
-        - title
-        - runtime
-        - released-at
-    Links:
-      type: object
-      properties:
-        self:
-          type: string
-        prev:
-          type: string
-        next:
-          type: string
-    UploadImage:
-      type: object
-      properties:
-        file: # <- this is the form field name that needs to be present in the POST payload 
-          type: string
-          format: binary
-          description: a binary file uploaded via openAPI spec
-        id:
-          type: string # it's a form field, so will always be a string 
-        name:
-          type: string
-      required:
-        - id
-        - name
+    AnyValue:
+      nullable: true
+      description: Can be anything, including null.          
     Hello:
-      properties:
-        msg:
-          type: string
-      required:
-        - msg
-    Pet:
-      type: object
-      discriminator:
-        propertyName: petType
-      properties:
-        name:
-          type: string
-        petType:
-          type: string
-      required:
-        - name
-        - petType
-    Goodbye:
       properties:
         msg:
           type: string

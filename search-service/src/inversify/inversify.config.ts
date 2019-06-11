@@ -1,8 +1,8 @@
 import { Container } from "inversify";
 import { TYPES } from "./types";
-import { MovieRepository } from "../repositories/moviesRepository";
+import { SearchRepository } from "../repositories/searchRepository";
 
 const myContainer = new Container();
-myContainer.bind<MovieRepository>(TYPES.IMovieRepository).to(MovieRepository);
+myContainer.bind<SearchRepository>(TYPES.ISearchRepository).to(SearchRepository);
 
 export { myContainer };

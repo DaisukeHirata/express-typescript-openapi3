@@ -1,22 +1,23 @@
 import { Request, Response } from "express";
 import * as P from "bluebird";
 import * as moment from "moment";
-import { movieSerializer, moviePagerSerializer } from "../serializers/moviesSerializer";
-import { IMovieRepository } from "../inversify/interfaces";
-// import { TDebug } from "../log";
-// const debug = new TDebug("app:src:controllers:movies");
+import { searchSerializer, searchPagerSerializer } from "../serializers/searchSerializer";
+import { ISearchRepository } from "../inversify/interfaces";
+import { TDebug } from "../log";
+const debug = new TDebug("app:src:controllers:search");
 
-export class MoviesController {
-  private repo: IMovieRepository;
+export class SearchController {
+  private repo: ISearchRepository;
 
-  constructor(repo: IMovieRepository) {
+  constructor(repo: ISearchRepository) {
     this.repo = repo;
   }
 
-  public async getAllMovies(req: Request, res: Response): P<any> {
-    const movies = await this.repo.getAllMovies();
-    const serializedMovies = movieSerializer.serialize(movies);
-    res.send(serializedMovies);
+  public async ingestCinemas(req: Request, res: Response): P<any> {
+    const body = req.body;
+    debug.log("body: ", body);
+    await this.repo.ingestAllCinemas(body);
+    res.send({"msg": "done"});
   }
 
   // https://jsonapi.org/profiles/ethanresnick/cursor-pagination/
@@ -51,7 +52,7 @@ export class MoviesController {
     }
 
     const url = req.protocol + "://" + req.get("host") + req.path;
-    const serializedMovies = moviePagerSerializer(url, movies, pageSize).serialize(movies);
+    const serializedMovies = searchPagerSerializer(url, movies, pageSize).serialize(movies);
 
     res.send(serializedMovies);
   }
@@ -65,7 +66,7 @@ export class MoviesController {
       return;
     }
 
-    const serializedMovie = movieSerializer.serialize(movies);
+    const serializedMovie = searchSerializer.serialize(movies);
     res.send(serializedMovie);
   }
 }
