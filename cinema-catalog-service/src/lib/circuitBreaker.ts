@@ -87,7 +87,6 @@ async function req(url: RequestInfo, method: any, params: {}, defaultResponse: a
     error: "Unread messages currently unavailable. Try again later"
   }));
 
-  const requestId = request.get(REQ_NAME);
   const res = await circuit.fire(params).catch((err) => {
     debug(`get ${url} error (${err.status}).`, err);
     throw err;
