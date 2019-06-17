@@ -1,8 +1,9 @@
-FROM docker.elastic.co/beats/filebeat:7.0.1
-# Copy our custom configuration file
-COPY filebeat.yml /usr/share/filebeat/filebeat.yml
-USER root
-# Create a directory to map volume with all docker log files
-RUN mkdir /usr/share/filebeat/dockerlogs
-RUN chown -R root /usr/share/filebeat/
-RUN chmod -R go-w /usr/share/filebeat/
+FROM sebp/elk:701
+
+ENV ES_HOME /opt/elasticsearch
+WORKDIR ${ES_HOME}
+
+RUN yes | CONF_DIR=/etc/elasticsearch gosu elasticsearch bin/elasticsearch-plugin \
+    install -b analysis-smartcn
+RUN yes | CONF_DIR=/etc/elasticsearch gosu elasticsearch bin/elasticsearch-plugin \
+    install -b analysis-kuromoji

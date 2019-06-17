@@ -160,6 +160,8 @@ export class CinemaRepository implements ICinemaRepository {
 
       cinema["title"] = movie.title;
       cinema["plot"] = movie.plot;
+      cinema["plot_ja"] = movie.plot_ja;
+      cinema["plot_cn"] = movie.plot_cn;
       cinema["genre"] = movie.genre;
       cinema["movie_format"] = movie.format;
       cinema["runtime"] = movie.runtime;

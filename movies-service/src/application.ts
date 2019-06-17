@@ -14,6 +14,7 @@ import * as helmet from "helmet";
 import { Container } from "inversify";
 
 export const initApp = (container: Container): express.Express => {
+  process.on("unhandledRejection", console.dir);
   env.checkEnv();
   env.set("DIContainer", container);
   const app = express();

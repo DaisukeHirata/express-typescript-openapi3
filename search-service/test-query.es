@@ -613,6 +613,152 @@ GET my_products_optimized/_search
   ]
 }
 
+"1つだけのフィールドを使用するStandard Analyzer"
+DELETE mono
+PUT /mono
+{
+  "mappings": {
+    "properties": {
+      "body": {
+        "type": "text"
+      }
+    }
+  }
+}
+
+PUT /mono/_doc/1
+{
+  "body" : "세계인의 축제, 제23회 동계올림픽대회는 대한민국 강원도 평창에서 2018년 2월 9일부터 25일까지 17일간 개최됩니다. 대한민국 평창은 세 번의 도전 끝에 지난 2011년 7월 6일 열린 제123차 IOC 총회에서 과반 표를 획득하며 2018년 동계올림픽 개최지로 선정되었습니다. 이로써 대한민국에서는 1988년 서울 올림픽 이후 30년 만에, 평창에서 개∙폐회식과 대부분의 설상 경기가 개최되며, 강릉에서는 빙상 종목 전 경기가, 그리고 정선에서는 알파인 스키 활강 경기가 개최될 예정입니다."
+}
+PUT /mono/_doc/2
+{
+  "body" : "The XXIII Olympic Winter Games will be held for 17 days from 9 to 25 February 2018 in PyeongChang, Gangwon Province, the Republic of Korea. PyeongChang was selected as the host city of the 2018 Olympic Winter Games after receiving a majority vote at the 123rd IOC Session held on 6 July 2011 after three consecutive bids. The Olympic Winter Games will be held in Korea for the first time in 30 years after the Seoul Olympic Games in 1988. PyeongChang will be the stage for the Opening and Closing Ceremonies and most snow sports. Alpine speed events will take place in Jeongseon, and all ice sports will be competed in the coastal city of Gangneung."
+}
+PUT /mono/_doc/3
+{
+  "body" : "第23届冬季奥运会将于2018年2月9日-25日在韩国江原道平昌展开。韩国平昌在第三次申奥之后，于2011年7月6日召开的第123届国际奥委会全会上被选定为2018年冬季奥运会的主办地。由此，韩国自1988年举办首尔夏季奥运会以后，时隔30年，将首次举办冬季奥运会。该届冬奥会的开·闭幕式以及大部分的雪上运动将在平昌进行，而所有冰上运动将在江陵、高山滑雪滑降比赛则将在旌善进行。"}PUT /mono/docs/4{  "body" : "世界の人々の祝祭、第23回冬季オリンピック大会は大韓民国江原道平昌で2018年2月9日から25日までの17日間、開催されます。大韓民国・平昌は三度の挑戦の末、2011年7月7日に開かれた第123回IOC総会で過半数票を獲得し、2018年冬季オリンピック及びパラリンピックの開催地に選ばれました。これにより1988年ソウルオリンピック開催後30年の時を経てついに、大韓民国で最初の冬季パラリンピックの舞台が繰り広げられます。平昌で開・閉会式とほぼ全ての雪上競技が開催され、江陵では氷上種目全競技が、そして旌善ではアルペンスキー滑降競技が開催される予定です。"
+}
+
+GET /mono/_search
+{
+  "query": {
+    "multi_match": {
+      "query": "Olympic Games",
+      "fields": [
+        "body"
+      ]
+    }
+  }
+}
+
+POST /mono/_search
+{
+  "query": {
+    "multi_match": {
+      "query": "オリンピック大会",
+      "fields": [
+        "body"
+      ]
+    }
+  }
+}
+
+POST /mono/_search
+{
+  "query": {
+    "multi_match": {
+      "query": "奥运会",
+      "fields": [
+        "body"
+      ]
+    }
+  }
+}
+
+POST /mono/_search
+{
+  "query": {
+    "multi_match": {
+      "query": "올림픽대회",
+      "fields": [
+        "body"
+      ]
+    }
+  }
+}
+
+DELETE /test
+PUT /test
+{
+  "mappings": {
+    "properties": {
+      "body": {
+        "type": "text",
+        "fields": {
+          "japanese_field": {
+            "analyzer": "kuromoji",
+            "type": "text"
+          },
+          "chinese_field": {
+            "analyzer": "smartcn",
+            "type": "text"
+          }
+        }
+      }
+    }
+  }
+}
+
+PUT /test/_doc/2
+{
+  "body" : "The XXIII Olympic Winter Games will be held for 17 days from 9 to 25 February 2018 in PyeongChang, Gangwon Province, the Republic of Korea. PyeongChang was selected as the host city of the 2018 Olympic Winter Games after receiving a majority vote at the 123rd IOC Session held on 6 July 2011 after three consecutive bids. The Olympic Winter Games will be held in Korea for the first time in 30 years after the Seoul Olympic Games in 1988. PyeongChang will be the stage for the Opening and Closing Ceremonies and most snow sports. Alpine speed events will take place in Jeongseon, and all ice sports will be competed in the coastal city of Gangneung."
+}
+PUT /test/_doc/3
+{
+  "body" : "第23届冬季奥运会将于2018年2月9日-25日在韩国江原道平昌展开。韩国平昌在第三次申奥之后，于2011年7月6日召开的第123届国际奥委会全会上被选定为2018年冬季奥运会的主办地。由此，韩国自1988年举办首尔夏季奥运会以后，时隔30年，将首次举办冬季奥运会。该届冬奥会的开·闭幕式以及大部分的雪上运动将在平昌进行，而所有冰上运动将在江陵、高山滑雪滑降比赛则将在旌善进行。"
+}
+PUT /test/_doc/4
+{
+  "body" : "世界の人々の祝祭、第23回冬季オリンピック大会は大韓民国江原道平昌で2018年2月9日から25日までの17日間、開催されます。大韓民国・平昌は三度の挑戦の末、2011年7月7日に開かれた第123回IOC総会で過半数票を獲得し、2018年冬季オリンピック及びパラリンピックの開催地に選ばれました。これにより1988年ソウルオリンピック開催後30年の時を経てついに、大韓民国で最初の冬季パラリンピックの舞台が繰り広げられます。平昌で開・閉会式とほぼ全ての雪上競技が開催され、江陵では氷上種目全競技が、そして旌善ではアルペンスキー滑降競技が開催される予定です。"
+}
+
+POST /test/_search
+{
+  "query": {
+    "multi_match": {
+      "query": "Olympic Games",
+      "fields": [
+        "body"
+      ]
+    }
+  }
+}
+
+POST /test/_search
+{
+  "query": {
+    "multi_match": {
+      "query": "オリンピック大会",
+      "fields": [
+        "body.japanese_field"
+      ]
+    }
+  }
+}
+
+POST /test/_search
+{
+  "query": {
+    "multi_match": {
+      "query": "奥运会",
+      "fields": [
+        "body.chinese_field"
+      ]
+    }
+  }
+}
+
+
 GET my_products_optimized/_search
 
 "The _all field"

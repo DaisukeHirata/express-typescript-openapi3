@@ -92,18 +92,25 @@ async function req(url: RequestInfo, method: any, params: {}, defaultResponse: a
     throw err;
   });
   debug("status %d", res.statusCode);
+  if (isEmpty(res)) {
+    const err = new Error("response empty error");
+    throw err;
+  }
   if (res.statusCode >= 500 && res.statusCode < 600) {
     const err = new Error(res.statusText);
     err.code = err.status = err.statusCode = res.statusCode;
     err.url = url;
     throw err;
-  } else {
-    if (res && res.body) {
-      if (typeof res.body === "string") {
-        return JSON.parse(res.body);
-      }
-      return res.body;
-    }
-    return "";
   }
+  if (res && res.body) {
+    if (typeof res.body === "string") {
+      return JSON.parse(res.body);
+    }
+    return res.body;
+  }
+  return "";
+}
+
+function isEmpty(obj) {
+  return !Object.keys(obj).length;
 }

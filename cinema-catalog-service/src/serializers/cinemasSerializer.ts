@@ -10,7 +10,7 @@ export const cinemaPremieresByIdSerializer = new jsonapiSerializer.Serializer("c
     ref: (cinema, movie) => {
       return movie.id;
     },
-    attributes: ["title", "genre", "runtime", "plot", "poster"]
+    attributes: ["title", "genre", "runtime", "plot", "plot_ja", "plot_cn",  "poster"]
   }
 });
 
@@ -20,7 +20,7 @@ export const cinemaSchedulesSerializer = new jsonapiSerializer.Serializer("cinem
     ref: (cinema, movies) => {
       return movies.id;
     },
-    attributes: ["title", "genre", "runtime", "format", "plot", "released-at"]
+    attributes: ["title", "genre", "runtime", "format", "plot", "plot-ja", "plot-cn", "released-at"]
   },
   rooms: {
     ref: (cinema, rooms) => {

@@ -304,6 +304,12 @@ components:
         plot:
           type: string
           example: "Lorem ipsum dolor sit amet"
+        plot-ja:
+          type: string
+          example: "主人公・カラムは幼少時に、"
+        plot-cn:
+          type: string
+          example: "2016年，死囚柯倫·林區透過阿布斯泰戈"
         released-at:
           type: string
           format: date-time

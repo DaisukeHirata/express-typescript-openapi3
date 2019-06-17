@@ -16,6 +16,8 @@ frame "movie" {
       runtime:innt
       format:string
       plot:string
+      plot_ja:string
+      plot_cn:string
       released_at:datetime
   }
 }

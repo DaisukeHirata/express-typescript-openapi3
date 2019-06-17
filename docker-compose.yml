@@ -21,11 +21,12 @@ services:
     container_name: db-cont
 
   elk:
-    image: sebp/elk:701
+    build: ./elk
+    environment:
+      - LOGSTASH_START=0
     ports:
       - "5601:5601"  # host:container kibana
       - "9200:9200"  # host:container elasticsearch
-      - "5044:5044"  # host:container logstash
     volumes:
       - elk-vol:/usr/share/elasticsearch/data
     container_name: elk-cont

@@ -21,7 +21,9 @@ exports.up = function(db) {
     genre: "string",
     runtime: "int",
     format: "string",
-    plot: "string",
+    plot: "text",
+    plot_ja: "text",
+    plot_cn: "text",
     released_at: "datetime",
     created_at: "datetime",
     updated_at: "datetime"

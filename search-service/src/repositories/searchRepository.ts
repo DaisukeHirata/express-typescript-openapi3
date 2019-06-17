@@ -46,9 +46,11 @@ export class SearchRepository implements ISearchRepository {
       return result;
     }, []);
 
-    await nestedCinemas.map((cinema) => {
-      return put(esHost + "cinemas/_doc/" + cinema.id, cinema);
+    nestedCinemas.map(async (cinema) => {
+      await put(esHost + "cinemas/_doc/" + cinema.id, cinema);
     });
+
+    return "";
   }
 
   public async getMoviePremieres(pageSize: number, pageBefore: moment.Moment, pageAfter: moment.Moment): P<any[]> {
