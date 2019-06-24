@@ -19,7 +19,7 @@ function loadDocumentSync(file: string): any {
 }
 
 export const initSwaggerMiddlware = function (app: express.Express, basePath: string, cb: any) {
-    const swaggerDoc = loadDocumentSync(basePath + "/definition/swagger.yaml");
+    const swaggerDoc = loadDocumentSync(basePath + "/definition/openapi.yml");
     const options = {
         controllers: basePath + "/routes",
         loglevel: "info",
