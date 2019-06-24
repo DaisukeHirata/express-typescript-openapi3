@@ -1,4 +1,5 @@
 import * as cls from "cls-hooked";
+import * as env from "../env";
 import CircuitBreaker from "opossum";
 import * as rp from "request-promise";
 import * as Debug from "debug";
@@ -7,6 +8,7 @@ const debug = Debug("fetch-circuit-breaker");
 const getNamespace = cls.getNamespace;
 const NAMESPACE: string = "SOS";
 export const REQ_NAME: string = "X-Request-Id";
+export const REQ_ACCEPT_LANGUAGE: string = "accept-language";
 export const request = getNamespace(NAMESPACE);
 
 declare global {
@@ -26,9 +28,14 @@ declare global {
 // https://epsagon.com/blog/best-practices-for-aws-lambda-timeouts/
 export async function fetch(url: RequestInfo, defaultResponse: any = {}) {
   const requestId = request.get(REQ_NAME);
+  const acceptLanguage = request.get(REQ_ACCEPT_LANGUAGE);
   const params = {
     uri: url,
-    headers: {[REQ_NAME]: requestId},
+    headers: {
+      [REQ_NAME]: requestId,
+      [REQ_ACCEPT_LANGUAGE]: acceptLanguage,
+      "accept": "*/*"
+    },
     resolveWithFullResponse: true
   };
   return req(url, rp.get, params, defaultResponse);
@@ -36,10 +43,14 @@ export async function fetch(url: RequestInfo, defaultResponse: any = {}) {
 
 export async function put(url: RequestInfo, payload: {}, defaultResponse: any = {}) {
   const requestId = request.get(REQ_NAME);
+  const acceptLanguage = request.get(REQ_ACCEPT_LANGUAGE);
   const params =  {
     method: "PUT",
     uri: url,
-    headers: {[REQ_NAME]: requestId},
+    headers: {
+      [REQ_NAME]: requestId,
+      [REQ_ACCEPT_LANGUAGE]: acceptLanguage
+    },
     body: payload,
     json: true,
     resolveWithFullResponse: true
@@ -49,10 +60,14 @@ export async function put(url: RequestInfo, payload: {}, defaultResponse: any = 
 
 export async function post(url: RequestInfo, payload: {}, defaultResponse: any = {}) {
   const requestId = request.get(REQ_NAME);
+  const acceptLanguage = request.get(REQ_ACCEPT_LANGUAGE);
   const params =  {
     method: "POST",
     uri: url,
-    headers: {[REQ_NAME]: requestId},
+    headers: {
+      [REQ_NAME]: requestId,
+      [REQ_ACCEPT_LANGUAGE]: acceptLanguage
+    },
     body: payload,
     json: true,
     resolveWithFullResponse: true
@@ -60,12 +75,35 @@ export async function post(url: RequestInfo, payload: {}, defaultResponse: any =
   return req(url, rp.post, params, defaultResponse);
 }
 
+export async function index(url: RequestInfo, payload: {}, defaultResponse: any = {}) {
+  const requestId = request.get(REQ_NAME);
+  const acceptLanguage = request.get(REQ_ACCEPT_LANGUAGE);
+  const params =  {
+    method: "PUT",
+    uri: url,
+    headers: {
+      [REQ_NAME]: requestId,
+      [REQ_ACCEPT_LANGUAGE]: acceptLanguage,
+      Authorization: env.get("ES_AUTHORIZATION_TOKEN")
+    },
+    body: payload,
+    json: true,
+    resolveWithFullResponse: true
+  };
+  return req(url, rp.put, params, defaultResponse);
+}
+
 export async function search(url: RequestInfo, payload: {}, defaultResponse: any = {}) {
   const requestId = request.get(REQ_NAME);
+  const acceptLanguage = request.get(REQ_ACCEPT_LANGUAGE);
   const params =  {
     method: "GET",
     uri: url,
-    headers: {[REQ_NAME]: requestId},
+    headers: {
+      [REQ_NAME]: requestId,
+      [REQ_ACCEPT_LANGUAGE]: acceptLanguage,
+      Authorization: env.get("ES_AUTHORIZATION_TOKEN")
+    },
     body: payload,
     json: true,
     resolveWithFullResponse: true
@@ -92,18 +130,25 @@ async function req(url: RequestInfo, method: any, params: {}, defaultResponse: a
     throw err;
   });
   debug("status %d", res.statusCode);
+  if (isEmpty(res)) {
+    const err = new Error("response empty error");
+    throw err;
+  }
   if (res.statusCode >= 500 && res.statusCode < 600) {
     const err = new Error(res.statusText);
     err.code = err.status = err.statusCode = res.statusCode;
     err.url = url;
     throw err;
-  } else {
-    if (res && res.body) {
-      if (typeof res.body === "string") {
-        return JSON.parse(res.body);
-      }
-      return res.body;
-    }
-    return "";
   }
+  if (res && res.body) {
+    if (typeof res.body === "string") {
+      return JSON.parse(res.body);
+    }
+    return res.body;
+  }
+  return "";
+}
+
+function isEmpty(obj) {
+  return !Object.keys(obj).length;
 }

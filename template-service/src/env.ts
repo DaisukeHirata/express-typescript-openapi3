@@ -4,19 +4,19 @@ exports.set = set;
 const configs = {
   local: {
     LOG_LEVEL: "silly",
-    CORS: "*",
+    CORS: "*"
   },
   development: {
     LOG_LEVEL: "silly",
-    CORS: "*",
+    CORS: "*"
   },
   staging: {
     LOG_LEVEL: "silly",
-    CORS: "*",
+    CORS: "*"
   },
   production : {
     LOG_LEVEL: "silly",
-    CORS: "*",
+    CORS: "*"
   }
 };
 

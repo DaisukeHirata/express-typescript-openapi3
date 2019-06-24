@@ -21,7 +21,7 @@ package:
 
 functions:
   app:
-    handler: dist/lambda.http
+    handler: dist/src/lambda.http
     events:
       - http:
           path: /

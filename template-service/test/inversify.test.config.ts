@@ -1,8 +1,5 @@
 import "reflect-metadata";
-import * as P from "bluebird";
-import { Container, injectable } from "inversify";
-import { Moment } from "moment";
-import { TYPES } from "../src/inversify/types";
+import { Container } from "inversify";
 
 const testContainer = new Container();
 
