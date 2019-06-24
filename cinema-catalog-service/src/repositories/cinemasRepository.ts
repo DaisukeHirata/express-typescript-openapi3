@@ -1,12 +1,11 @@
 import * as env from "../env";
 import * as P from "bluebird";
-import * as moment from "moment";
 import serverlessMysql = require("serverless-mysql");
 import { ServerlessMysql } from "serverless-mysql";
 import "reflect-metadata";
 import { injectable } from "inversify";
 import { ICinemaRepository } from "../inversify/interfaces";
-import { fetch, put, post, search } from "../lib/circuitBreaker";
+import { fetch, post } from "../lib/circuitBreaker";
 import { cinemaDeserializer } from "../serializers/cinemasSerializer";
 
 // current workaround. https://github.com/jeremydaly/serverless-mysql/issues/30#issuecomment-488192023

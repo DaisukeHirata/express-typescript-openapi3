@@ -36,6 +36,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorSummary'
+  /good-morning:
+    post:
+      x-swagger-router-controller: helloWorldRoute
+      operationId: goodMorningPost
+      tags:
+        - /hello
+      description: >-
+        post with json body.
+      requestBody:
+        description: get with json body
+        x-name: goodMorning
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnyValue'
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnyValue'
+        default:
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorSummary'
   /goodbye/{postId}:
     post:
       x-swagger-router-controller: goodbyeWorldRoute
@@ -146,3 +174,6 @@ components:
       required:
         - id
         - name
+    AnyValue:
+      nullable: true
+      description: Can be anything, including null.

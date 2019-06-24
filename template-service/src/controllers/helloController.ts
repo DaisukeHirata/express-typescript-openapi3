@@ -10,8 +10,8 @@ export async function getHelloWorld(req: Request, res: Response): P<any> {
     res.send({"msg": "hello " + greeting});
 }
 
-export async function postHelloWorld(req: Request, res: Response): P<any> {
+export async function postGoodMorning(req: Request, res: Response): P<any> {
     const body = req.body;
     debug.log("body: ", body);
-    res.send({"msg": JSON.stringify(body)});
+    res.send(body);
 }
