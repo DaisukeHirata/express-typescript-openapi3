@@ -28,7 +28,6 @@
     "oas-tools": "^2.1.5",
     "opossum": "^2.0.0",
     "perfy": "^1.1.2",
-    "prom-client": "11.5.0",
     "reflect-metadata": "^0.1.13",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
