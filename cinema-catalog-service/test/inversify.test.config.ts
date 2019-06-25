@@ -43,6 +43,10 @@ class DummyCinemaRepository implements ICinemaRepository {
     return P.all(this.testMovies);
   }
 
+  public async ingestAllCinemasToES() {
+    return;
+  }
+
 }
 
 const testContainer = new Container();
