@@ -1,0 +1,15 @@
+{
+  "name": "shared-service",
+  "version": "1.0.0",
+  "description": "shared-service",
+  "main": "dist/index.js",
+  "scripts": {
+    "deploy": "serverless deploy"
+  },
+  "author": "shogo-mitomo",
+  "license": "ISC",
+  "devDependencies": {
+    "serverless": "^1.43.0",
+    "serverless-plugin-warmup": "^4.5.3-rc.1"
+  }
+}
