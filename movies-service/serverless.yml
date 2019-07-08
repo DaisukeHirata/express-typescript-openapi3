@@ -11,10 +11,9 @@ provider:
     DATABASE: movie
     DATABASE_USER: foo
     DATABASE_PASSWORD: bar
-    MOVIES_SERVICE_HOST: ${cf.${self:provider.region}:movies-service-${opt:stage, self:provider.stage}.ServiceEndpoint}
     ESCLOUD_SECRET_TOKEN: ${self:custom.escloudSecretToken.${opt:stage, self:provider.stage}}
     ESCLOUD_SERVER_URL: ${self:custom.escloudSecretUrl.${opt:stage, self:provider.stage}}
-    DEBUG: app:*
+    DEBUG: app:*,fetch-circuit-breaker
 
 custom:
   stages:
@@ -38,7 +37,7 @@ package:
 
 functions:
   app:
-    handler: dist/lambda.http
+    handler: dist/src/lambda.http
     events:
       - http:
           path: /
@@ -58,7 +57,7 @@ functions:
     warmup: true
 
   db-migrate-up:
-    handler: dist/lib/db-migrate.migrate
+    handler: dist/src/lib/db-migrate.migrate
     vpc:
       securityGroupIds:
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessDefaultSecurityGroup}

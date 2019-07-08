@@ -8,8 +8,7 @@ const configs = {
     DATABASE_HOST: "db",
     DATABASE: "movie",
     DATABASE_USER: "foo", // can be stored in environment variable
-    DATABASE_PASSWORD: "bar", // can be stored in environment variable
-    MOVIES_SERVICE_HOST: "http://movies-service:8001"
+    DATABASE_PASSWORD: "bar" // can be stored in environment variable
   },
   development: {
     LOG_LEVEL: "silly",
@@ -17,8 +16,7 @@ const configs = {
     DATABASE_HOST: "db",
     DATABASE: "movie",
     DATABASE_USER: "foo", // can be stored in environment variable
-    DATABASE_PASSWORD: "bar", // can be stored in environment variable
-    MOVIES_SERVICE_HOST: "http://movies-service:8001"
+    DATABASE_PASSWORD: "bar" // can be stored in environment variable
   },
   staging: {
     LOG_LEVEL: "silly",
@@ -26,8 +24,7 @@ const configs = {
     DATABASE_HOST: "db",
     DATABASE: "movie",
     DATABASE_USER: "foo", // can be stored in environment variable
-    DATABASE_PASSWORD: "bar", // can be stored in environment variable
-    MOVIES_SERVICE_HOST: "http://movies-service:8001"
+    DATABASE_PASSWORD: "bar" // can be stored in environment variable
   },
   production : {
     LOG_LEVEL: "silly",
@@ -35,8 +32,7 @@ const configs = {
     DATABASE_HOST: "db",
     DATABASE: "movie",
     DATABASE_USER: "foo", // can be stored in environment variable
-    DATABASE_PASSWORD: "bar", // can be stored in environment variable
-    MOVIES_SERVICE_HOST: "http://movies-service:8001"
+    DATABASE_PASSWORD: "bar" // can be stored in environment variable
   }
 };
 
