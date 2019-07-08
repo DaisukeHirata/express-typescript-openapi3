@@ -16,14 +16,12 @@ export const initApp = (container: Container): express.Express => {
   env.checkEnv();
   env.set("DIContainer", container);
   const app = express();
+  app.use(cls.setAllHeaders);
   app.use(bodyParser.json({
-    strict: false,
-    limit: "300kb"
+    limit: "5MB"
   }));
   app.use(compression());
   app.use(cors(getCorsOptions()));
-  app.use(cls.setRequestId);
-  app.use(cls.setAcceptLanguage);
   app.use(inOutLogger);
   app.use(helmet());
   const upload = multer();

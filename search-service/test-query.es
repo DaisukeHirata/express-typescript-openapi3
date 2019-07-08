@@ -758,6 +758,30 @@ POST /test/_search
   }
 }
 
+POST _scripts/update-restaurant-reviews-rating-score
+{
+  "script" : {
+    "lang": "painless",
+    "source": "
+    double calcWilsonScore(def s1, def s2, def s3, def s4, def s5) {
+      double p = (s1 * 0.0) + (s2 * 0.25) + (s3 * 0.5) + (s4 * 0.75) + (s5 * 1.0);
+      double n = (s1 * 1.0) + (s2 * 0.75) + (s3 * 0.5) + (s4 * 0.25) + (s5 * 0.0);
+      wilsonScore = p + n > 0 ? ((p + 1.9208) / (p + n) - 1.96 * Math.sqrt((p * n) / (p + n) + 0.9604) / (p + n)) / (1 + 3.8416 / (p + n)) : 0;
+      wilsonScore;
+    }
+
+    ctx._source.overall_rating[params.overall_rating.toString()]++;
+    long o_s1 = ctx._source.overall_rating['1'];
+    long o_s2 = ctx._source.overall_rating['2'];
+    long o_s3 = ctx._source.overall_rating['3'];
+    long o_s4 = ctx._source.overall_rating['4'];
+    long o_s5 = ctx._source.overall_rating['5'];
+    double o_wilsonScore = calcWilsonScore(o_s1, o_s2, o_s3, o_s4, o_s5);
+    ctx._source['overall-wilson-score'] = o_wilsonScore;
+    "
+  }
+}
+
 
 GET my_products_optimized/_search
 

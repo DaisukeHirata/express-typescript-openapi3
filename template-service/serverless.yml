@@ -41,7 +41,7 @@ functions:
     warmup: true
 
   db-migrate-up:
-    handler: dist/lib/db-migrate.migrate
+    handler: dist/src/lib/db-migrate.migrate
     vpc:
       securityGroupIds:
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessDefaultSecurityGroup}

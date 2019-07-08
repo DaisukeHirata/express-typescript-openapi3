@@ -111,7 +111,9 @@ export class CinemaRepository implements ICinemaRepository {
       return result;
     }, []);
 
-    const movie = await fetch(moviesServiceHost + "/api/movies/" + movieId);
+    const movie = await fetch(moviesServiceHost + "/api/movies/" + movieId).catch((err) => {
+      throw err;
+    });
     const deserializedMovie = await cinemaDeserializer.deserialize(movie);
 
     const cinemaSchedules = {
@@ -145,7 +147,9 @@ export class CinemaRepository implements ICinemaRepository {
     // make api requests parallel
     const parallelRequests = cinemaMovieIds.map((movieId) => {
       const url = moviesServiceHost + "/api/movies/" + movieId;
-      return fetch(url);
+      return fetch(url).catch((err) => {
+        throw err;
+      });
     });
 
     // deserialize response

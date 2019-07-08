@@ -29,7 +29,10 @@ export class CinemasController {
 
   public async getCinemaById(req: Request, res: Response): P<any> {
     const cinemaId = req.swagger.params.cinema_id.value;
-    const cinema = await this.repo.getCinemaById(cinemaId);
+    const cinema = await this.repo.getCinemaById(cinemaId).catch((err) => {
+      res.status(err.statusCode).send({ message: err.message });
+      return;
+    });
 
     if (cinema.movies.length === 0) {
       res.status(404).send({
@@ -45,7 +48,10 @@ export class CinemasController {
   public async getCinemaScheduleByMovie(req: Request, res: Response): P<any> {
     const cinemaId = req.swagger.params.cinema_id.value;
     const movieId = req.swagger.params.movie_id.value;
-    const cinemaSchedule = await this.repo.getCinemaScheduleByMovie(cinemaId, movieId);
+    const cinemaSchedule = await this.repo.getCinemaScheduleByMovie(cinemaId, movieId).catch((err) => {
+      res.status(err.statusCode).send({ message: err.message });
+      return;
+    });
 
     if (cinemaSchedule.length === 0) {
       res.status(404).send({

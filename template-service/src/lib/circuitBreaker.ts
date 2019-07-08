@@ -3,13 +3,15 @@ import * as env from "../env";
 import CircuitBreaker from "opossum";
 import * as rp from "request-promise";
 import * as Debug from "debug";
+import * as P from "bluebird";
 const debug = Debug("fetch-circuit-breaker");
 
 const getNamespace = cls.getNamespace;
 const NAMESPACE: string = "SOS";
 export const REQ_NAME: string = "X-Request-Id";
 export const REQ_ACCEPT_LANGUAGE: string = "accept-language";
-export const request = getNamespace(NAMESPACE);
+export const REQ_AUTORIZATION: string = "authorization";
+export const REQ_GEO_LOCATION: string = "geolocation";
 
 declare global {
   interface Error {
@@ -26,25 +28,36 @@ declare global {
 // because we should avoid serverless anti-pattern of sharing the state of the circuit across multiple callers.
 // https://medium.com/@jeremydaly/serverless-microservice-patterns-for-aws-6dadcd21bc02#834f
 // https://epsagon.com/blog/best-practices-for-aws-lambda-timeouts/
-export async function fetch(url: RequestInfo, defaultResponse: any = {}) {
+export async function fetch(url: RequestInfo, defaultResponse: any = {}): P<any> {
+  const request = getNamespace(NAMESPACE);
+  debug(JSON.stringify(request));
   const requestId = request.get(REQ_NAME);
   const acceptLanguage = request.get(REQ_ACCEPT_LANGUAGE);
+  const authorization = request.get(REQ_AUTORIZATION);
+  const headers = {
+    [REQ_NAME]: requestId,
+    [REQ_ACCEPT_LANGUAGE]: acceptLanguage,
+    [REQ_AUTORIZATION]: authorization,
+    "accept": "*/*"
+  };
+  const geolocation = request.get(REQ_GEO_LOCATION);
+  if (geolocation) {
+    headers[REQ_GEO_LOCATION] = geolocation;
+  }
   const params = {
     uri: url,
-    headers: {
-      [REQ_NAME]: requestId,
-      [REQ_ACCEPT_LANGUAGE]: acceptLanguage,
-      "accept": "*/*"
-    },
+    headers,
     resolveWithFullResponse: true
   };
   return req(url, rp.get, params, defaultResponse);
 }
 
-export async function put(url: RequestInfo, payload: {}, defaultResponse: any = {}) {
+export async function put(url: RequestInfo, payload: {}, defaultResponse: any = {}): P<any> {
+  const request = getNamespace(NAMESPACE);
+  debug(JSON.stringify(request));
   const requestId = request.get(REQ_NAME);
   const acceptLanguage = request.get(REQ_ACCEPT_LANGUAGE);
-  const params =  {
+  const params = {
     method: "PUT",
     uri: url,
     headers: {
@@ -58,16 +71,24 @@ export async function put(url: RequestInfo, payload: {}, defaultResponse: any = 
   return req(url, rp.put, params, defaultResponse);
 }
 
-export async function post(url: RequestInfo, payload: {}, defaultResponse: any = {}) {
+export async function post(url: RequestInfo, payload: {}, defaultResponse: any = {}): P<any> {
+  const request = getNamespace(NAMESPACE);
+  debug(JSON.stringify(request));
   const requestId = request.get(REQ_NAME);
   const acceptLanguage = request.get(REQ_ACCEPT_LANGUAGE);
-  const params =  {
+  const headers = {
+    [REQ_NAME]: requestId,
+    [REQ_ACCEPT_LANGUAGE]: acceptLanguage,
+    "accept": "*/*"
+  };
+  const geolocation = request.get(REQ_GEO_LOCATION);
+  if (geolocation) {
+    headers[REQ_GEO_LOCATION] = geolocation;
+  }
+  const params = {
     method: "POST",
     uri: url,
-    headers: {
-      [REQ_NAME]: requestId,
-      [REQ_ACCEPT_LANGUAGE]: acceptLanguage
-    },
+    headers,
     body: payload,
     json: true,
     resolveWithFullResponse: true
@@ -75,11 +96,13 @@ export async function post(url: RequestInfo, payload: {}, defaultResponse: any =
   return req(url, rp.post, params, defaultResponse);
 }
 
-export async function index(url: RequestInfo, payload: {}, defaultResponse: any = {}) {
+export async function index(url: RequestInfo, payload: {}, defaultResponse: any = {}): P<any> {
+  const request = getNamespace(NAMESPACE);
+  debug(JSON.stringify(request));
   const requestId = request.get(REQ_NAME);
   const acceptLanguage = request.get(REQ_ACCEPT_LANGUAGE);
-  const params =  {
-    method: "PUT",
+  const params = {
+    method: "POST",
     uri: url,
     headers: {
       [REQ_NAME]: requestId,
@@ -90,13 +113,15 @@ export async function index(url: RequestInfo, payload: {}, defaultResponse: any 
     json: true,
     resolveWithFullResponse: true
   };
-  return req(url, rp.put, params, defaultResponse);
+  return req(url, rp.post, params, defaultResponse);
 }
 
-export async function search(url: RequestInfo, payload: {}, defaultResponse: any = {}) {
+export async function search(url: RequestInfo, payload: {}, defaultResponse: any = {}): P<any> {
+  const request = getNamespace(NAMESPACE);
+  debug(JSON.stringify(request));
   const requestId = request.get(REQ_NAME);
   const acceptLanguage = request.get(REQ_ACCEPT_LANGUAGE);
-  const params =  {
+  const params = {
     method: "GET",
     uri: url,
     headers: {
@@ -111,7 +136,9 @@ export async function search(url: RequestInfo, payload: {}, defaultResponse: any
   return req(url, rp.get, params, defaultResponse);
 }
 
-async function req(url: RequestInfo, method: any, params: {}, defaultResponse: any = {}) {
+async function req(url: RequestInfo, method: any, params: {}, defaultResponse: any = {}): P<any> {
+  debug("Send Request: %s %s", url, JSON.stringify(params));
+
   // option should be considered later
   const options = {
     timeout: 3000, // If our function takes longer than 3 seconds, trigger a failure
@@ -120,35 +147,45 @@ async function req(url: RequestInfo, method: any, params: {}, defaultResponse: a
   };
 
   const circuit = CircuitBreaker(method, options);
+  circuit.hystrixStats.getHystrixStream().setMaxListeners(100);
 
-  circuit.fallback(() => Promise.resolve(defaultResponse ? defaultResponse : {
-    error: "Unread messages currently unavailable. Try again later"
-  }));
-
-  const res = await circuit.fire(params).catch((err) => {
+  circuit.fire(params).catch((err) => {
+    debug("circuit: " + circuit.status);
     debug(`get ${url} error (${err.status}).`, err);
     throw err;
   });
-  debug("status %d", res.statusCode);
-  if (isEmpty(res)) {
-    const err = new Error("response empty error");
-    throw err;
-  }
-  if (res.statusCode >= 500 && res.statusCode < 600) {
-    const err = new Error(res.statusText);
-    err.code = err.status = err.statusCode = res.statusCode;
-    err.url = url;
-    throw err;
-  }
-  if (res && res.body) {
-    if (typeof res.body === "string") {
-      return JSON.parse(res.body);
-    }
-    return res.body;
-  }
-  return "";
-}
 
-function isEmpty(obj) {
-  return !Object.keys(obj).length;
+  return new Promise((resolve, reject) => {
+    circuit.fallback(() => reject(defaultResponse ? defaultResponse : {
+      error: "Unread messages currently unavailable. Try again later"
+    }));
+
+    circuit.on("success", (res) => {
+      debug("status %d", res.statusCode);
+      if (res.statusCode >= 500 && res.statusCode < 600) {
+        const err = new Error(res.statusText);
+        err.code = err.status = err.statusCode = res.statusCode;
+        err.url = url;
+        reject(err);
+      }
+      if (res && res.body) {
+        if (typeof res.body === "string") {
+          resolve(JSON.parse(res.body));
+        }
+        resolve(res.body);
+      }
+    });
+
+    circuit.on("failure", (err) => {
+      if (!err.statusCode) {
+        err.statusCode = "500";
+      }
+      if (err.code === "ETIMEDOUT") {
+        err.statusCode = "408";
+      }
+      debug("status %d", err.statusCode);
+      debug("err: " + JSON.stringify(err));
+      reject(err);
+    });
+  });
 }

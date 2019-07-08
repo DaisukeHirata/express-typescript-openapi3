@@ -26,7 +26,7 @@ package:
 
 functions:
   hello-get:
-    handler: dist/lambda.http
+    handler: dist/src/lambda.http
     events:
       - http:
           path: /api/hello
@@ -46,7 +46,7 @@ functions:
     warmup: true
 
   goodbye-post:
-    handler: dist/lambda.http
+    handler: dist/src/lambda.http
     events:
       - http:
           path: /api/goodbye/{postId}
@@ -66,7 +66,7 @@ functions:
     warmup: true
 
   other:
-    handler: dist/lambda.http
+    handler: dist/src/lambda.http
     events:
       - http:
           path: /
@@ -86,7 +86,7 @@ functions:
     warmup: true
 
   db-migrate-up:
-    handler: dist/lib/db-migrate.migrate
+    handler: dist/src/lib/db-migrate.migrate
     vpc:
       securityGroupIds:
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessDefaultSecurityGroup}
