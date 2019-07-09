@@ -76,7 +76,7 @@
     "test": "DEBUG=app:* TS_NODE_CACHE=false tsc -p tsconfig.json --noEmit --skipLibCheck && nyc mocha --timeout 10000 --require ts-node/register 'test/**/*.ts' --exit",
     "testOne": "TS_NODE_CACHE=false tsc -p tsconfig.json --noEmit --skipLibCheck && nyc mocha --timeout 10000 --require ts-node/register ",
     "integration-test": "nyc mocha integration-test/index.js",
-    "jmeter": "rm -f integration-test/log.jtl && rm -rf integration-test/report && jmeter -n -t integration-test/movie-service-api.jmeter.test.jmx -l integration-test/log.jtl -e -o integration-test/report",
+    "jmeter": "rm -f integration-test/log.jtl && rm -rf integration-test/report && jmeter -n -t integration-test/cinema-catalog-service-api.jmeter.test.jmx -l integration-test/log.jtl -e -o integration-test/report",
     "codecov": "nyc report --reporter=lcovonly && codecov",
     "deploy": "npm run build:live && serverless deploy",
     "chrome-debug": "node --debug-brk --inspect --require ts-node/register src/index.ts"
