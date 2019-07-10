@@ -1,4 +1,3 @@
-import * as P from "bluebird";
 import * as jsonapiSerializer from "jsonapi-serializer";
 
 const attr = ["title", "genre", "runtime", "format", "plot", "plot_ja", "plot_cn", "released_at", "created_at", "updated_at"];
@@ -7,7 +6,7 @@ export const movieSerializer = new jsonapiSerializer.Serializer("movies", {
   attributes: attr
 });
 
-export const moviePagerSerializer = (url: string, movies: P<any[]>, pageSize: number) => {
+export const moviePagerSerializer = (url: string, movies: any[], pageSize: number) => {
   return new jsonapiSerializer.Serializer("movies", {
     topLevelLinks: {
       self: `${url}?page[size]=${pageSize}`,

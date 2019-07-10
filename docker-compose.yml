@@ -59,6 +59,9 @@ services:
     volumes:
       - ./cinema-catalog-service:/home/nupp/app
     container_name: cinema-catalog-service-cont
+    environment:
+      - COGNITO_USER_POOL_ID    # pass host enviroment var
+      - COGNITO_CLIENT_ID       # pass host enviroment var
 
   movies-service:
     build: ./movies-service
@@ -77,6 +80,9 @@ services:
     volumes:
       - ./movies-service:/home/nupp/app
     container_name: movies-service-cont
+    environment:
+      - COGNITO_USER_POOL_ID    # pass host enviroment var
+      - COGNITO_CLIENT_ID       # pass host enviroment var
 
   search-service:
     build: ./search-service

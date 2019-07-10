@@ -71,6 +71,8 @@ paths:
     get:
       x-swagger-router-controller: cinemasRoute
       operationId: getCinemaById
+      security:
+      - Bearer: []
       tags:
         - /cinemas
       description: >-
@@ -99,6 +101,8 @@ paths:
     get:
       x-swagger-router-controller: cinemasRoute
       operationId: getCinemaSchedulesByMovie
+      security:
+      - Bearer: []
       tags:
         - /cinemas
       description: >-
@@ -388,3 +392,9 @@ components:
           type: string
       required:
         - msg
+
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

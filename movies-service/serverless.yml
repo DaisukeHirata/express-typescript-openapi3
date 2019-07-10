@@ -14,6 +14,9 @@ provider:
     ESCLOUD_SECRET_TOKEN: ${self:custom.escloudSecretToken.${opt:stage, self:provider.stage}}
     ESCLOUD_SERVER_URL: ${self:custom.escloudSecretUrl.${opt:stage, self:provider.stage}}
     DEBUG: app:*,fetch-circuit-breaker
+    COGNITO_REGION: ${env:COGNITO_REGION}
+    COGNITO_USER_POOL_ID: ${env:COGNITO_USER_POOL_ID}
+    COGNITO_CLIENT_ID: ${env:COGNITO_CLIENT_ID}
 
 custom:
   stages:
@@ -35,6 +38,9 @@ package:
     - "*"
     - "!package.json"
 
+plugins:
+  - serverless-plugin-warmup
+
 functions:
   app:
     handler: dist/src/lambda.http
@@ -54,7 +60,9 @@ functions:
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetA}
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetB}
         - ${cf.${self:provider.region}:shared-infra-${opt:stage, self:provider.stage}.ServerlessPrivateSubnetC}
-    warmup: true
+    warmup:
+      enabled:
+        - dev
 
   db-migrate-up:
     handler: dist/src/lib/db-migrate.migrate
