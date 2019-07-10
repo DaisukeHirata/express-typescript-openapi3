@@ -31,6 +31,11 @@ declare global {
 export async function fetch(url: RequestInfo, defaultResponse: any = {}): P<any> {
   const request = getNamespace(NAMESPACE);
   debug(JSON.stringify(request));
+  if (!request.active.hasOwnProperty(REQ_AUTORIZATION)) {
+    const err = new Error("authorization does not exist in fetch");
+    err.statusCode = "500";
+    throw err;
+  }
   const requestId = request.get(REQ_NAME);
   const acceptLanguage = request.get(REQ_ACCEPT_LANGUAGE);
   const authorization = request.get(REQ_AUTORIZATION);
@@ -98,7 +103,7 @@ export async function post(url: RequestInfo, payload: {}, defaultResponse: any =
 
 export async function index(url: RequestInfo, payload: {}, defaultResponse: any = {}): P<any> {
   const request = getNamespace(NAMESPACE);
-//  debug(JSON.stringify(request));
+  debug(JSON.stringify(request));
   const requestId = request.get(REQ_NAME);
   const acceptLanguage = request.get(REQ_ACCEPT_LANGUAGE);
   const params = {

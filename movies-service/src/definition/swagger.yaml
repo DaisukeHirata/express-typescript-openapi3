@@ -30,6 +30,8 @@ paths:
     get:
       x-swagger-router-controller: moviesRoute
       operationId: getMoviePremieres
+      security:
+      - Bearer: []
       tags:
         - /movies
       description: >-
@@ -74,6 +76,8 @@ paths:
     get:
       x-swagger-router-controller: moviesRoute
       operationId: getMovie
+      security:
+      - Bearer: []
       tags:
         - /movies
       description: >-
@@ -355,3 +359,9 @@ components:
           type: string
       required:
         - msg
+
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

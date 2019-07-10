@@ -5,6 +5,9 @@ const configs = {
   local: {
     LOG_LEVEL: "silly",
     CORS: "*",
+    COGNITO_REGION: "ap-southeast-1",
+    COGNITO_USER_POOL_ID: "local",
+    COGNITO_CLIENT_ID: "local",
     DATABASE_HOST: "db",
     DATABASE: "movie",
     DATABASE_USER: "foo", // can be stored in environment variable
@@ -13,6 +16,9 @@ const configs = {
   development: {
     LOG_LEVEL: "silly",
     CORS: "*",
+    COGNITO_REGION: "ap-southeast-1",
+    COGNITO_USER_POOL_ID: "local",
+    COGNITO_CLIENT_ID: "local",
     DATABASE_HOST: "db",
     DATABASE: "movie",
     DATABASE_USER: "foo", // can be stored in environment variable
@@ -21,6 +27,9 @@ const configs = {
   staging: {
     LOG_LEVEL: "silly",
     CORS: "*",
+    COGNITO_REGION: "ap-southeast-1",
+    COGNITO_USER_POOL_ID: "local",
+    COGNITO_CLIENT_ID: "local",
     DATABASE_HOST: "db",
     DATABASE: "movie",
     DATABASE_USER: "foo", // can be stored in environment variable
@@ -29,6 +38,9 @@ const configs = {
   production : {
     LOG_LEVEL: "silly",
     CORS: "*",
+    COGNITO_REGION: "ap-southeast-1",
+    COGNITO_USER_POOL_ID: "local",
+    COGNITO_CLIENT_ID: "local",
     DATABASE_HOST: "db",
     DATABASE: "movie",
     DATABASE_USER: "foo", // can be stored in environment variable
