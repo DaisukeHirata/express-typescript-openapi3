@@ -3,8 +3,7 @@ import swaggerTools = require("oas-tools");
 import { Swagger20Request } from "oas-tools";
 import { readFileSync } from "fs";
 import * as YAML from "js-yaml";
-import { TDebug } from "../log";
-const debug = new TDebug("app:src:middlewares:swagger");
+import * as cls from "../lib/cls";
 
 declare module "express" {
     interface Request {
@@ -34,7 +33,6 @@ const cognitoExpress = new CognitoExpress({
 // refs. https://github.com/isa-group/oas-tools#2-oassecurity
 function verifyToken(req, secDef, token, next) {
   const bearerRegex = /^Bearer\s/;
-  debug.log(`token: ${token}`);
 
   if (token && bearerRegex.test(token)) {
     const newToken = token.replace(bearerRegex, "");
@@ -47,9 +45,8 @@ function verifyToken(req, secDef, token, next) {
       if (error) {
         return req.res.status(401).send(error);
       }
-
       req.res.locals.user = response;
-      next();
+      cls.createNewContext(req, next);
     });
   } else {
     return next(req.res.status(403).send("Invalid Access Token"));

@@ -30,8 +30,6 @@ paths:
     get:
       x-swagger-router-controller: moviesRoute
       operationId: getMoviePremieres
-      security:
-      - Bearer: []
       tags:
         - /movies
       description: >-
