@@ -66,6 +66,10 @@ export async function setAllHeaders(req: express.Request, res: express.Response,
     debug("Store geolocation, add it to the request");
   }
 
+  createNewContext(req, next);
+}
+
+export async function createNewContext(req: express.Request, next: express.NextFunction): P <any> {
   request.run(function() {
     request.set(REQ_NAME, req[REQ_NAME]);
     debug("CLS, requestId added as:", req[REQ_NAME]);

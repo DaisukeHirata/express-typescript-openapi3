@@ -71,8 +71,6 @@ paths:
     get:
       x-swagger-router-controller: cinemasRoute
       operationId: getCinemaById
-      security:
-      - Bearer: []
       tags:
         - /cinemas
       description: >-
