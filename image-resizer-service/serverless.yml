@@ -1,0 +1,95 @@
+---
+service: image-resizer-service
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${opt:stage, "dev"}
+  region: ap-northeast-1
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:GetObject"
+        - "s3:PutObject"
+      Resource:
+        - !Join ["", ["arn:aws:s3:::", !Ref ImageS3Bucket, "/*"]]
+  environment:
+    BUCKET: !Ref ImageS3Bucket
+    REGION: ap-northeast-1
+
+plugins:
+  - serverless-webpack
+
+custom:
+  stage: ${opt:stage, self:custom.defaultStage}
+  webpack:
+    includeModules:
+      forceExclude:
+        - aws-sdk
+  defaultStage: dev
+  stages:
+    - ${opt:stage}
+    - dev
+    - stg
+    - prd
+
+package:
+  exclude:
+    - node_modules/**
+    - '!node_modules/babel-runtime/**'
+    - '!node_modules/sharp/**'
+
+functions:
+  resize:
+    handler: src/handlers/resizer/index.handler
+    events:
+      - http:
+          path: /{size}/{image}
+          method: get
+
+resources:
+  Resources:
+    ### S3 ###
+    ImageS3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: dh-image-resizer-${self:provider.stage}
+        AccessControl: PublicRead
+        WebsiteConfiguration:
+          IndexDocument: index.html
+          RoutingRules:
+            - RedirectRule:
+                HostName:
+                  Fn::Join:
+                    - ""
+                    - - Ref: ApiGatewayRestApi
+                      - ".execute-api."
+                      - Ref: AWS::Region
+                      - ".amazonaws.com"
+                HttpRedirectCode: "307"
+                Protocol: https
+                ReplaceKeyPrefixWith: ${self:provider.stage}/
+              RoutingRuleCondition:
+                HttpErrorCodeReturnedEquals: "404"
+    ImageS3BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: !Ref ImageS3Bucket
+        PolicyDocument:
+          Statement:
+            - Sid: PublicReadGetObject
+              Effect: Allow
+              Principal: "*"
+              Action:
+                - "s3:GetObject"
+              Resource:
+                - !Join ["", ["arn:aws:s3:::", !Ref ImageS3Bucket, "/*"]]
+
+  # Outputs:
+  #   ImageS3BucketDomainName:
+  #     Value: !GetAtt ImageS3Bucket.DomainName
+  #   ImageS3CloudFrontOriginAccessIdentityID:
+  #     Value: !Ref ImageS3CloudFrontOriginAccessIdentity
+  #   ImageS3BucketKeyPrefix:
+  #     Value: ${self:custom.S3BUCKET.KEY_PREFIX}
+
