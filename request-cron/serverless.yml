@@ -1,0 +1,18 @@
+---
+service: request-cron-service
+
+# Add the serverless-webpack plugin
+plugins:
+  - serverless-webpack
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  stage: ${opt:stage, "dev"}
+  region: ap-northeast-1
+
+functions:
+  hello:
+    handler: index.hello
+    events:
+      - schedule: rate(1 minute)
