@@ -150,10 +150,6 @@ export async function search(url: RequestInfo, payload: {}, fallbackResponse: an
   return req(url, getCircuitBreaker, params, fallbackResponse);
 }
 
-function isEmpty(obj) {
-  return !Object.keys(obj).length;
-}
-
 async function req(url: RequestInfo, circuit: CircuitBreaker, params: {}, fallbackResponse: any = {}): P<any> {
   debug("Send Request: %s %s", url, JSON.stringify(params));
 
@@ -203,4 +199,8 @@ async function req(url: RequestInfo, circuit: CircuitBreaker, params: {}, fallba
       reject(err);
     });
   });
+}
+
+function isEmpty(obj) {
+  return !Object.keys(obj).length;
 }

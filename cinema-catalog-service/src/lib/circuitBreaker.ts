@@ -150,10 +150,6 @@ export async function search(url: RequestInfo, payload: {}, fallbackResponse: an
   return req(url, getCircuitBreaker, params, fallbackResponse);
 }
 
-function isEmpty(obj) {
-  return !Object.keys(obj).length;
-}
-
 async function req(url: RequestInfo, circuit: CircuitBreaker, params: {}, fallbackResponse: any = {}): P<any> {
   debug("Send Request: %s %s", url, JSON.stringify(params));
 
@@ -166,13 +162,10 @@ async function req(url: RequestInfo, circuit: CircuitBreaker, params: {}, fallba
   return new Promise((resolve, reject) => {
     circuit.fallback(() => {
       debug(`🔌 CircuitBreaker ON ${url}`);
-      if (!isEmpty(fallbackResponse)) {
-        resolve(fallbackResponse);
-      }
       const err = new Error("🔌 Circuit breakers ON. Try again later");
       err.code = err.status = err.statusCode = "500";
       err.url = url;
-      reject(err);
+      throw err;
     });
 
     circuit.on("success", (res) => {
@@ -203,4 +196,8 @@ async function req(url: RequestInfo, circuit: CircuitBreaker, params: {}, fallba
       reject(err);
     });
   });
+}
+
+function isEmpty(obj) {
+  return !Object.keys(obj).length;
 }

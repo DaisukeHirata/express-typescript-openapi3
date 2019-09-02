@@ -1,6 +1,6 @@
 import * as cls from "cls-hooked";
 import * as env from "../env";
-import CircuitBreaker from "opossum";
+import circuitBreaker, { CircuitBreaker } from "opossum";
 import * as rp from "request-promise";
 import * as Debug from "debug";
 import * as P from "bluebird";
@@ -22,13 +22,27 @@ declare global {
   }
 }
 
+// option should be considered later
+const options = {
+  timeout: 3000, // If our function takes longer than 3 seconds, trigger a failure
+  errorThresholdPercentage: 50, // When 50% of requests fail, trip the circuit
+  resetTimeout: 30000 // After 30 seconds, try again.
+};
+
+const getCircuitBreaker = circuitBreaker(rp.get, options);
+getCircuitBreaker.hystrixStats.getHystrixStream().setMaxListeners(100);
+const postCircuitBreaker = circuitBreaker(rp.post, options);
+postCircuitBreaker.hystrixStats.getHystrixStream().setMaxListeners(100);
+const putCircuitBreaker = circuitBreaker(rp.put, options);
+putCircuitBreaker.hystrixStats.getHystrixStream().setMaxListeners(100);
+
 // please see the following to understand this code in detail.
 // http://lanceball.com/words/2017/01/05/protect-your-node-js-rest-clients-with-circuit-breakers/
 // This article reccomend to use elasticache to share the state of the circuit. but we don't.
 // because we should avoid serverless anti-pattern of sharing the state of the circuit across multiple callers.
 // https://medium.com/@jeremydaly/serverless-microservice-patterns-for-aws-6dadcd21bc02#834f
 // https://epsagon.com/blog/best-practices-for-aws-lambda-timeouts/
-export async function fetch(url: RequestInfo, defaultResponse: any = {}): P<any> {
+export async function fetch(url: RequestInfo, fallbackResponse: any = {}): P<any> {
   const request = getNamespace(NAMESPACE);
   debug(JSON.stringify(request));
   const requestId = request.get(REQ_NAME);
@@ -49,10 +63,10 @@ export async function fetch(url: RequestInfo, defaultResponse: any = {}): P<any>
     headers,
     resolveWithFullResponse: true
   };
-  return req(url, rp.get, params, defaultResponse);
+  return req(url, getCircuitBreaker, params, fallbackResponse);
 }
 
-export async function put(url: RequestInfo, payload: {}, defaultResponse: any = {}): P<any> {
+export async function put(url: RequestInfo, payload: {}, fallbackResponse: any = {}): P<any> {
   const request = getNamespace(NAMESPACE);
   debug(JSON.stringify(request));
   const requestId = request.get(REQ_NAME);
@@ -68,10 +82,10 @@ export async function put(url: RequestInfo, payload: {}, defaultResponse: any = 
     json: true,
     resolveWithFullResponse: true
   };
-  return req(url, rp.put, params, defaultResponse);
+  return req(url, putCircuitBreaker, params, fallbackResponse);
 }
 
-export async function post(url: RequestInfo, payload: {}, defaultResponse: any = {}): P<any> {
+export async function post(url: RequestInfo, payload: {}, fallbackResponse: any = {}): P<any> {
   const request = getNamespace(NAMESPACE);
   debug(JSON.stringify(request));
   const requestId = request.get(REQ_NAME);
@@ -93,10 +107,10 @@ export async function post(url: RequestInfo, payload: {}, defaultResponse: any =
     json: true,
     resolveWithFullResponse: true
   };
-  return req(url, rp.post, params, defaultResponse);
+  return req(url, postCircuitBreaker, params, fallbackResponse);
 }
 
-export async function index(url: RequestInfo, payload: {}, defaultResponse: any = {}): P<any> {
+export async function index(url: RequestInfo, payload: {}, fallbackResponse: any = {}): P<any> {
   const request = getNamespace(NAMESPACE);
   debug(JSON.stringify(request));
   const requestId = request.get(REQ_NAME);
@@ -113,10 +127,10 @@ export async function index(url: RequestInfo, payload: {}, defaultResponse: any 
     json: true,
     resolveWithFullResponse: true
   };
-  return req(url, rp.post, params, defaultResponse);
+  return req(url, postCircuitBreaker, params, fallbackResponse);
 }
 
-export async function search(url: RequestInfo, payload: {}, defaultResponse: any = {}): P<any> {
+export async function search(url: RequestInfo, payload: {}, fallbackResponse: any = {}): P<any> {
   const request = getNamespace(NAMESPACE);
   debug(JSON.stringify(request));
   const requestId = request.get(REQ_NAME);
@@ -133,21 +147,11 @@ export async function search(url: RequestInfo, payload: {}, defaultResponse: any
     json: true,
     resolveWithFullResponse: true
   };
-  return req(url, rp.get, params, defaultResponse);
+  return req(url, getCircuitBreaker, params, fallbackResponse);
 }
 
-async function req(url: RequestInfo, method: any, params: {}, defaultResponse: any = {}): P<any> {
+async function req(url: RequestInfo, circuit: CircuitBreaker, params: {}, fallbackResponse: any = {}): P<any> {
   debug("Send Request: %s %s", url, JSON.stringify(params));
-
-  // option should be considered later
-  const options = {
-    timeout: 3000, // If our function takes longer than 3 seconds, trigger a failure
-    errorThresholdPercentage: 50, // When 50% of requests fail, trip the circuit
-    resetTimeout: 30000 // After 30 seconds, try again.
-  };
-
-  const circuit = CircuitBreaker(method, options);
-  circuit.hystrixStats.getHystrixStream().setMaxListeners(100);
 
   circuit.fire(params).catch((err) => {
     debug("circuit: " + circuit.status);
@@ -156,9 +160,16 @@ async function req(url: RequestInfo, method: any, params: {}, defaultResponse: a
   });
 
   return new Promise((resolve, reject) => {
-    circuit.fallback(() => reject(defaultResponse ? defaultResponse : {
-      error: "Unread messages currently unavailable. Try again later"
-    }));
+    circuit.fallback(() => {
+      debug(`🔌 CircuitBreaker ON ${url}`);
+      if (!isEmpty(fallbackResponse)) {
+        resolve(fallbackResponse);
+      }
+      const err = new Error("🔌 Circuit breakers ON. Try again later");
+      err.code = err.status = err.statusCode = "500";
+      err.url = url;
+      reject(err);
+    });
 
     circuit.on("success", (res) => {
       debug("status %d", res.statusCode);
@@ -188,4 +199,8 @@ async function req(url: RequestInfo, method: any, params: {}, defaultResponse: a
       reject(err);
     });
   });
+}
+
+function isEmpty(obj) {
+  return !Object.keys(obj).length;
 }
