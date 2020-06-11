@@ -18,7 +18,7 @@
     "debug": "^4.1.1",
     "elastic-apm-node": "^2.11.6",
     "express": "4.17.1",
-    "helmet": "^3.18.0",
+    "helmet": "^3.22.1",
     "inversify": "^5.0.1",
     "js-yaml": "^3.13.1",
     "jsonapi-serializer": "^3.6.4",
