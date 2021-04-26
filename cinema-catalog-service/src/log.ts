@@ -27,9 +27,9 @@ export class TDebug {
     this.logger(Levels.Warn, formatter, ...args);
   }
 
-  public verbose(formatter: string, ...args: any[]) {
-    this.logger(Levels.Verbose, formatter, ...args);
-  }
+  // public verbose(formatter: string, ...args: any[]) {
+  //   this.logger(Levels.Verbose, formatter, ...args);
+  // }
 
   public silly(formatter: string, ...args: any[]) {
     this.logger(Levels.Silly, formatter, ...args);
