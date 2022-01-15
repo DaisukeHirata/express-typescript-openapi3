@@ -32,7 +32,7 @@
     "request-promise": "^4.2.4",
     "roi": "^0.18.0",
     "serverless-mysql": "^1.4.0",
-    "shelljs": "^0.8.3",
+    "shelljs": "^0.8.5",
     "source-map-support": "^0.5.12",
     "winston": "^3.2.1"
   },
