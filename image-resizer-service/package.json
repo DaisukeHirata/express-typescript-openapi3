@@ -17,7 +17,7 @@
     "lodash": "^4.17.11",
     "serverless-offline": "^4.7.0",
     "serverless-webpack": "^5.2.0",
-    "sharp": "^0.21.3",
+    "sharp": "^0.30.5",
     "source-map-support": "^0.5.10",
     "stream": "^0.0.2"
   },
