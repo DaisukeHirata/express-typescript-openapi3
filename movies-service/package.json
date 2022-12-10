@@ -17,7 +17,7 @@
     "db-migrate-mysql": "^1.1.10",
     "debug": "^4.1.1",
     "elastic-apm-node": "^2.11.6",
-    "express": "4.17.1",
+    "express": "4.17.3",
     "helmet": "^3.18.0",
     "inversify": "^5.0.1",
     "js-yaml": "^3.13.1",
