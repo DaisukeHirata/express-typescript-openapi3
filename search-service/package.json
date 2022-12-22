@@ -25,7 +25,7 @@
     "multer": "^1.4.1",
     "node-fetch": "^2.6.0",
     "node-uuid": "^1.4.8",
-    "oas-tools": "^2.1.6",
+    "oas-tools": "^3.0.0",
     "opossum": "^2.2.0",
     "perfy": "^1.1.2",
     "reflect-metadata": "^0.1.13",
