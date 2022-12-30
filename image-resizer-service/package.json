@@ -35,7 +35,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-3": "^6.24.1",
     "jest": "^23.6.0",
-    "serverless": "^1.47.0",
+    "serverless": "^1.83.3",
     "webpack": "^4.28.3",
     "webpack-node-externals": "^1.7.2"
   },
